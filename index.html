@@ -143,21 +143,6 @@
         </button>
       </div>
 
-      <!-- サンプルしおりリンク -->
-      <div class="space-y-2">
-        <span class="text-[11px] font-bold text-shiorit-gray block text-center">サンプルしおりを体験する</span>
-        <div class="grid grid-cols-2 gap-2.5">
-          <a href="?trip=yamaguchi" class="glass-card p-3.5 rounded-2xl text-center hover:shadow-resort transition group border border-shiorit-secondary/70">
-            <span class="text-xs font-bold text-shiorit-dark group-hover:text-shiorit-primary transition block">🐡 山口 2泊3日</span>
-            <span class="text-[10px] text-shiorit-gray">萩・下関・角島</span>
-          </a>
-          <a href="?trip=karuizawa" class="glass-card p-3.5 rounded-2xl text-center hover:shadow-resort transition group border border-shiorit-secondary/70">
-            <span class="text-xs font-bold text-shiorit-dark group-hover:text-shiorit-primary transition block">🌲 軽井沢 2泊3日</span>
-            <span class="text-[10px] text-shiorit-gray">ピレネー・リゾート</span>
-          </a>
-        </div>
-      </div>
-
       <!-- シオリットの強みカード一覧 -->
       <div class="space-y-3 pt-2">
         <h2 class="text-xs font-black tracking-widest text-shiorit-primary uppercase text-center">シオリットの圧倒的強み</h2>
@@ -283,7 +268,7 @@
   <!-- メインコンテンツ -->
   <main id="mainContainer" class="flex-1 max-w-md w-full mx-auto p-3.5 sm:p-4 space-y-6"></main>
 
-  <!-- ★【新機能1】作成直後の「URL紛失防止・強力コピー保存ポップアップ」モーダル -->
+  <!-- 作成直後の「URL紛失防止・強力コピー保存ポップアップ」モーダル -->
   <div id="createdUrlModal" class="fixed inset-0 z-[110] bg-shiorit-dark/70 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="glass-card bg-white rounded-3xl max-w-md w-full p-6 shadow-resort border border-shiorit-secondary space-y-4 text-center">
       <div class="w-16 h-16 rounded-3xl bg-shiorit-primary/20 text-shiorit-primary flex items-center justify-center text-2xl mx-auto shadow-resort border border-shiorit-secondary">
@@ -385,8 +370,8 @@
           </div>
 
           <div>
-            <label class="text-[11px] font-bold text-amber-900 block mb-1">行きたい場所・希望（書ける範囲でOK）</label>
-            <textarea id="newTripAiPrompt" rows="2" class="w-full p-2.5 bg-white border border-amber-200 rounded-xl text-xs text-amber-950 placeholder-amber-800/40 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none" placeholder="例：ハイアットホテルに泊まりたい、中華街でランチしたい"></textarea>
+            <label class="text-[11px] font-bold text-amber-900 block mb-1">行きたい場所・希望・時間指定（例: 12:00に中華街、15:00ホテル）</label>
+            <textarea id="newTripAiPrompt" rows="3" class="w-full p-2.5 bg-white border border-amber-200 rounded-xl text-xs text-amber-950 placeholder-amber-800/40 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none" placeholder="例：1日目 11:30に新横浜駅集合、お昼は中華街、15:00にハイアットホテルにチェックイン、夜は夜景スポットに行きたい"></textarea>
           </div>
         </div>
 
@@ -396,15 +381,19 @@
             <span>AIで全日プランを自動作成してスタート</span>
           </button>
           <div class="flex gap-2">
-            <button type="submit" name="submitAction" value="blank" class="flex-1 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-dark font-bold rounded-xl text-xs transition">白紙で自分で作る</button>
-            <button type="button" onclick="closeCreateTripModal()" class="px-4 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-gray font-medium rounded-xl text-xs transition">キャンセル</button>
+            <button type="submit" name="submitAction" value="blank" class="flex-1 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-dark font-bold rounded-xl text-xs transition">
+              白紙で自分で作る
+            </button>
+            <button type="button" onclick="closeCreateTripModal()" class="px-4 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-gray font-medium rounded-xl text-xs transition">
+              キャンセル
+            </button>
           </div>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- 確認モーダル -->
+  <!-- 汎用カスタム確認モーダル -->
   <div id="confirmModal" class="fixed inset-0 z-[100] bg-shiorit-dark/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="glass-card bg-white rounded-3xl max-w-xs w-full p-5 shadow-resort border border-shiorit-secondary space-y-4 text-center">
       <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center text-xl mx-auto border border-rose-100">
@@ -556,7 +545,7 @@
 
         <div>
           <label class="font-bold text-shiorit-dark block mb-1">Googleマップ検索キーワード または URL</label>
-          <input type="text" id="editMapQuery" class="w-full p-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark" placeholder="例：スポット名">
+          <input type="text" id="editMapQuery" class="w-full p-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark" placeholder="例：ハイアット リージェンシー 横浜、またはGoogleマップのURL">
         </div>
 
         <div>
@@ -762,7 +751,7 @@
     </div>
   </div>
 
-  <!-- ★【新機能3】AIコンシェルジュ（チャット形式での相談・提案反映モーダル） -->
+  <!-- AIコンシェルジュ（チャット形式での相談・提案反映モーダル） -->
   <div id="aiChatModal" class="fixed inset-0 z-[60] bg-shiorit-dark/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 hidden">
     <div class="glass-card bg-white rounded-3xl max-w-lg w-full p-4 sm:p-5 shadow-resort border border-shiorit-secondary flex flex-col h-[85vh] max-h-[700px] space-y-3">
       
@@ -914,13 +903,6 @@
       }
     };
 
-    function updateAiBadge() {
-      const badge = document.getElementById('aiCountBadge');
-      if (badge) badge.innerText = `Free`;
-      const modalCount = document.getElementById('aiModalRemainingCount');
-      if (modalCount) modalCount.innerText = "無制限";
-    }
-
     window.showCustomConfirm = function(title, message, onConfirm) {
       document.getElementById('confirmModalTitle').innerText = title;
       document.getElementById('confirmModalMessage').innerText = message;
@@ -1044,7 +1026,7 @@
       const themes = Array.from(selectedThemes).join('、') || '名物グルメ・観光';
       const freePrompt = document.getElementById('newTripAiPrompt').value.trim();
 
-      const structuredPrompt = `【移動手段】: ${transport}\n【旅のテーマ】: ${themes}\n【行きたい場所・希望】: ${freePrompt || '特になし（定番スポットで構成）'}`;
+      const structuredPrompt = `【移動手段】: ${transport}\n【旅のテーマ】: ${themes}\n【行きたい場所・希望・時間指定】:\n${freePrompt || '特になし（定番スポットで構成）'}`;
 
       if (!title || !startDate || !endDate || !membersStr) return;
 
@@ -1102,8 +1084,8 @@
       totalTripDays = calc.days;
       await saveToCloud();
 
-      // ★【新機能1】作成直後に「URL紛失防止ポップアップ」を表示
-      const currentBaseUrl = window.location.href.split('?')[0];
+      // 作成直後に「URL紛失防止ポップアップ」を表示
+      const currentBaseUrl = window.location.href.split('?')[0].split('#')[0];
       newlyCreatedTripUrl = `${currentBaseUrl}?trip=${tripId}`;
       document.getElementById('createdTripUrlInput').value = newlyCreatedTripUrl;
       document.getElementById('createdUrlModal').classList.remove('hidden');
@@ -1124,18 +1106,20 @@
     async function generateInitialPlanWithAi(title, totalDays, dayDates, members, userPrompt) {
       const systemPrompt = `あなたはプロの旅行ツアープランナーです。指定された旅行タイトル、日数（全${totalDays}日間）、ユーザーの希望条件に基づいて、美しく実用的な旅行しおりのタイムラインJSONを作成してください。
 
-【厳格な出力仕様】
-1. 出力は必ず {"steps": [...]} の形式のJSONオブジェクトのみを返してください。
-2. day は 1 〜 ${totalDays} の整数。1日あたり3〜4個の予定（午前・昼・午後・夜）を作成してください。
-3. タイトル（title）は洗練された名称（「〇〇でランチ」「〇〇散策」「〇〇 チェックイン」等）にしてください。
-4. 各予定の mapQuery には、Googleマップで一発でヒットする正式な施設名・店舗名を設定してください。
-5. startTime と endTime は、指定された各日の日付（${JSON.stringify(dayDates)}）と時間を結合した ISO8601形式（例: "${dayDates[1] || '2026-10-02'}T12:00:00"）にしてください。`;
+【厳格なプランニング＆時間反映ルール】
+1. ユーザーが「〇時」「お昼」「15:00にチェックイン」「11:30に集合」など具体的な時間やスポットを指定している場合は、その時間を最優先・厳守して該当の日程に配置してください。
+2. ユーザーの要望前後の空き時間を、周辺の観光・ランチ・移動・カフェ・ディナー等で論理的かつ魅力的に補完してください。
+3. ユーザーの入力文をそのままタイトルにせず、「〇〇 チェックイン」「〇〇 ランチ」「〇〇 散策」のように洗練された名称に整えてください。
+4. Googleマップ検索キーワード（mapQuery）には、Googleマップで確実にピンポイントに検索できる「正確な施設名・会場名・店舗名」を設定してください。
+5. 出力は必ず {"steps": [...]} の形式のJSONオブジェクトのみを返してください。
+6. day は 1 〜 ${totalDays} の整数。1日あたり3〜5個の予定（午前・昼・午後・夜）を作成してください。
+7. startTime と endTime は、指定された各日の日付（${JSON.stringify(dayDates)}）と時間を結合した ISO8601形式（例: "${dayDates[1] || '2026-10-02'}T12:00:00"）にしてください。`;
 
       const userQuery = `【旅行先】: ${title}
 【全日程】: ${totalDays}日間
 【各日の日付】: ${JSON.stringify(dayDates)}
 【参加メンバー】: ${members.join(', ')}
-【ユーザーの希望条件】:
+【ユーザーの希望条件・時間指定】:
 ${userPrompt}
 
 上記を反映した全${totalDays}日分の旅行プラン steps 配列を作成してください。`;
@@ -1246,7 +1230,7 @@ ${userPrompt}
       } catch (err) {}
     }
 
-    // ★【新機能3】AIコンシェルジュ（チャット形式での相談・提案反映）
+    // AIコンシェルジュ（チャット形式での相談・提案反映）
     window.openAiChatModal = function() {
       document.getElementById('aiChatModal').classList.remove('hidden');
       const container = document.getElementById('aiChatLogContainer');
@@ -2131,7 +2115,8 @@ ${userPrompt}
     }
 
     window.shareTripUrl = function() {
-      const shareUrl = window.location.href;
+      const currentBaseUrl = window.location.href.split('?')[0].split('#')[0];
+      const shareUrl = `${currentBaseUrl}?trip=${currentTripKey}`;
       const trip = liveTripData[currentTripKey];
       const text = `✈️ 【${trip.title}】のしおりを作成しました！\nこちらのリンクから参加・編集できます👇\n${shareUrl}`;
 
@@ -2144,7 +2129,7 @@ ${userPrompt}
       showToast('LINE共有用リンクをコピーしました！');
     };
 
-    function checkUrlParams() {
+    async function checkUrlParams() {
       const urlParams = new URLSearchParams(window.location.search);
       let tripParam = urlParams.get('trip')?.toLowerCase();
 
@@ -2154,6 +2139,7 @@ ${userPrompt}
       }
 
       if (tripParam) {
+        // 1. ローカルストレージを確認
         if (!liveTripData[tripParam]) {
           const saved = localStorage.getItem('shiorit_custom_' + tripParam);
           if (saved) {
@@ -2161,9 +2147,36 @@ ${userPrompt}
           }
         }
 
+        // 2. クラウド（Firestore）から直接取得
+        if (!liveTripData[tripParam] && tripParam !== 'yamaguchi' && tripParam !== 'karuizawa') {
+          try {
+            const url = `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/travel_plans/${tripParam}?key=${firebaseApiKey}`;
+            const res = await fetch(url);
+            if (res.ok) {
+              const doc = await res.json();
+              if (doc.fields) {
+                const steps = doc.fields.stepsJson ? JSON.parse(doc.fields.stepsJson.stringValue) : [];
+                const members = doc.fields.membersJson ? JSON.parse(doc.fields.membersJson.stringValue) : ["メンバー"];
+                const expenses = doc.fields.expensesJson ? JSON.parse(doc.fields.expensesJson.stringValue) : [];
+                
+                liveTripData[tripParam] = {
+                  title: "旅行のしおり",
+                  dates: "日程調整中",
+                  startDate: new Date().toISOString().slice(0, 10) + "T00:00:00",
+                  endDate: new Date().toISOString().slice(0, 10) + "T23:59:59",
+                  dayDates: { 1: new Date().toISOString().slice(0, 10) },
+                  members,
+                  expenses,
+                  steps
+                };
+              }
+            }
+          } catch(err){}
+        }
+
         if (liveTripData[tripParam]) {
           currentTripKey = tripParam;
-          const trip = liveTripData[tripParam];
+          const trip = liveTripData[currentTripKey];
 
           if (trip.startDate && trip.endDate) {
             const calc = calculateTripDates(trip.startDate.slice(0,10), trip.endDate.slice(0,10));
@@ -2197,10 +2210,9 @@ ${userPrompt}
     }
 
     window.addEventListener('hashchange', checkUrlParams);
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       initTimePickers();
-      checkUrlParams();
-      updateAiBadge();
+      await checkUrlParams();
       updateCurrentStep();
       setInterval(updateCurrentStep, 5000);
       setInterval(syncFromCloud, 4000);
