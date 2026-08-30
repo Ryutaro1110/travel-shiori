@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title id="appPageTitle">旅のしおり</title>
+  <title id="appPageTitle">シオリット | みんなで作る旅行しおり＆割り勘</title>
   
   <!-- iOS PWA・全画面スタンドアロン設定 -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="旅のしおり">
+  <meta name="apple-mobile-web-app-title" content="シオリット">
   <meta name="theme-color" content="#0f172a">
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/854/854878.png">
 
@@ -61,49 +61,69 @@
 <body class="bg-slate-900 text-slate-800 font-sans min-h-screen antialiased flex flex-col justify-between selection:bg-amber-300">
 
   <!-- ヘッダー / アプリコントロール -->
-  <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-3 py-2.5 space-y-2">
+  <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-3 py-2 space-y-2">
     <div class="max-w-md mx-auto space-y-2">
       
-      <!-- タイトル ＆ アクションボタン -->
+      <!-- ロゴ ＆ 新規作成 ＆ AI変更 ＆ 予定追加 -->
       <div class="flex items-center justify-between gap-1.5">
         
-        <!-- 旅行切り替えスイッチ（URLパラメータなし時のみ表示） -->
-        <div id="tripSwitchContainer" class="flex items-center bg-slate-800 p-1 rounded-2xl border border-slate-700 text-xs flex-1">
-          <button onclick="switchTrip('yamaguchi')" id="trip-btn-yamaguchi" class="flex-1 py-1.5 rounded-xl font-bold text-white bg-blue-600 shadow transition text-center">
-            山口
-          </button>
-          <button onclick="switchTrip('karuizawa')" id="trip-btn-karuizawa" class="flex-1 py-1.5 rounded-xl font-medium text-slate-400 hover:text-white transition text-center">
-            軽井沢
-          </button>
-        </div>
-
-        <!-- 個別専用モード時のタイトルバッジ（URLパラメータ指定時） -->
-        <div id="singleModeHeader" class="hidden items-center gap-2 flex-1">
-          <span id="singleModeIcon" class="w-8 h-8 rounded-xl text-white flex items-center justify-center text-sm shadow">
-            <i class="fa-solid fa-map-location-dot"></i>
+        <!-- ブランドロゴ / タイトル -->
+        <div class="flex items-center gap-1.5 shrink-0 cursor-pointer" onclick="setSlide(1)">
+          <span class="w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 text-white flex items-center justify-center text-xs shadow-md font-black">
+            S
           </span>
           <div>
-            <h1 id="singleModeTitle" class="font-bold text-sm text-white leading-tight">旅のしおり</h1>
-            <p id="singleModeDates" class="text-[10px] text-slate-400">日程</p>
+            <div class="flex items-center gap-1">
+              <span class="font-black text-sm text-white tracking-tight">シオリット</span>
+              <span class="text-[9px] bg-blue-500/20 text-blue-300 border border-blue-400/30 px-1 py-0.2 rounded font-bold">Beta</span>
+            </div>
           </div>
         </div>
 
         <!-- アクションボタン群 -->
-        <div class="flex items-center gap-1.5 shrink-0">
+        <div class="flex items-center gap-1 shrink-0">
+          <!-- 新規旅行作成ボタン -->
+          <button onclick="openNewTripModal()" class="flex items-center gap-1 px-2 py-1.5 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-bold rounded-xl text-xs shadow transition cursor-pointer" title="新しいしおりを作成">
+            <i class="fa-solid fa-folder-plus text-xs"></i>
+            <span class="hidden sm:inline">新しおり</span>
+            <span class="sm:hidden">新規</span>
+          </button>
+
           <!-- 予定追加ボタン -->
-          <button onclick="openEditModal(null, currentSlide >= 1 && currentSlide <= 3 ? currentSlide : 1)" class="flex items-center gap-1 px-2.5 py-1.5 bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 font-bold rounded-xl text-xs shadow transition cursor-pointer">
+          <button onclick="openEditModal(null, currentSlide >= 1 && currentSlide <= 3 ? currentSlide : 1)" class="flex items-center gap-1 px-2 py-1.5 bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 font-bold rounded-xl text-xs shadow transition cursor-pointer">
             <i class="fa-solid fa-plus text-emerald-400"></i>
             <span>予定追加</span>
           </button>
 
-          <!-- AIプラン変更ボタン（残り回数バッジ付き） -->
-          <button onclick="openAiPromptModal()" class="flex items-center gap-1.5 px-2.5 py-1.5 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 active:opacity-90 text-slate-950 font-black rounded-xl text-xs shadow-lg transition cursor-pointer">
+          <!-- AIプラン変更ボタン（残り回数バッジ付き・1日5回） -->
+          <button onclick="openAiPromptModal()" class="flex items-center gap-1 px-2 py-1.5 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 active:opacity-90 text-slate-950 font-black rounded-xl text-xs shadow-lg transition cursor-pointer">
             <i class="fa-solid fa-wand-magic-sparkles text-slate-950"></i>
             <span>AI変更</span>
-            <span id="aiHeaderRemainingBadge" class="bg-slate-950/80 text-amber-300 px-1.5 py-0.2 rounded-md text-[10px] font-mono">3/3</span>
+            <span id="aiHeaderRemainingBadge" class="bg-slate-950/80 text-amber-300 px-1.5 py-0.2 rounded-md text-[10px] font-mono">5/5</span>
           </button>
         </div>
 
+      </div>
+
+      <!-- 旅行タイトルバッジ（タップで共有URLコピー） -->
+      <div class="flex items-center justify-between bg-slate-800/80 px-2.5 py-1.5 rounded-xl border border-slate-700/80 text-xs">
+        <div class="flex items-center gap-2 truncate flex-1">
+          <span id="currentTripIcon" class="w-5 h-5 rounded-lg text-white flex items-center justify-center text-[10px] bg-blue-600 shrink-0 shadow">
+            <i class="fa-solid fa-location-dot"></i>
+          </span>
+          <div class="truncate">
+            <span id="currentTripTitle" class="font-bold text-white text-xs truncate block">読み込み中...</span>
+            <span id="currentTripDates" class="text-[10px] text-slate-400 block truncate">日程</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1 shrink-0 ml-2">
+          <!-- LINE共有 / URLコピー -->
+          <button onclick="shareTripUrl()" class="px-2 py-1 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold rounded-lg text-[10px] flex items-center gap-1 transition shadow">
+            <i class="fa-solid fa-share-nodes"></i>
+            <span>共有</span>
+          </button>
+        </div>
       </div>
 
       <!-- スライド切り替えタブ -->
@@ -131,7 +151,7 @@
         </div>
         <div class="flex items-center gap-1.5">
           <span id="syncBadge" class="inline-flex items-center gap-1 text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-md font-bold">
-            <i class="fa-solid fa-shield-halved"></i> 保護通信中
+            <i class="fa-solid fa-shield-halved"></i> クラウド同期中
           </span>
           <span id="nowTimeDisplay" class="font-mono text-amber-300 font-bold">--:--</span>
         </div>
@@ -148,6 +168,65 @@
 
   <!-- メインコンテンツ -->
   <main id="mainContainer" class="flex-1 max-w-md w-full mx-auto p-3 sm:p-4 space-y-6"></main>
+
+  <!-- 🆕 新規旅行の作成モーダル (z-[70]) -->
+  <div id="newTripModal" class="fixed inset-0 z-[70] bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl border border-slate-100 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-start justify-between pb-2 border-b border-slate-100">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg font-bold">
+            <i class="fa-solid fa-plus"></i>
+          </div>
+          <div>
+            <span class="text-[10px] bg-indigo-100 text-indigo-900 px-2 py-0.5 rounded-full font-bold">新しいしおりの発行</span>
+            <h3 class="text-base font-black text-slate-800 mt-0.5">新しい旅行しおりを作成</h3>
+          </div>
+        </div>
+        <button onclick="closeNewTripModal()" class="text-slate-400 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-lg">✕</button>
+      </div>
+
+      <form onsubmit="createNewTrip(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">旅行タイトル <span class="text-rose-500">*</span></label>
+          <input type="text" id="newTripTitle" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="例：北海道 2泊3日 グルメ旅、沖縄女子旅 など">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">出発日 <span class="text-rose-500">*</span></label>
+            <input type="date" id="newTripStartDate" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-indigo-500">
+          </div>
+          <div>
+            <label class="font-bold text-slate-700 block mb-1">最終日 <span class="text-rose-500">*</span></label>
+            <input type="date" id="newTripEndDate" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-indigo-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="font-bold text-slate-700 block mb-1">参加メンバー（カンマまたは改行区切り） <span class="text-rose-500">*</span></label>
+          <input type="text" id="newTripMembers" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-medium focus:ring-2 focus:ring-indigo-500" placeholder="例：りゅーたろー, 岡村, 田中, さとう">
+          <p class="text-[10px] text-slate-400 mt-1">※後から追加・削除もいつでも可能です。</p>
+        </div>
+
+        <div class="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-3 space-y-1 text-indigo-900">
+          <div class="font-bold flex items-center gap-1.5 text-xs">
+            <i class="fa-solid fa-wand-magic-sparkles text-indigo-600"></i> 作成後の流れ
+          </div>
+          <p class="text-[11px] leading-relaxed">
+            しおりを作成すると専用のURLが自動発行されます。右上の「共有」ボタンからLINEでURLを送るだけで、参加者全員がインストール不要で閲覧＆編集できます！
+          </p>
+        </div>
+
+        <div class="pt-2 flex gap-2">
+          <button type="submit" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 active:scale-98 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-lg transition cursor-pointer">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span>この旅行しおりを発行する</span>
+          </button>
+          <button type="button" onclick="closeNewTripModal()" class="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl text-xs transition">キャンセル</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- 汎用カスタム確認モーダル（最前面 z-[100]） -->
   <div id="confirmModal" class="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-4 hidden">
@@ -255,7 +334,7 @@
 
         <div>
           <label class="font-bold text-slate-700 block mb-1">予定・スポット名 <span class="text-rose-500">*</span></label>
-          <input type="text" id="editTitle" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="例：瓦そばランチ、カフェ散策など">
+          <input type="text" id="editTitle" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="例：名物ランチ、カフェ散策、温泉など">
         </div>
 
         <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3 space-y-2">
@@ -304,13 +383,13 @@
           </div>
           <div>
             <label class="font-bold text-slate-700 block mb-1">バッジ（任意）</label>
-            <input type="text" id="editBadge" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800" placeholder="例：予約済, 3軒ハシゴ">
+            <input type="text" id="editBadge" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800" placeholder="例：予約済, 名物">
           </div>
         </div>
 
         <div>
           <label class="font-bold text-slate-700 block mb-1">Googleマップ検索キーワード</label>
-          <input type="text" id="editMapQuery" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800" placeholder="例：萩市 瓦そば, ピレネー 軽井沢">
+          <input type="text" id="editMapQuery" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800" placeholder="例：小樽運河、美ら海水族館">
         </div>
 
         <div>
@@ -320,7 +399,7 @@
 
         <div>
           <label class="font-bold text-slate-700 block mb-1">ポイント・注意事項（任意）</label>
-          <input type="text" id="editTips" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800" placeholder="例：水着を持参、前日12時までに予約必須">
+          <input type="text" id="editTips" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800" placeholder="例：前日までに要予約、スニーカー推奨">
         </div>
 
         <div class="pt-2 flex gap-2">
@@ -492,7 +571,7 @@
 
         <div>
           <label class="font-bold text-slate-700 block mb-1">支払いの用途 <span class="text-rose-500">*</span></label>
-          <input type="text" id="expenseTitle" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="例：レンタカー代、瓦そばランチ、BBQ買い出し">
+          <input type="text" id="expenseTitle" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="例：レンタカー代、ランチ、買い出し">
         </div>
 
         <div class="grid grid-cols-2 gap-2">
@@ -539,7 +618,7 @@
           <div>
             <div class="flex items-center gap-1.5">
               <span class="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full font-bold">AI自動プラン書き換え</span>
-              <span id="aiModalRemainingBadge" class="text-[10px] bg-slate-800 text-amber-300 px-2 py-0.5 rounded-full font-bold font-mono">本日残り 3/3回</span>
+              <span id="aiModalRemainingBadge" class="text-[10px] bg-slate-800 text-amber-300 px-2 py-0.5 rounded-full font-bold font-mono">本日残り 5/5回</span>
             </div>
             <h3 class="text-base font-black text-slate-800 mt-1">プラン変更の内容を入力</h3>
           </div>
@@ -553,7 +632,7 @@
         </p>
 
         <div class="relative">
-          <textarea id="aiPromptInput" rows="4" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white resize-none" placeholder="例：2日目のサウナをやめて、景色のいいカフェ巡りに変更して&#10;例：1日目のピレネーランチを13:00集合に変更して"></textarea>
+          <textarea id="aiPromptInput" rows="4" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white resize-none" placeholder="例：2日目の午前をのんびりカフェ巡りに変更して&#10;例：1日目のランチを13:00集合に変更して"></textarea>
         </div>
 
         <div class="space-y-1">
@@ -602,15 +681,15 @@
 
   <!-- スクリプト -->
   <script>
-    // 安全なCloudflare Workers中継エンドポイント（生APIキーはコード内に存在しません）
+    // 安全なCloudflare Workers中継エンドポイント（生APIキー完全秘匿）
     const cloudflareWorkerEndpoint = "https://travel-gemini-proxy.5890288.workers.dev";
     
     // Firestore REST API（同期用）
     const firebaseApiKey = "AIzaSyBUbfrWbxBIDN-Y4Ooa_8au9EANbUaWjKs";
     const firebaseProjectId = "travel-shiori-e81a2";
 
-    // 1日あたりのAI利用上限
-    const MAX_DAILY_AI_LIMIT = 3;
+    // 1日あたりのAI利用上限（試作段階として1日5回に拡張）
+    const MAX_DAILY_AI_LIMIT = 5;
 
     const defaultTripData = {
       yamaguchi: {
@@ -688,14 +767,13 @@
     let currentTripKey = 'yamaguchi';
     let currentSlide = 1;
     let liveTripData = JSON.parse(JSON.stringify(defaultTripData));
-    let isSingleMode = false;
     let currentSelectedStepId = null;
     let currentSelectedExpenseId = null;
     let currentSelectedMember = null;
     let lastCloudSyncHash = '';
     let confirmActionCallback = null;
 
-    // --- AI利用回数制限（1日3回、毎朝0時リセット）ロジック ---
+    // --- AI利用回数制限（1日5回、毎朝0時リセット）ロジック ---
     function getTodayKey() {
       const now = new Date();
       const y = now.getFullYear();
@@ -706,14 +784,14 @@
 
     function getAiUsageCount() {
       const today = getTodayKey();
-      const storageKey = `ai_count_${currentTripKey}_${today}`;
+      const storageKey = `shiorit_ai_count_${currentTripKey}_${today}`;
       const count = parseInt(localStorage.getItem(storageKey), 10);
       return isNaN(count) ? 0 : count;
     }
 
     function incrementAiUsageCount() {
       const today = getTodayKey();
-      const storageKey = `ai_count_${currentTripKey}_${today}`;
+      const storageKey = `shiorit_ai_count_${currentTripKey}_${today}`;
       const current = getAiUsageCount();
       localStorage.setItem(storageKey, String(current + 1));
       updateAiRemainingUI();
@@ -747,13 +825,134 @@
       if (submitBtn) {
         if (remaining === 0) {
           submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
-          submitBtn.innerHTML = '<i class="fa-solid fa-ban"></i><span>本日の上限（3回）に達しました</span>';
+          submitBtn.innerHTML = '<i class="fa-solid fa-ban"></i><span>本日の上限（5回）に達しました</span>';
         } else {
           submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
           submitBtn.innerHTML = '<i class="fa-solid fa-sparkles"></i><span>この内容でプランを更新する</span>';
         }
       }
     }
+
+    // 🆕 新規旅行の作成モーダル制御
+    window.openNewTripModal = function() {
+      const today = new Date();
+      const y = today.getFullYear();
+      const m = String(today.getMonth() + 1).padStart(2, '0');
+      const d = String(today.getDate()).padStart(2, '0');
+      const todayStr = `${y}-${m}-${d}`;
+
+      const d2 = new Date(today);
+      d2.setDate(d2.getDate() + 2);
+      const endStr = `${d2.getFullYear()}-${String(d2.getMonth() + 1).padStart(2, '0')}-${String(d2.getDate()).padStart(2, '0')}`;
+
+      document.getElementById('newTripTitle').value = '';
+      document.getElementById('newTripStartDate').value = todayStr;
+      document.getElementById('newTripEndDate').value = endStr;
+      document.getElementById('newTripMembers').value = '';
+
+      document.getElementById('newTripModal').classList.remove('hidden');
+    };
+
+    window.closeNewTripModal = function() {
+      document.getElementById('newTripModal').classList.add('hidden');
+    };
+
+    window.createNewTrip = async function(e) {
+      e.preventDefault();
+      const title = document.getElementById('newTripTitle').value.trim();
+      const startDate = document.getElementById('newTripStartDate').value;
+      const endDate = document.getElementById('newTripEndDate').value;
+      const membersRaw = document.getElementById('newTripMembers').value.trim();
+
+      if (!title || !startDate || !endDate || !membersRaw) {
+        showToast('すべての項目を入力してください');
+        return;
+      }
+
+      const members = membersRaw.split(/[,、\n\s]+/).filter(m => m.trim().length > 0);
+      if (members.length === 0) {
+        showToast('参加メンバーを1人以上入力してください');
+        return;
+      }
+
+      // ユニークな旅行IDを生成（例: t_9x2a41）
+      const newTripId = 't_' + Math.random().toString(36).substring(2, 8);
+
+      const sD = new Date(startDate);
+      const eD = new Date(endDate);
+      const datesFormatted = `${startDate.replace(/-/g, '.')} - ${endDate.replace(/-/g, '.')}`;
+
+      // 日付マップ作成
+      const dayDates = {};
+      let cur = new Date(sD);
+      let dayIndex = 1;
+      while (cur <= eD && dayIndex <= 3) {
+        dayDates[dayIndex] = cur.toISOString().split('T')[0];
+        cur.setDate(cur.getDate() + 1);
+        dayIndex++;
+      }
+
+      // 新規旅行オブジェクトの初期化
+      const newTripObj = {
+        title: title,
+        dates: datesFormatted,
+        startDate: `${startDate}T00:00:00`,
+        endDate: `${endDate}T23:59:59`,
+        dayDates: dayDates,
+        icon: "fa-solid fa-map-location-dot",
+        iconBg: "bg-indigo-600",
+        btnColor: "bg-indigo-600",
+        members: members,
+        expenses: [],
+        steps: [
+          {
+            id: "step_init_1",
+            day: 1,
+            title: "集合・出発",
+            category: "移動・ドライブ",
+            time: "09:00〜10:00",
+            startTime: `${startDate}T09:00:00`,
+            endTime: `${startDate}T10:00:00`,
+            icon: "fa-solid fa-location-dot",
+            iconBg: "bg-blue-100 text-blue-600",
+            badge: "集合",
+            desc: "駅または空港に集合して旅行スタート！",
+            tips: "持ち物・チケットを再確認！",
+            mapQuery: title
+          }
+        ]
+      };
+
+      liveTripData[newTripId] = newTripObj;
+      currentTripKey = newTripId;
+
+      closeNewTripModal();
+
+      // URLパラメータを更新して新規旅行へ遷移
+      const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?trip=${newTripId}`;
+      window.history.pushState({ path: newUrl }, '', newUrl);
+
+      applyModeDisplay();
+      await saveToCloud();
+
+      showToast(`🎉 新しいしおり「${title}」を発行しました！`);
+    };
+
+    // 共有リンクのコピー
+    window.shareTripUrl = function() {
+      const curUrl = window.location.href;
+      const trip = liveTripData[currentTripKey];
+      const copyText = `【${trip.title}】のしおり共有リンクです！✈️\n\n${curUrl}\n\n※URLを開くだけでアプリとして全員で予定＆割り勘を管理できます📱`;
+
+      const dummy = document.createElement('textarea');
+      document.body.appendChild(dummy);
+      dummy.value = copyText;
+      dummy.select();
+      document.execCommand('copy');
+      document.body.removeChild(dummy);
+
+      showToast('LINE共有用リンクをコピーしました！📋');
+    };
 
     // カスタム確認モーダル制御（最前面）
     window.showCustomConfirm = function(title, message, onConfirm) {
@@ -805,9 +1004,30 @@
         if (res.ok) {
           const doc = await res.json();
           if (doc.fields) {
-            const rawHash = (doc.fields.stepsJson?.stringValue || '') + (doc.fields.membersJson?.stringValue || '') + (doc.fields.expensesJson?.stringValue || '');
+            const rawHash = (doc.fields.title?.stringValue || '') + (doc.fields.stepsJson?.stringValue || '') + (doc.fields.membersJson?.stringValue || '') + (doc.fields.expensesJson?.stringValue || '');
             if (rawHash && rawHash !== lastCloudSyncHash) {
               lastCloudSyncHash = rawHash;
+              if (!liveTripData[currentTripKey]) {
+                liveTripData[currentTripKey] = {
+                  title: doc.fields.title?.stringValue || "旅のしおり",
+                  dates: doc.fields.dates?.stringValue || "",
+                  startDate: doc.fields.startDate?.stringValue || new Date().toISOString(),
+                  endDate: doc.fields.endDate?.stringValue || new Date().toISOString(),
+                  dayDates: doc.fields.dayDatesJson ? JSON.parse(doc.fields.dayDatesJson.stringValue) : { 1: "2026-10-02", 2: "2026-10-03", 3: "2026-10-04" },
+                  icon: "fa-solid fa-map-location-dot",
+                  iconBg: "bg-indigo-600",
+                  btnColor: "bg-indigo-600",
+                  members: [],
+                  expenses: [],
+                  steps: []
+                };
+              }
+              if (doc.fields.title) liveTripData[currentTripKey].title = doc.fields.title.stringValue;
+              if (doc.fields.dates) liveTripData[currentTripKey].dates = doc.fields.dates.stringValue;
+              if (doc.fields.startDate) liveTripData[currentTripKey].startDate = doc.fields.startDate.stringValue;
+              if (doc.fields.endDate) liveTripData[currentTripKey].endDate = doc.fields.endDate.stringValue;
+              if (doc.fields.dayDatesJson) liveTripData[currentTripKey].dayDates = JSON.parse(doc.fields.dayDatesJson.stringValue);
+
               if (doc.fields.stepsJson) {
                 const steps = JSON.parse(doc.fields.stepsJson.stringValue);
                 if (steps && Array.isArray(steps)) liveTripData[currentTripKey].steps = steps;
@@ -831,13 +1051,20 @@
     async function saveToCloud() {
       try {
         const trip = liveTripData[currentTripKey];
-        const rawHash = JSON.stringify(trip.steps) + JSON.stringify(trip.members || []) + JSON.stringify(trip.expenses || []);
+        if (!trip) return;
+
+        const rawHash = (trip.title || '') + JSON.stringify(trip.steps) + JSON.stringify(trip.members || []) + JSON.stringify(trip.expenses || '');
         lastCloudSyncHash = rawHash;
 
         const url = `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/travel_plans/${currentTripKey}?key=${firebaseApiKey}`;
         const body = {
           fields: {
-            stepsJson: { stringValue: JSON.stringify(trip.steps) },
+            title: { stringValue: trip.title || "旅のしおり" },
+            dates: { stringValue: trip.dates || "" },
+            startDate: { stringValue: trip.startDate || new Date().toISOString() },
+            endDate: { stringValue: trip.endDate || new Date().toISOString() },
+            dayDatesJson: { stringValue: JSON.stringify(trip.dayDates || {}) },
+            stepsJson: { stringValue: JSON.stringify(trip.steps || []) },
             membersJson: { stringValue: JSON.stringify(trip.members || []) },
             expensesJson: { stringValue: JSON.stringify(trip.expenses || []) }
           }
@@ -853,42 +1080,43 @@
     function checkUrlParams() {
       const urlParams = new URLSearchParams(window.location.search);
       const hash = window.location.hash.replace('#', '').toLowerCase();
-      const tripParam = urlParams.get('trip')?.toLowerCase() || hash;
+      const tripParam = urlParams.get('trip') || hash;
 
-      if (tripParam === 'karuizawa') {
-        currentTripKey = 'karuizawa';
-        isSingleMode = true;
-      } else if (tripParam === 'yamaguchi') {
-        currentTripKey = 'yamaguchi';
-        isSingleMode = true;
+      if (tripParam) {
+        currentTripKey = tripParam;
       } else {
-        isSingleMode = false;
+        currentTripKey = 'yamaguchi';
       }
 
       applyModeDisplay();
     }
 
     function applyModeDisplay() {
-      const trip = liveTripData[currentTripKey];
-      const switchBox = document.getElementById('tripSwitchContainer');
-      const singleBox = document.getElementById('singleModeHeader');
-
-      if (isSingleMode) {
-        switchBox.classList.add('hidden');
-        singleBox.classList.remove('hidden');
-        singleBox.classList.add('flex');
-
-        document.getElementById('singleModeTitle').innerText = trip.title;
-        document.getElementById('singleModeDates').innerText = trip.dates;
-        const iconSpan = document.getElementById('singleModeIcon');
-        iconSpan.className = `w-8 h-8 rounded-xl text-white flex items-center justify-center text-sm shadow ${trip.iconBg}`;
-        iconSpan.innerHTML = `<i class="${trip.icon}"></i>`;
-        document.getElementById('appPageTitle').innerText = trip.title;
-      } else {
-        switchBox.classList.remove('hidden');
-        singleBox.classList.add('hidden');
-        singleBox.classList.remove('flex');
+      if (!liveTripData[currentTripKey]) {
+        // クラウドから取得するまでの一時プレースホルダー
+        liveTripData[currentTripKey] = {
+          title: "旅のしおり",
+          dates: "日程",
+          startDate: new Date().toISOString(),
+          endDate: new Date().toISOString(),
+          dayDates: { 1: "2026-10-02", 2: "2026-10-03", 3: "2026-10-04" },
+          icon: "fa-solid fa-map-location-dot",
+          iconBg: "bg-indigo-600",
+          btnColor: "bg-indigo-600",
+          members: ["メンバー1", "メンバー2"],
+          expenses: [],
+          steps: []
+        };
       }
+
+      const trip = liveTripData[currentTripKey];
+      document.getElementById('currentTripTitle').innerText = trip.title;
+      document.getElementById('currentTripDates').innerText = trip.dates;
+      document.getElementById('appPageTitle').innerText = `${trip.title} | シオリット`;
+
+      const iconSpan = document.getElementById('currentTripIcon');
+      iconSpan.className = `w-5 h-5 rounded-lg text-white flex items-center justify-center text-[10px] ${trip.iconBg || 'bg-indigo-600'} shrink-0 shadow`;
+      iconSpan.innerHTML = `<i class="${trip.icon || 'fa-solid fa-map-location-dot'}"></i>`;
 
       renderMainCards();
       setSlide(1, false);
@@ -897,30 +1125,8 @@
       syncFromCloud();
     }
 
-    window.switchTrip = function(tripKey) {
-      if (isSingleMode) return;
-      currentTripKey = tripKey;
-      currentSlide = 1;
-
-      const yBtn = document.getElementById('trip-btn-yamaguchi');
-      const kBtn = document.getElementById('trip-btn-karuizawa');
-      if (tripKey === 'yamaguchi') {
-        yBtn.className = "flex-1 py-1.5 rounded-xl font-bold text-white bg-blue-600 shadow transition text-center";
-        kBtn.className = "flex-1 py-1.5 rounded-xl font-medium text-slate-400 hover:text-white transition text-center";
-      } else {
-        kBtn.className = "flex-1 py-1.5 rounded-xl font-bold text-white bg-emerald-700 shadow transition text-center";
-        yBtn.className = "flex-1 py-1.5 rounded-xl font-medium text-slate-400 hover:text-white transition text-center";
-      }
-
-      renderMainCards();
-      setSlide(1, false);
-      updateCurrentStep();
-      updateAiRemainingUI();
-      syncFromCloud();
-    };
-
     function calculateSettlement() {
-      const trip = liveTripData[currentTripKey];
+      const trip = liveTripData[currentTripKey] || { members: [], expenses: [] };
       const members = trip.members || [];
       const expenses = trip.expenses || [];
 
@@ -997,12 +1203,12 @@
     }
 
     function renderMainCards() {
-      const trip = liveTripData[currentTripKey];
+      const trip = liveTripData[currentTripKey] || { steps: [], members: [], expenses: [] };
       const container = document.getElementById('mainContainer');
 
-      const day1Steps = trip.steps.filter(s => s.day === 1).sort((a,b) => (a.startTime || '').localeCompare(b.startTime || ''));
-      const day2Steps = trip.steps.filter(s => s.day === 2).sort((a,b) => (a.startTime || '').localeCompare(b.startTime || ''));
-      const day3Steps = trip.steps.filter(s => s.day === 3).sort((a,b) => (a.startTime || '').localeCompare(b.startTime || ''));
+      const day1Steps = (trip.steps || []).filter(s => s.day === 1).sort((a,b) => (a.startTime || '').localeCompare(b.startTime || ''));
+      const day2Steps = (trip.steps || []).filter(s => s.day === 2).sort((a,b) => (a.startTime || '').localeCompare(b.startTime || ''));
+      const day3Steps = (trip.steps || []).filter(s => s.day === 3).sort((a,b) => (a.startTime || '').localeCompare(b.startTime || ''));
 
       const renderStepsHtml = (steps) => {
         if (steps.length === 0) {
@@ -1012,7 +1218,7 @@
           <div data-step-id="${s.id}" data-start="${s.startTime}" data-end="${s.endTime}" onclick="openModal('${s.id}')" class="schedule-step cursor-pointer p-2.5 rounded-2xl bg-slate-50 border border-slate-200/80 active:bg-blue-50/60 transition relative">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
-                <span class="font-mono font-bold ${trip.btnColor.replace('bg-', 'text-')} text-xs">${s.time.split('〜')[0] || s.time}</span>
+                <span class="font-mono font-bold ${(trip.btnColor || 'bg-blue-600').replace('bg-', 'text-')} text-xs">${s.time.split('〜')[0] || s.time}</span>
                 <span class="font-bold text-slate-800 text-xs">${s.title}</span>
               </div>
               ${s.badge ? `<span class="text-[10px] bg-slate-200/80 text-slate-800 px-1.5 py-0.5 rounded font-bold">${s.badge}</span>` : ''}
@@ -1029,20 +1235,20 @@
       container.innerHTML = `
         <!-- 1日目 -->
         <article id="card-1" class="pamphlet-card bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-100 flex flex-col transition">
-          <div class="bg-gradient-to-r ${currentTripKey === 'yamaguchi' ? 'from-sky-600 via-blue-700 to-indigo-800' : 'from-emerald-800 via-teal-800 to-slate-900'} text-white p-5 relative overflow-hidden">
+          <div class="bg-gradient-to-r from-sky-600 via-blue-700 to-indigo-800 text-white p-5 relative overflow-hidden">
             <div class="flex items-center justify-between gap-2">
-              <span class="px-2.5 py-0.5 rounded-full bg-white/20 border border-white/30 text-white text-[10px] font-bold">1日目 / ${currentTripKey === 'yamaguchi' ? '10.02 (金)' : '08.21 (金)'}</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-white/20 border border-white/30 text-white text-[10px] font-bold">1日目 / ${trip.dayDates ? trip.dayDates[1] || 'DAY 1' : '1日目'}</span>
               <span class="text-[11px] font-black tracking-widest text-amber-300">1 / 5 PAGE</span>
             </div>
             <div class="mt-2.5 flex items-center gap-3">
-              <div class="w-10 h-10 rounded-2xl bg-white ${currentTripKey === 'yamaguchi' ? 'text-blue-700' : 'text-emerald-800'} font-black text-xl flex items-center justify-center shadow">1</div>
-              <h2 class="text-base sm:text-lg font-black leading-tight">${trip.title}<br><span class="text-xs font-normal opacity-90">${currentTripKey === 'yamaguchi' ? '萩・自然体験' : 'ピレネー＆アウトレット'}</span></h2>
+              <div class="w-10 h-10 rounded-2xl bg-white text-blue-700 font-black text-xl flex items-center justify-center shadow">1</div>
+              <h2 class="text-base sm:text-lg font-black leading-tight">${trip.title}<br><span class="text-xs font-normal opacity-90">1日目 スケジュール</span></h2>
             </div>
           </div>
           <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
             <div class="space-y-2 text-xs">
               <div class="flex items-center justify-between font-bold text-slate-800 pb-1 border-b border-slate-100">
-                <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock ${trip.btnColor.replace('bg-', 'text-')}"></i> 1日目 スケジュール</span>
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock ${(trip.btnColor || 'bg-blue-600').replace('bg-', 'text-')}"></i> 1日目 スケジュール</span>
                 <span class="text-[10px] text-slate-500 font-normal"><i class="fa-solid fa-hand-pointer mr-0.5"></i> タップで詳細・編集</span>
               </div>
               <div class="space-y-1.5">${renderStepsHtml(day1Steps)}</div>
@@ -1056,14 +1262,14 @@
 
         <!-- 2日目 -->
         <article id="card-2" class="pamphlet-card bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-100 flex flex-col transition">
-          <div class="bg-gradient-to-r ${currentTripKey === 'yamaguchi' ? 'from-amber-600 via-orange-600 to-red-600' : 'from-amber-700 via-orange-700 to-slate-900'} text-white p-5 relative overflow-hidden">
+          <div class="bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 text-white p-5 relative overflow-hidden">
             <div class="flex items-center justify-between gap-2">
-              <span class="px-2.5 py-0.5 rounded-full bg-white/20 border border-white/30 text-white text-[10px] font-bold">2日目 / ${currentTripKey === 'yamaguchi' ? '10.03 (土)' : '08.22 (土)'}</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-white/20 border border-white/30 text-white text-[10px] font-bold">2日目 / ${trip.dayDates ? trip.dayDates[2] || 'DAY 2' : '2日目'}</span>
               <span class="text-[11px] font-black tracking-widest text-amber-300">2 / 5 PAGE</span>
             </div>
             <div class="mt-2.5 flex items-center gap-3">
               <div class="w-10 h-10 rounded-2xl bg-white text-orange-600 font-black text-xl flex items-center justify-center shadow">2</div>
-              <h2 class="text-base sm:text-lg font-black leading-tight">${currentTripKey === 'yamaguchi' ? '下関・秋吉台 ＆ 湯田温泉' : 'コモングラウンズ ＆ 隠れ家ホテル'}</h2>
+              <h2 class="text-base sm:text-lg font-black leading-tight">${trip.title}<br><span class="text-xs font-normal opacity-90">2日目 スケジュール</span></h2>
             </div>
           </div>
           <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
@@ -1083,14 +1289,14 @@
 
         <!-- 3日目 -->
         <article id="card-3" class="pamphlet-card bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-100 flex flex-col transition">
-          <div class="bg-gradient-to-r ${currentTripKey === 'yamaguchi' ? 'from-emerald-600 via-teal-600 to-cyan-700' : 'from-blue-700 via-indigo-700 to-slate-900'} text-white p-5 relative overflow-hidden">
+          <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white p-5 relative overflow-hidden">
             <div class="flex items-center justify-between gap-2">
-              <span class="px-2.5 py-0.5 rounded-full bg-white/20 border border-white/30 text-white text-[10px] font-bold">3日目 / ${currentTripKey === 'yamaguchi' ? '10.04 (日)' : '08.23 (日)'}</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-white/20 border border-white/30 text-white text-[10px] font-bold">3日目 / ${trip.dayDates ? trip.dayDates[3] || 'DAY 3' : '3日目'}</span>
               <span class="text-[11px] font-black tracking-widest text-amber-300">3 / 5 PAGE</span>
             </div>
             <div class="mt-2.5 flex items-center gap-3">
-              <div class="w-10 h-10 rounded-2xl bg-white ${currentTripKey === 'yamaguchi' ? 'text-emerald-700' : 'text-blue-700'} font-black text-xl flex items-center justify-center shadow">3</div>
-              <h2 class="text-base sm:text-lg font-black leading-tight">${currentTripKey === 'yamaguchi' ? '岡村家BBQ ＆ 笑顔で帰路へ' : 'ホテル朝食 ＆ 新幹線で帰京'}</h2>
+              <div class="w-10 h-10 rounded-2xl bg-white text-emerald-700 font-black text-xl flex items-center justify-center shadow">3</div>
+              <h2 class="text-base sm:text-lg font-black leading-tight">${trip.title}<br><span class="text-xs font-normal opacity-90">3日目 スケジュール</span></h2>
             </div>
           </div>
           <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
@@ -1118,144 +1324,34 @@
             <div class="mt-2.5 flex items-center gap-3">
               <div class="w-10 h-10 rounded-2xl bg-white text-purple-700 font-black text-xl flex items-center justify-center shadow">4</div>
               <div>
-                <h2 class="text-base sm:text-lg font-black leading-tight">${currentTripKey === 'yamaguchi' ? '山口県内 移動ルートMAP' : '軽井沢 エリアMAP'}</h2>
-                <p class="text-xs text-purple-200 font-normal">位置関係と移動ルートをチェック</p>
+                <h2 class="text-base sm:text-lg font-black leading-tight">${trip.title} MAP</h2>
+                <p class="text-xs text-purple-200 font-normal">登録スポットの位置関係をチェック</p>
               </div>
             </div>
           </div>
 
           <div class="p-4 space-y-4 flex-1 flex flex-col justify-between">
-            ${currentTripKey === 'yamaguchi' ? `
-              <div class="relative bg-slate-50 border border-slate-200 rounded-2xl p-2 overflow-hidden shadow-inner">
-                <svg viewBox="0 0 400 280" class="w-full h-auto drop-shadow-sm">
-                  <rect width="400" height="280" fill="#f0f9ff" rx="12"/>
-                  <text x="20" y="28" fill="#93c5fd" font-size="11" font-weight="bold">【 日本海 】</text>
-                  <text x="280" y="260" fill="#93c5fd" font-size="11" font-weight="bold">【 瀬戸内海 】</text>
-
-                  <path d="M 60,180 C 40,160 30,120 70,80 C 100,60 140,50 180,60 C 220,50 260,70 300,90 C 350,110 380,140 370,170 C 340,190 320,220 280,220 C 240,210 200,230 160,230 C 120,240 80,210 60,180 Z" fill="#dcfce7" stroke="#86efac" stroke-width="3" />
-
-                  <path d="M 190,220 Q 150,160 170,85" fill="none" stroke="#2563eb" stroke-width="4" stroke-dasharray="6,4" />
-                  <path d="M 170,85 Q 90,120 55,185 Q 110,170 160,145 Q 185,150 220,155" fill="none" stroke="#ea580c" stroke-width="4" stroke-dasharray="6,4" />
-                  <path d="M 220,155 Q 210,190 190,220" fill="none" stroke="#16a34a" stroke-width="4" stroke-dasharray="6,4" />
-
-                  <g transform="translate(170, 85)" class="cursor-pointer" onclick="openModal('y4')">
-                    <circle r="7" fill="#2563eb" stroke="#fff" stroke-width="2"/>
-                    <text x="0" y="-10" text-anchor="middle" font-size="11" font-weight="900" fill="#1e3a8a">萩市 (コテージ泊)</text>
-                    <text x="0" y="16" text-anchor="middle" font-size="8" fill="#1e40af">瓦そば / 釣り</text>
-                  </g>
-
-                  <g transform="translate(55, 185)" class="cursor-pointer" onclick="openModal('y9')">
-                    <circle r="6" fill="#ea580c" stroke="#fff" stroke-width="2"/>
-                    <text x="-5" y="-9" text-anchor="middle" font-size="10" font-weight="900" fill="#9a3412">下関 (唐戸市場)</text>
-                    <text x="-5" y="14" text-anchor="middle" font-size="8" fill="#c2410c">サウナ/鍋</text>
-                  </g>
-
-                  <g transform="translate(155, 140)" class="cursor-pointer" onclick="openModal('y12')">
-                    <circle r="6" fill="#ea580c" stroke="#fff" stroke-width="2"/>
-                    <text x="0" y="-9" text-anchor="middle" font-size="10" font-weight="900" fill="#9a3412">美祢市</text>
-                    <text x="0" y="14" text-anchor="middle" font-size="8" fill="#c2410c">秋吉台/サファリ</text>
-                  </g>
-
-                  <g transform="translate(225, 155)" class="cursor-pointer" onclick="openModal('y14')">
-                    <circle r="7" fill="#9333ea" stroke="#fff" stroke-width="2"/>
-                    <text x="5" y="-10" text-anchor="start" font-size="10" font-weight="900" fill="#581c87">山口市 / 湯田温泉</text>
-                    <text x="5" y="14" text-anchor="start" font-size="8" fill="#6b21a8">岡村家 / はしご酒</text>
-                  </g>
-
-                  <g transform="translate(190, 220)">
-                    <circle r="8" fill="#0284c7" stroke="#fff" stroke-width="2"/>
-                    <text x="0" y="18" text-anchor="middle" font-size="10" font-weight="900" fill="#0369a1">山口宇部空港</text>
-                  </g>
-                </svg>
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-center space-y-3">
+              <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl mx-auto">
+                <i class="fa-solid fa-map-location-dot"></i>
               </div>
-
-              <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3 space-y-1.5">
-                <div class="font-bold text-slate-800 text-xs flex items-center gap-1">
-                  <i class="fa-solid fa-car text-indigo-600"></i> 区間別の車移動時間目安
-                </div>
-                <div class="grid grid-cols-2 gap-1.5 text-[11px] text-slate-700">
-                  <div class="bg-white p-1.5 rounded-lg border border-slate-200 flex justify-between"><span>宇部空港 ➔ 萩</span><strong class="text-blue-700">約90分</strong></div>
-                  <div class="bg-white p-1.5 rounded-lg border border-slate-200 flex justify-between"><span>萩 ➔ 下関</span><strong class="text-orange-700">約80分</strong></div>
-                  <div class="bg-white p-1.5 rounded-lg border border-slate-200 flex justify-between"><span>下関 ➔ 美祢</span><strong class="text-orange-700">約50分</strong></div>
-                  <div class="bg-white p-1.5 rounded-lg border border-slate-200 flex justify-between"><span>美祢 ➔ 山口市</span><strong class="text-purple-700">約60分</strong></div>
-                  <div class="bg-white p-1.5 rounded-lg border border-slate-200 flex justify-between col-span-2"><span>山口市 ➔ 宇部空港</span><strong class="text-emerald-700">約60分</strong></div>
-                </div>
+              <div>
+                <h3 class="font-bold text-slate-800 text-sm">Googleマップで予定ルートを開く</h3>
+                <p class="text-xs text-slate-500 mt-1">各予定カードをタップすると、その場所のGoogleマップを直接開けます。</p>
               </div>
-            ` : `
-              <div class="relative bg-emerald-950/5 border border-emerald-900/10 rounded-2xl p-2 overflow-hidden shadow-inner">
-                <svg viewBox="0 0 380 340" class="w-full h-auto drop-shadow-sm">
-                  <rect width="380" height="340" fill="#f4f9f4" rx="14"/>
-                  <text x="15" y="24" fill="#047857" font-size="10" font-weight="900">N ↑ 北（浅間山方面）</text>
+              <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(trip.title)}" target="_blank" class="inline-flex items-center gap-1.5 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs shadow transition">
+                <i class="fa-solid fa-map-pin"></i> Googleマップで全体検索
+              </a>
+            </div>
 
-                  <path d="M 80,30 L 110,65 L 50,65 Z" fill="#d1fae5" stroke="#a7f3d0" stroke-width="1.5"/>
-                  <text x="80" y="55" text-anchor="middle" font-size="9" fill="#065f46" font-weight="bold">浅間山</text>
-
-                  <path d="M 235,160 Q 220,100 200,60" fill="none" stroke="#94a3b8" stroke-width="4" stroke-dasharray="4,3"/>
-                  <path d="M 30,230 Q 150,235 350,225" fill="none" stroke="#cbd5e1" stroke-width="5"/>
-                  <text x="40" y="222" fill="#94a3b8" font-size="8">国道18号</text>
-
-                  <path d="M 245,245 L 245,170" fill="none" stroke="#059669" stroke-width="3.5"/>
-                  <path d="M 245,170 L 130,225 Q 150,140 200,60" fill="none" stroke="#ea580c" stroke-width="3.5" stroke-dasharray="6,4"/>
-                  <path d="M 200,60 Q 230,150 245,245" fill="none" stroke="#2563eb" stroke-width="3.5" stroke-dasharray="6,4"/>
-
-                  <g transform="translate(200, 60)" class="cursor-pointer" onclick="openModal('k10')">
-                    <circle r="9" fill="#ea580c" stroke="#fff" stroke-width="2.5"/>
-                    <text x="14" y="-2" font-size="11" font-weight="900" fill="#9a3412">アンシェントホテル浅間</text>
-                    <text x="14" y="10" font-size="8" fill="#c2410c">【2泊目】貸切風呂 / タクシー精算</text>
-                  </g>
-
-                  <g transform="translate(130, 225)" class="cursor-pointer" onclick="openModal('k9')">
-                    <circle r="8" fill="#d97706" stroke="#fff" stroke-width="2"/>
-                    <text x="-12" y="-12" text-anchor="middle" font-size="10" font-weight="900" fill="#78350f">コモングラウンズ</text>
-                    <text x="-12" y="0" text-anchor="middle" font-size="7.5" fill="#92400e">軽井沢書店/SHOZO</text>
-                    <text x="-12" y="16" text-anchor="middle" font-size="8" fill="#b45309">スーパーツルヤ</text>
-                  </g>
-
-                  <g transform="translate(245, 170)" class="cursor-pointer" onclick="openModal('k6')">
-                    <circle r="8" fill="#059669" stroke="#fff" stroke-width="2"/>
-                    <text x="14" y="-3" font-size="10.5" font-weight="900" fill="#065f46">ルグラン旧軽井沢</text>
-                    <text x="14" y="9" font-size="8" fill="#047857">【1泊目】露天風呂 / 送迎</text>
-                    <text x="14" y="21" font-size="8.5" font-weight="bold" fill="#b45309">ピレネー（ランチ）</text>
-                  </g>
-
-                  <g transform="translate(245, 245)" class="cursor-pointer" onclick="openModal('k2')">
-                    <circle r="9" fill="#2563eb" stroke="#fff" stroke-width="2.5"/>
-                    <text x="15" y="-1" font-size="11" font-weight="900" fill="#1e3a8a">軽井沢駅</text>
-                    <text x="15" y="11" font-size="8" fill="#1d4ed8">（北陸新幹線）</text>
-                  </g>
-
-                  <g transform="translate(245, 280)" class="cursor-pointer" onclick="openModal('k5')">
-                    <rect x="-10" y="-8" width="130" height="20" rx="6" fill="#f8fafc" stroke="#3b82f6" stroke-width="1.5"/>
-                    <text x="55" y="6" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#1e40af">アウトレット（南口）</text>
-                  </g>
-                </svg>
+            <!-- サンプル切り替え導線（山口/軽井沢） -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3 space-y-2">
+              <span class="font-bold text-slate-700 text-xs block">📌 サンプルしおりを見る</span>
+              <div class="flex gap-2 text-xs">
+                <a href="?trip=yamaguchi" class="flex-1 py-2 bg-white border border-slate-200 hover:bg-slate-100 rounded-xl font-bold text-slate-700 text-center transition">🐡 山口旅行</a>
+                <a href="?trip=karuizawa" class="flex-1 py-2 bg-white border border-slate-200 hover:bg-slate-100 rounded-xl font-bold text-slate-700 text-center transition">🌲 軽井沢旅行</a>
               </div>
-
-              <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3 space-y-1.5">
-                <div class="font-bold text-slate-800 text-xs flex items-center justify-between">
-                  <span><i class="fa-solid fa-car text-emerald-700 mr-1"></i> 移動時間の目安</span>
-                  <span class="text-[10px] text-slate-500">タクシー / 車</span>
-                </div>
-                <div class="grid grid-cols-2 gap-1.5 text-[10px] text-slate-700">
-                  <div class="bg-white p-1.5 rounded-lg border border-slate-200 flex justify-between items-center">
-                    <span>軽井沢駅 ➔ 旧軽井沢</span>
-                    <strong class="text-emerald-800">約5分</strong>
-                  </div>
-                  <div class="bg-white p-1.5 rounded-lg border border-slate-200 flex justify-between items-center">
-                    <span>旧軽 ➔ コモングラウンズ</span>
-                    <strong class="text-amber-800">約12分</strong>
-                  </div>
-                  <div class="bg-white p-1.5 rounded-lg border border-slate-200 flex justify-between items-center">
-                    <span>中軽 ➔ アンシェント</span>
-                    <strong class="text-orange-800">約15〜20分</strong>
-                  </div>
-                  <div class="bg-white p-1.5 rounded-lg border border-slate-200 flex justify-between items-center">
-                    <span>アンシェント ➔ 駅</span>
-                    <strong class="text-blue-800">約20〜25分</strong>
-                  </div>
-                </div>
-              </div>
-            `}
+            </div>
           </div>
         </article>
 
@@ -1774,7 +1870,7 @@
       const eH = document.getElementById('editEndHour').value;
       const eM = document.getElementById('editEndMin').value;
 
-      const dayDateStr = trip.dayDates[day] || (day === 1 ? '2026-10-02' : day === 2 ? '2026-10-03' : '2026-10-04');
+      const dayDateStr = trip.dayDates ? trip.dayDates[day] || '2026-10-02' : '2026-10-02';
       const startTime = `${dayDateStr}T${sH}:${sM}:00`;
       let endTime = null;
       let timeText = `${sH}:${sM}`;
@@ -1803,7 +1899,7 @@
         icon = 'fa-solid fa-bag-shopping'; iconBg = 'bg-emerald-100 text-emerald-700';
       }
 
-      const updatedSteps = [...trip.steps];
+      const updatedSteps = [...(trip.steps || [])];
 
       if (stepId) {
         const idx = updatedSteps.findIndex(s => s.id === stepId);
@@ -1896,7 +1992,7 @@
       document.getElementById('detailModal').classList.add('hidden');
     };
 
-    // AIプラン変更（Cloudflare Workers プロキシ経由で安全に実行 ＆ 1日3回制限）
+    // AIプラン変更（Cloudflare Workers プロキシ経由で安全に実行 ＆ 1日5回制限）
     window.openAiPromptModal = function() {
       updateAiRemainingUI();
       document.getElementById('aiPromptModal').classList.remove('hidden');
@@ -1911,7 +2007,7 @@
     window.submitAiPlanChange = async function() {
       const used = getAiUsageCount();
       if (used >= MAX_DAILY_AI_LIMIT) {
-        showToast('本日のAI変更可能回数（3回）を超えました。明日0時にリセットされます。');
+        showToast('本日のAI変更可能回数（5回）を超えました。明日0時にリセットされます。');
         return;
       }
 
@@ -2009,7 +2105,7 @@ ${promptText}
       document.getElementById('aiLoadingOverlay').classList.add('hidden');
 
       if (newSteps) {
-        incrementAiUsageCount(); // 利用回数を1回カウント
+        incrementAiUsageCount();
         liveTripData[currentTripKey].steps = newSteps;
         renderMainCards();
         updateCurrentStep();
@@ -2029,7 +2125,7 @@ ${promptText}
     };
 
     function applyCurrentSlideView(shouldScroll = false) {
-      const trip = liveTripData[currentTripKey];
+      const trip = liveTripData[currentTripKey] || {};
 
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('bg-blue-600', 'bg-emerald-700', 'bg-indigo-600', 'bg-slate-700', 'text-white');
@@ -2076,7 +2172,7 @@ ${promptText}
           if (currentSlide === 5) {
             activeTab.classList.add('bg-indigo-600', 'text-white');
           } else {
-            activeTab.classList.add(trip.btnColor, 'text-white');
+            activeTab.classList.add(trip.btnColor || 'bg-blue-600', 'text-white');
           }
           activeTab.classList.remove('text-slate-400');
         }
@@ -2125,7 +2221,7 @@ ${promptText}
             step.appendChild(badge);
           }
           const stepId = step.getAttribute('data-step-id');
-          const data = liveTripData[currentTripKey].steps.find(s => s.id === stepId);
+          const data = (liveTripData[currentTripKey]?.steps || []).find(s => s.id === stepId);
           const name = data ? data.title : '現在の工程';
           document.getElementById('currentStatusText').innerHTML = `進行中：${name}`;
         } else {
@@ -2137,18 +2233,20 @@ ${promptText}
 
       if (!activeFound) {
         const trip = liveTripData[currentTripKey];
-        const tripStart = new Date(trip.startDate);
-        const tripEnd = new Date(trip.endDate);
+        if (trip && trip.startDate && trip.endDate) {
+          const tripStart = new Date(trip.startDate);
+          const tripEnd = new Date(trip.endDate);
 
-        if (now < tripStart) {
-          const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-          const startDate = new Date(tripStart.getFullYear(), tripStart.getMonth(), tripStart.getDate());
-          const diffDays = Math.round((startDate - nowDate) / (1000 * 60 * 60 * 24));
-          document.getElementById('currentStatusText').innerText = `旅行開始まで あと ${diffDays} 日`;
-        } else if (now > tripEnd) {
-          document.getElementById('currentStatusText').innerText = '旅行終了';
-        } else {
-          document.getElementById('currentStatusText').innerText = '自由時間 / 移動中';
+          if (now < tripStart) {
+            const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const startDate = new Date(tripStart.getFullYear(), tripStart.getMonth(), tripStart.getDate());
+            const diffDays = Math.round((startDate - nowDate) / (1000 * 60 * 60 * 24));
+            document.getElementById('currentStatusText').innerText = `旅行開始まで あと ${diffDays} 日`;
+          } else if (now > tripEnd) {
+            document.getElementById('currentStatusText').innerText = '旅行終了';
+          } else {
+            document.getElementById('currentStatusText').innerText = '自由時間 / 移動中';
+          }
         }
       }
     }
@@ -2165,7 +2263,7 @@ ${promptText}
       }, 2500);
     }
 
-    window.addEventListener('hashchange', checkUrlParams);
+    window.addEventListener('popstate', checkUrlParams);
 
     document.addEventListener('DOMContentLoaded', () => {
       initTimePickers();
