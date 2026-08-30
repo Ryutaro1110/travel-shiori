@@ -11,9 +11,9 @@
   <meta name="apple-mobile-web-app-title" content="シオリット">
   <meta name="theme-color" content="#64CDE3">
   
-  <!-- 添付いただいたデザイン仕様（リクエストいただいた新アイコンSVG） -->
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><defs><linearGradient id='bg' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23EAF7FB'/><stop offset='50%' stop-color='%23AEE5EF'/><stop offset='100%' stop-color='%2364CDE3'/></linearGradient><linearGradient id='ribbon' x1='0%' y1='0%' x2='0%' y2='100%'><stop offset='0%' stop-color='%2364CDE3'/><stop offset='100%' stop-color='%2338bdf8'/></linearGradient></defs><rect width='512' height='512' rx='112' fill='url(%23bg)'/><g transform='translate(96, 64)'><path d='M30 30 C30 20 40 10 50 10 L270 10 C280 10 290 20 290 30 L290 320 L160 270 L30 320 Z' fill='%23ffffff' fill-opacity='0.85' stroke='%238CCFE3' stroke-width='4'/><path d='M90 60 L230 60 M90 110 L230 110 M90 160 L230 160' stroke='%23D3F0F6' stroke-width='3' stroke-linecap='round'/><path d='M90 60 Q160 100 230 60 M90 110 Q160 150 230 110' fill='none' stroke='%23D3F0F6' stroke-width='2'/><path d='M100 280 L160 380 L220 280 Z' fill='url(%23ribbon)' stroke='%2364CDE3' stroke-width='3'/><circle cx='160' cy='120' r='36' fill='%2364CDE3' stroke='%23ffffff' stroke-width='6'/><circle cx='160' cy='120' r='14' fill='%23ffffff'/></g></svg>">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='bg' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23AEE5EF'/><stop offset='100%' stop-color='%2364CDE3'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23bg)'/><path d='M10 10 C10 6 14 2 18 2 L82 2 C86 2 90 6 90 10 L90 75 L50 60 L10 75 Z' fill='white' fill-opacity='0.9' stroke='%238CCFE3' stroke-width='1.5'/><polygon points='32,62 50,92 68,62' fill='%2364CDE3'/><circle cx='50' cy='32' r='11' fill='%2364CDE3' stroke='white' stroke-width='2'/><circle cx='50' cy='32' r='4' fill='white'/></svg>">
+  <!-- アップロードいただいたアイコンをApple Touch Iconおよびファビコンに完全設定 -->
+  <link rel="apple-touch-icon" href="https://i.ibb.co/6R2Z8x9/image.png">
+  <link rel="icon" type="image/png" href="https://i.ibb.co/6R2Z8x9/image.png">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -83,15 +83,7 @@
         
         <!-- ブランドロゴ -->
         <div class="flex items-center gap-2 shrink-0 cursor-pointer group" onclick="goToTopPage()">
-          <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-[#AEE5EF] to-[#64CDE3] text-white flex items-center justify-center shadow-md shadow-[#64CDE3]/20 group-active:scale-95 transition">
-            <svg class="w-5 h-5" viewBox="0 0 100 100" fill="none">
-              <path d="M16 12 C16 8 20 4 24 4 L76 4 C80 4 84 8 84 12 L84 85 L50 72 L16 85 Z" fill="white" fill-opacity="0.95" stroke="#8CCFE3" stroke-width="2"/>
-              <path d="M22 20 L78 20 M22 36 L78 36" stroke="#D3F0F6" stroke-width="2"/>
-              <path d="M25 75 L50 96 L75 75 Z" fill="#64CDE3"/>
-              <circle cx="50" cy="35" r="9" fill="#64CDE3" stroke="white" stroke-width="2"/>
-              <circle cx="50" cy="35" r="3" fill="white"/>
-            </svg>
-          </div>
+          <img src="https://i.ibb.co/6R2Z8x9/image.png" alt="シオリットロゴ" class="w-9 h-9 rounded-2xl shadow-md object-cover group-active:scale-95 transition">
           <div>
             <div class="flex items-center gap-1">
               <span class="font-brand font-black text-sm text-[#1F2D3D] tracking-tight">シオリット</span>
@@ -183,21 +175,13 @@
     <span id="toastMsg">データを更新しました</span>
   </div>
 
-  <!-- 🌟 トップページ（ご指定の特徴文言を完全反映したLP） -->
+  <!-- 🌟 トップページ（LP） -->
   <div id="landingView" class="flex-1 max-w-md w-full mx-auto p-4 sm:p-5 space-y-6">
     
     <!-- LPヘッダー -->
     <div class="flex items-center justify-between pt-2">
       <div class="flex items-center gap-2.5">
-        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#AEE5EF] to-[#64CDE3] text-white flex items-center justify-center shadow-md shadow-[#64CDE3]/20">
-          <svg class="w-6 h-6" viewBox="0 0 100 100" fill="none">
-            <path d="M16 12 C16 8 20 4 24 4 L76 4 C80 4 84 8 84 12 L84 85 L50 72 L16 85 Z" fill="white" fill-opacity="0.95" stroke="#8CCFE3" stroke-width="2"/>
-            <path d="M22 20 L78 20 M22 36 L78 36" stroke="#D3F0F6" stroke-width="2"/>
-            <path d="M25 75 L50 96 L75 75 Z" fill="#64CDE3"/>
-            <circle cx="50" cy="35" r="9" fill="#64CDE3" stroke="white" stroke-width="2"/>
-            <circle cx="50" cy="35" r="3" fill="white"/>
-          </svg>
-        </div>
+        <img src="https://i.ibb.co/6R2Z8x9/image.png" alt="シオリットロゴ" class="w-10 h-10 rounded-2xl shadow-md object-cover">
         <div>
           <span class="font-brand font-black text-xl text-[#1F2D3D] tracking-tight block leading-none">シオリット</span>
           <span class="text-[10px] text-[#6B7C93] font-bold tracking-wide">旅のしおりを、かんたんに。</span>
@@ -290,11 +274,11 @@
         <span class="text-[10px] text-[#6B7C93]">登録不要</span>
       </div>
       <div class="grid grid-cols-2 gap-2 text-xs">
-        <button onclick="loadSampleTrip('yamaguchi')" class="p-3 bg-[#EAF7FB]/60 hover:bg-[#EAF7FB] active:scale-98 rounded-2xl border border-[#AEE5EF] text-left transition space-y-1">
+        <button onclick="loadSampleTrip('yamaguchi')" class="p-3 bg-[#EAF7FB]/60 hover:bg-[#EAF7FB] active:scale-98 rounded-2xl border border-[#AEE5EF] text-left transition space-y-1 cursor-pointer">
           <span class="text-xs font-bold text-[#1F2D3D] block">🐡 山口 2泊3日</span>
           <span class="text-[10px] text-[#6B7C93] block">萩・下関・秋吉台・BBQ</span>
         </button>
-        <button onclick="loadSampleTrip('karuizawa')" class="p-3 bg-emerald-50/60 hover:bg-emerald-100/80 active:scale-98 rounded-2xl border border-emerald-100 text-left transition space-y-1">
+        <button onclick="loadSampleTrip('karuizawa')" class="p-3 bg-emerald-50/60 hover:bg-emerald-100/80 active:scale-98 rounded-2xl border border-emerald-100 text-left transition space-y-1 cursor-pointer">
           <span class="text-xs font-bold text-[#1F2D3D] block">🌲 軽井沢 2泊3日</span>
           <span class="text-[10px] text-[#6B7C93] block">ピレネー・コモングラウンズ</span>
         </button>
@@ -324,7 +308,7 @@
             <h3 class="text-base font-black text-[#1F2D3D] mt-0.5">新しい旅行しおりを作成</h3>
           </div>
         </div>
-        <button onclick="closeNewTripModal()" class="text-slate-400 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-lg">✕</button>
+        <button onclick="closeNewTripModal()" class="text-slate-400 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-lg cursor-pointer">✕</button>
       </div>
 
       <form onsubmit="createNewTrip(event)" class="space-y-3 text-xs">
@@ -354,7 +338,7 @@
             <i class="fa-solid fa-cloud-arrow-up"></i>
             <span>この旅行しおりを発行する</span>
           </button>
-          <button type="button" onclick="closeNewTripModal()" class="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-[#6B7C93] font-medium rounded-xl text-xs transition">キャンセル</button>
+          <button type="button" onclick="closeNewTripModal()" class="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-[#6B7C93] font-medium rounded-xl text-xs transition cursor-pointer">キャンセル</button>
         </div>
       </form>
     </div>
@@ -373,7 +357,7 @@
             <h3 id="modalTitle" class="text-base font-black text-slate-800 mt-0.5">スポット名</h3>
           </div>
         </div>
-        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-lg">✕</button>
+        <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-lg cursor-pointer">✕</button>
       </div>
 
       <div class="space-y-3 text-xs text-slate-600">
@@ -399,17 +383,17 @@
             <i class="fa-solid fa-map-pin"></i>
             <span>Googleマップで開く</span>
           </a>
-          <button id="modalEditBtn" class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs flex items-center gap-1 transition">
+          <button id="modalEditBtn" class="px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs flex items-center gap-1 transition cursor-pointer">
             <i class="fa-solid fa-pen-to-square"></i>
             <span>編集</span>
           </button>
         </div>
         <div class="flex justify-between items-center pt-1 border-t border-slate-100">
-          <button id="modalDeleteBtn" class="text-rose-500 hover:text-rose-700 text-xs font-bold py-1 px-2 flex items-center gap-1">
+          <button id="modalDeleteBtn" class="text-rose-500 hover:text-rose-700 text-xs font-bold py-1 px-2 flex items-center gap-1 cursor-pointer">
             <i class="fa-regular fa-trash-can"></i>
             <span>この予定を削除</span>
           </button>
-          <button onclick="closeModal()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium rounded-lg text-xs transition">閉じる</button>
+          <button onclick="closeModal()" class="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium rounded-lg text-xs transition cursor-pointer">閉じる</button>
         </div>
       </div>
     </div>
@@ -420,7 +404,7 @@
     <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto space-y-4">
       <div class="flex items-center justify-between pb-2 border-b border-slate-100">
         <h3 id="editModalHeading" class="text-base font-black text-slate-800">予定を編集</h3>
-        <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-lg">✕</button>
+        <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-lg cursor-pointer">✕</button>
       </div>
       <form id="editForm" onsubmit="saveManualStep(event)" class="space-y-3 text-xs">
         <input type="hidden" id="editStepId" value="">
@@ -459,8 +443,8 @@
           <textarea id="editDesc" rows="2" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl resize-none"></textarea>
         </div>
         <div class="pt-2 flex gap-2">
-          <button type="submit" class="flex-1 py-3 bg-[#64CDE3] text-white font-bold rounded-xl text-xs shadow transition">保存する</button>
-          <button type="button" onclick="closeEditModal()" class="px-4 py-3 bg-slate-100 text-slate-700 font-medium rounded-xl text-xs">キャンセル</button>
+          <button type="submit" class="flex-1 py-3 bg-[#64CDE3] text-white font-bold rounded-xl text-xs shadow transition cursor-pointer">保存する</button>
+          <button type="button" onclick="closeEditModal()" class="px-4 py-3 bg-slate-100 text-slate-700 font-medium rounded-xl text-xs cursor-pointer">キャンセル</button>
         </div>
       </form>
     </div>
@@ -482,7 +466,7 @@
             <h3 class="text-base font-black text-slate-800 mt-1">プラン変更の内容を入力</h3>
           </div>
         </div>
-        <button onclick="closeAiPromptModal()" class="text-slate-400 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-lg">✕</button>
+        <button onclick="closeAiPromptModal()" class="text-slate-400 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-lg cursor-pointer">✕</button>
       </div>
 
       <div class="space-y-2 text-xs text-slate-600">
@@ -490,11 +474,11 @@
       </div>
 
       <div class="pt-2 flex gap-2">
-        <button id="aiSubmitBtn" onclick="submitAiPlanChange()" class="flex-1 py-3 bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 text-amber-950 font-black rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition">
+        <button id="aiSubmitBtn" onclick="submitAiPlanChange()" class="flex-1 py-3 bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 text-amber-950 font-black rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition cursor-pointer">
           <i class="fa-solid fa-sparkles"></i>
           <span>この内容でプランを更新する</span>
         </button>
-        <button onclick="closeAiPromptModal()" class="px-4 py-3 bg-slate-100 text-slate-700 font-medium rounded-xl text-xs">キャンセル</button>
+        <button onclick="closeAiPromptModal()" class="px-4 py-3 bg-slate-100 text-slate-700 font-medium rounded-xl text-xs cursor-pointer">キャンセル</button>
       </div>
     </div>
   </div>
@@ -514,11 +498,11 @@
 
   <!-- ページめくりボタン -->
   <div id="slideNavigation" class="no-print sticky bottom-3 z-40 max-w-md mx-auto px-4 flex items-center justify-between pointer-events-none hidden">
-    <button onclick="prevSlide()" id="prevBtn" class="pointer-events-auto w-10 h-10 rounded-full bg-white/90 backdrop-blur-md text-slate-700 shadow-xl border border-slate-200 flex items-center justify-center text-sm active:scale-90 transition">
+    <button onclick="prevSlide()" id="prevBtn" class="pointer-events-auto w-10 h-10 rounded-full bg-white/90 backdrop-blur-md text-slate-700 shadow-xl border border-slate-200 flex items-center justify-center text-sm active:scale-90 transition cursor-pointer">
       <i class="fa-solid fa-chevron-left"></i>
     </button>
     <div id="pageIndicator" class="bg-slate-900/90 backdrop-blur-md text-[#64CDE3] text-xs font-bold px-3.5 py-1.5 rounded-full border border-slate-800 shadow">1 / 5</div>
-    <button onclick="nextSlide()" id="nextBtn" class="pointer-events-auto w-10 h-10 rounded-full bg-white/90 backdrop-blur-md text-slate-700 shadow-xl border border-slate-200 flex items-center justify-center text-sm active:scale-90 transition">
+    <button onclick="nextSlide()" id="nextBtn" class="pointer-events-auto w-10 h-10 rounded-full bg-white/90 backdrop-blur-md text-slate-700 shadow-xl border border-slate-200 flex items-center justify-center text-sm active:scale-90 transition cursor-pointer">
       <i class="fa-solid fa-chevron-right"></i>
     </button>
   </div>
@@ -796,21 +780,21 @@
             <div class="flex justify-between text-xs font-bold"><span class="bg-white/20 px-2.5 py-0.5 rounded-full">1日目</span><span>1 / 5 PAGE</span></div>
             <h2 class="text-lg font-black mt-2">${trip.title} - 1日目</h2>
           </div>
-          <div class="p-4 space-y-3">${renderSteps(d1)}<button onclick="openEditModal(null, 1)" class="w-full py-2 bg-[#EAF7FB] text-[#64CDE3] font-bold rounded-xl text-xs">予定追加</button></div>
+          <div class="p-4 space-y-3">${renderSteps(d1)}<button onclick="openEditModal(null, 1)" class="w-full py-2 bg-[#EAF7FB] text-[#64CDE3] font-bold rounded-xl text-xs cursor-pointer">予定追加</button></div>
         </article>
         <article id="card-2" class="pamphlet-card bg-white rounded-3xl overflow-hidden shadow-xl border border-[#AEE5EF] flex flex-col">
           <div class="bg-gradient-to-r from-amber-500 to-orange-500 text-white p-5">
             <div class="flex justify-between text-xs font-bold"><span class="bg-white/20 px-2.5 py-0.5 rounded-full">2日目</span><span>2 / 5 PAGE</span></div>
             <h2 class="text-lg font-black mt-2">${trip.title} - 2日目</h2>
           </div>
-          <div class="p-4 space-y-3">${renderSteps(d2)}<button onclick="openEditModal(null, 2)" class="w-full py-2 bg-amber-50 text-amber-700 font-bold rounded-xl text-xs">予定追加</button></div>
+          <div class="p-4 space-y-3">${renderSteps(d2)}<button onclick="openEditModal(null, 2)" class="w-full py-2 bg-amber-50 text-amber-700 font-bold rounded-xl text-xs cursor-pointer">予定追加</button></div>
         </article>
         <article id="card-3" class="pamphlet-card bg-white rounded-3xl overflow-hidden shadow-xl border border-[#AEE5EF] flex flex-col">
           <div class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white p-5">
             <div class="flex justify-between text-xs font-bold"><span class="bg-white/20 px-2.5 py-0.5 rounded-full">3日目</span><span>3 / 5 PAGE</span></div>
             <h2 class="text-lg font-black mt-2">${trip.title} - 3日目</h2>
           </div>
-          <div class="p-4 space-y-3">${renderSteps(d3)}<button onclick="openEditModal(null, 3)" class="w-full py-2 bg-emerald-50 text-emerald-700 font-bold rounded-xl text-xs">予定追加</button></div>
+          <div class="p-4 space-y-3">${renderSteps(d3)}<button onclick="openEditModal(null, 3)" class="w-full py-2 bg-emerald-50 text-emerald-700 font-bold rounded-xl text-xs cursor-pointer">予定追加</button></div>
         </article>
         <article id="card-4" class="pamphlet-card bg-white rounded-3xl overflow-hidden shadow-xl border border-[#AEE5EF] flex flex-col">
           <div class="bg-gradient-to-r from-sky-600 to-blue-700 text-white p-5">
@@ -828,7 +812,7 @@
           </div>
           <div class="p-4 space-y-3">
             <div class="bg-[#EAF7FB] p-3 rounded-xl text-xs font-bold text-[#1F2D3D]">合計支出: ¥${settlement.totalExpense.toLocaleString()}</div>
-            <button onclick="openExpenseModal()" class="w-full py-2.5 bg-[#64CDE3] text-white font-bold rounded-xl text-xs">支払いを記録</button>
+            <button onclick="openExpenseModal()" class="w-full py-2.5 bg-[#64CDE3] text-white font-bold rounded-xl text-xs cursor-pointer">支払いを記録</button>
           </div>
         </article>
       `;
