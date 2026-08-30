@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-title" content="シオリット">
   <meta name="theme-color" content="#64CDE3">
   
-  <!-- 添付いただいたデザイン仕様に完全準拠した新SVGアイコン -->
+  <!-- 添付いただいたデザイン仕様（リクエストいただいた新アイコンSVG） -->
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><defs><linearGradient id='bg' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23EAF7FB'/><stop offset='50%' stop-color='%23AEE5EF'/><stop offset='100%' stop-color='%2364CDE3'/></linearGradient><linearGradient id='ribbon' x1='0%' y1='0%' x2='0%' y2='100%'><stop offset='0%' stop-color='%2364CDE3'/><stop offset='100%' stop-color='%2338bdf8'/></linearGradient></defs><rect width='512' height='512' rx='112' fill='url(%23bg)'/><g transform='translate(96, 64)'><path d='M30 30 C30 20 40 10 50 10 L270 10 C280 10 290 20 290 30 L290 320 L160 270 L30 320 Z' fill='%23ffffff' fill-opacity='0.85' stroke='%238CCFE3' stroke-width='4'/><path d='M90 60 L230 60 M90 110 L230 110 M90 160 L230 160' stroke='%23D3F0F6' stroke-width='3' stroke-linecap='round'/><path d='M90 60 Q160 100 230 60 M90 110 Q160 150 230 110' fill='none' stroke='%23D3F0F6' stroke-width='2'/><path d='M100 280 L160 380 L220 280 Z' fill='url(%23ribbon)' stroke='%2364CDE3' stroke-width='3'/><circle cx='160' cy='120' r='36' fill='%2364CDE3' stroke='%23ffffff' stroke-width='6'/><circle cx='160' cy='120' r='14' fill='%23ffffff'/></g></svg>">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='bg' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23AEE5EF'/><stop offset='100%' stop-color='%2364CDE3'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23bg)'/><path d='M10 10 C10 6 14 2 18 2 L82 2 C86 2 90 6 90 10 L90 75 L50 60 L10 75 Z' fill='white' fill-opacity='0.9' stroke='%238CCFE3' stroke-width='1.5'/><polygon points='32,62 50,92 68,62' fill='%2364CDE3'/><circle cx='50' cy='32' r='11' fill='%2364CDE3' stroke='white' stroke-width='2'/><circle cx='50' cy='32' r='4' fill='white'/></svg>">
 
@@ -183,7 +183,7 @@
     <span id="toastMsg">データを更新しました</span>
   </div>
 
-  <!-- 🌟 トップページ（ChatGPT仕様ブランドカラーのLP） -->
+  <!-- 🌟 トップページ（ご指定の特徴文言を完全反映したLP） -->
   <div id="landingView" class="flex-1 max-w-md w-full mx-auto p-4 sm:p-5 space-y-6">
     
     <!-- LPヘッダー -->
@@ -216,56 +216,66 @@
       </div>
 
       <h1 class="text-2xl sm:text-3xl font-black leading-snug tracking-tight">
-        旅のしおりを、<br>
+        みんなで作る、<br>
         <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-white to-[#EAF7FB]">
-          かんたんに。
+          次世代の旅行しおり ＆ 割り勘。
         </span>
       </h1>
 
       <p class="text-xs text-sky-100/95 leading-relaxed font-medium">
-        行きたい場所をまとめて、あなただけの旅のしおりを作ろう。共有を許可して、一緒に旅を楽しもう。
+        友達にURLを送るだけで全員が1秒で参加！スケジュール管理、Googleマップ連携、割り勘最小ルート計算、AIプラン再計算がすべてリアルタイム同期。
       </p>
 
       <div class="pt-2">
         <button onclick="openNewTripModal()" class="w-full py-4 bg-white hover:bg-[#EAF7FB] active:scale-98 text-[#1F2D3D] font-black rounded-2xl text-sm shadow-xl flex items-center justify-center gap-2 transition cursor-pointer">
           <i class="fa-solid fa-plus-circle text-base text-[#64CDE3]"></i>
-          <span>しおりを作成する（無料）</span>
+          <span>新しく旅行しおりを作る（無料）</span>
         </button>
       </div>
     </div>
 
-    <!-- 特徴グリッド -->
+    <!-- シオリットの圧倒的強み -->
     <div class="space-y-3">
-      <h2 class="text-xs font-black text-[#6B7C93] uppercase tracking-wider px-1">シオリットの特徴</h2>
+      <h2 class="text-xs font-black text-[#6B7C93] uppercase tracking-wider px-1">シオリットの圧倒的強み</h2>
       
       <div class="grid grid-cols-1 gap-2.5 text-xs">
-        <div class="bg-white/90 backdrop-blur-sm border border-[#AEE5EF]/70 rounded-2xl p-4 flex items-start gap-3.5 shadow-xs">
-          <div class="w-9 h-9 rounded-xl bg-[#EAF7FB] text-[#64CDE3] flex items-center justify-center text-sm font-bold shrink-0 mt-0.5">
-            <i class="fa-solid fa-location-dot"></i>
-          </div>
-          <div>
-            <h3 class="font-bold text-[#1F2D3D] text-xs">旅をまとめる</h3>
-            <p class="text-[11px] text-[#6B7C93] mt-0.5 leading-relaxed">行きたい場所をピンで追加して旅のしおりを作成。</p>
-          </div>
-        </div>
-
-        <div class="bg-white/90 backdrop-blur-sm border border-[#AEE5EF]/70 rounded-2xl p-4 flex items-start gap-3.5 shadow-xs">
-          <div class="w-9 h-9 rounded-xl bg-[#EAF7FB] text-[#64CDE3] flex items-center justify-center text-sm font-bold shrink-0 mt-0.5">
-            <i class="fa-regular fa-calendar-days"></i>
-          </div>
-          <div>
-            <h3 class="font-bold text-[#1F2D3D] text-xs">スケジュール管理</h3>
-            <p class="text-[11px] text-[#6B7C93] mt-0.5 leading-relaxed">日ごとの予定やメモを整理して、旅をもっとスムーズに。</p>
-          </div>
-        </div>
-
         <div class="bg-white/90 backdrop-blur-sm border border-[#AEE5EF]/70 rounded-2xl p-4 flex items-start gap-3.5 shadow-xs">
           <div class="w-9 h-9 rounded-xl bg-[#EAF7FB] text-[#64CDE3] flex items-center justify-center text-sm font-bold shrink-0 mt-0.5">
             <i class="fa-solid fa-share-nodes"></i>
           </div>
           <div>
-            <h3 class="font-bold text-[#1F2D3D] text-xs">共有できる</h3>
-            <p class="text-[11px] text-[#6B7C93] mt-0.5 leading-relaxed">しおりを共有して、一緒に旅を楽しもう。</p>
+            <h3 class="font-bold text-[#1F2D3D] text-xs">LINEで送るだけ（会員登録＆DL不要） 1秒参加</h3>
+            <p class="text-[11px] text-[#6B7C93] mt-0.5 leading-relaxed">全員のアプリインストールは不要。リンクを開くだけで誰でもすぐ閲覧・共同編集できます。</p>
+          </div>
+        </div>
+
+        <div class="bg-white/90 backdrop-blur-sm border border-[#AEE5EF]/70 rounded-2xl p-4 flex items-start gap-3.5 shadow-xs">
+          <div class="w-9 h-9 rounded-xl bg-[#EAF7FB] text-[#64CDE3] flex items-center justify-center text-sm font-bold shrink-0 mt-0.5">
+            <i class="fa-solid fa-calculator"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-[#1F2D3D] text-xs">割り勘＆送金ナビ（最小送金ルート自動計算）</h3>
+            <p class="text-[11px] text-[#6B7C93] mt-0.5 leading-relaxed">立替えた支払いを記録するだけで、「誰が誰にいくら送金すれば良いか」を最小回数で自動算出。</p>
+          </div>
+        </div>
+
+        <div class="bg-white/90 backdrop-blur-sm border border-[#AEE5EF]/70 rounded-2xl p-4 flex items-start gap-3.5 shadow-xs">
+          <div class="w-9 h-9 rounded-xl bg-[#EAF7FB] text-[#64CDE3] flex items-center justify-center text-sm font-bold shrink-0 mt-0.5">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-[#1F2D3D] text-xs">AIがプランを瞬時に再構築（1日5回無料）</h3>
+            <p class="text-[11px] text-[#6B7C93] mt-0.5 leading-relaxed">「雨天プランに変えて」「30分遅らせて」と伝えるだけで、AIが日程と時間を自動で再計算して全員に同期。</p>
+          </div>
+        </div>
+
+        <div class="bg-white/90 backdrop-blur-sm border border-[#AEE5EF]/70 rounded-2xl p-4 flex items-start gap-3.5 shadow-xs">
+          <div class="w-9 h-9 rounded-xl bg-[#EAF7FB] text-[#64CDE3] flex items-center justify-center text-sm font-bold shrink-0 mt-0.5">
+            <i class="fa-solid fa-map-location-dot"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-[#1F2D3D] text-xs">Googleマップ連携 ＆ 進行中ハイライト</h3>
+            <p class="text-[11px] text-[#6B7C93] mt-0.5 leading-relaxed">現在進行中の予定が自動ハイライト。タップするだけでGoogleマップがワンタップ起動します。</p>
           </div>
         </div>
       </div>
@@ -511,70 +521,6 @@
     <button onclick="nextSlide()" id="nextBtn" class="pointer-events-auto w-10 h-10 rounded-full bg-white/90 backdrop-blur-md text-slate-700 shadow-xl border border-slate-200 flex items-center justify-center text-sm active:scale-90 transition">
       <i class="fa-solid fa-chevron-right"></i>
     </button>
-  </div>
-
-  <!-- 割り勘用モーダル群 -->
-  <div id="memberDetailModal" class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl max-h-[90vh] overflow-y-auto space-y-4">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-        <h3 id="memberDetailName" class="text-base font-black text-slate-800">メンバー名</h3>
-        <button onclick="closeMemberDetailModal()" class="text-slate-400">✕</button>
-      </div>
-      <div class="grid grid-cols-3 gap-2 text-center bg-slate-50 p-3 rounded-2xl">
-        <div><span class="text-[10px] text-slate-400 block">立替総額</span><span id="memberDetailPaid" class="font-mono font-bold text-xs">¥0</span></div>
-        <div><span class="text-[10px] text-slate-400 block">負担総額</span><span id="memberDetailShare" class="font-mono font-bold text-xs">¥0</span></div>
-        <div><span class="text-[10px] text-slate-400 block">最終差額</span><span id="memberDetailNet" class="font-mono font-black text-xs text-emerald-600">¥0</span></div>
-      </div>
-      <div class="space-y-3 text-xs">
-        <div><span class="font-bold text-slate-800">立替えた支払い</span><div id="memberDetailPaidList" class="space-y-1.5 mt-1"></div></div>
-        <div><span class="font-bold text-slate-800">割り勘対象</span><div id="memberDetailShareList" class="space-y-1.5 mt-1"></div></div>
-      </div>
-      <div class="pt-2 flex justify-between items-center border-t border-slate-100">
-        <button id="memberDetailDeleteBtn" class="text-rose-500 font-bold text-xs">このメンバーを削除</button>
-        <button onclick="closeMemberDetailModal()" class="px-4 py-2 bg-slate-100 rounded-xl text-xs">閉じる</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="expenseDetailModal" class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
-        <h3 id="expDetailTitle" class="text-base font-black text-slate-800">用途</h3>
-        <button onclick="closeExpenseDetailModal()" class="text-slate-400">✕</button>
-      </div>
-      <div class="grid grid-cols-2 gap-2 bg-slate-50 p-3 rounded-2xl text-xs">
-        <div><span class="text-[10px] text-slate-400 block">総額</span><span id="expDetailAmount" class="font-mono font-black text-base">¥0</span></div>
-        <div><span class="text-[10px] text-slate-400 block">支払者</span><span id="expDetailPayer" class="font-bold text-sm">--</span></div>
-      </div>
-      <div class="pt-2 flex justify-between items-center border-t border-slate-100">
-        <button id="expDetailDeleteBtn" class="text-rose-500 font-bold text-xs">この支払いを削除</button>
-        <button onclick="closeExpenseDetailModal()" class="px-4 py-2 bg-slate-100 rounded-xl text-xs">閉じる</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="memberModal" class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-xs w-full p-5 space-y-4">
-      <h3 class="text-base font-black text-slate-800">メンバーを追加</h3>
-      <form onsubmit="saveMember(event)" class="space-y-3 text-xs">
-        <input type="text" id="newMemberName" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold" placeholder="名前を入力">
-        <button type="submit" class="w-full py-2.5 bg-[#64CDE3] text-white font-bold rounded-xl">登録</button>
-      </form>
-    </div>
-  </div>
-
-  <div id="expenseModal" class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-md w-full p-5 space-y-4 max-h-[90vh] overflow-y-auto">
-      <h3 id="expenseModalHeading" class="text-base font-black text-slate-800">支払いを記録</h3>
-      <form id="expenseForm" onsubmit="saveExpense(event)" class="space-y-3 text-xs">
-        <input type="hidden" id="editExpenseId" value="">
-        <input type="text" id="expenseTitle" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold" placeholder="用途 (例: レンタカー)">
-        <input type="number" id="expenseAmount" required min="1" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold" placeholder="金額 (円)">
-        <select id="expensePayer" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold"></select>
-        <div id="expenseParticipantsList" class="grid grid-cols-2 gap-1.5 pt-1"></div>
-        <button type="submit" class="w-full py-3 bg-[#64CDE3] text-white font-bold rounded-xl">保存する</button>
-      </form>
-    </div>
   </div>
 
   <script>
