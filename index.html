@@ -105,14 +105,9 @@
           <span class="text-[9px] font-medium text-shiorit-primary">旅のしおりを、かんたんに。</span>
         </div>
       </div>
-      <div class="flex items-center gap-1.5">
-        <button onclick="openApiKeyModal()" class="px-2.5 py-1.5 bg-white border border-shiorit-secondary text-amber-500 hover:bg-shiorit-light font-bold rounded-xl text-xs shadow-xs transition" title="APIキー設定">
-          <i class="fa-solid fa-key"></i>
-        </button>
-        <button onclick="openCreateTripModal()" class="px-3.5 py-1.5 bg-shiorit-primary hover:opacity-90 active:scale-95 text-white font-bold rounded-xl text-xs shadow-resort transition cursor-pointer">
-          しおりを作成する
-        </button>
-      </div>
+      <button onclick="openCreateTripModal()" class="px-3.5 py-1.5 bg-shiorit-primary hover:opacity-90 active:scale-95 text-white font-bold rounded-xl text-xs shadow-resort transition cursor-pointer">
+        しおりを作成する
+      </button>
     </header>
 
     <!-- LP メインビジュアル ＆ アクション -->
@@ -146,6 +141,21 @@
           <i class="fa-solid fa-plus-circle text-base"></i>
           <span>新しく旅行しおりを作る（無料）</span>
         </button>
+      </div>
+
+      <!-- サンプルしおりリンク -->
+      <div class="space-y-2">
+        <span class="text-[11px] font-bold text-shiorit-gray block text-center">サンプルしおりを体験する</span>
+        <div class="grid grid-cols-2 gap-2.5">
+          <a href="?trip=yamaguchi" class="glass-card p-3.5 rounded-2xl text-center hover:shadow-resort transition group border border-shiorit-secondary/70">
+            <span class="text-xs font-bold text-shiorit-dark group-hover:text-shiorit-primary transition block">🐡 山口 2泊3日</span>
+            <span class="text-[10px] text-shiorit-gray">萩・下関・角島</span>
+          </a>
+          <a href="?trip=karuizawa" class="glass-card p-3.5 rounded-2xl text-center hover:shadow-resort transition group border border-shiorit-secondary/70">
+            <span class="text-xs font-bold text-shiorit-dark group-hover:text-shiorit-primary transition block">🌲 軽井沢 2泊3日</span>
+            <span class="text-[10px] text-shiorit-gray">ピレネー・リゾート</span>
+          </a>
+        </div>
       </div>
 
       <!-- シオリットの強みカード一覧 -->
@@ -197,9 +207,10 @@
 
     </div>
 
-    <!-- フッター -->
-    <footer class="py-6 text-center text-[10px] text-shiorit-gray border-t border-shiorit-secondary/40">
-      &copy; Shiorit (シオリット) All Rights Reserved.
+    <!-- フッター（バージョン表示付き） -->
+    <footer class="py-6 text-center text-[10px] text-shiorit-gray border-t border-shiorit-secondary/40 flex items-center justify-center gap-2">
+      <span>&copy; Shiorit (シオリット) All Rights Reserved.</span>
+      <span class="px-2 py-0.5 bg-shiorit-primary/20 text-shiorit-dark font-mono rounded-md font-bold text-[9px]">v1.0.0</span>
     </footer>
   </div>
 
@@ -220,9 +231,6 @@
         </div>
 
         <div class="flex items-center gap-1.5 shrink-0">
-          <button onclick="openApiKeyModal()" class="p-1.5 bg-white hover:bg-shiorit-light active:scale-95 text-amber-500 border border-shiorit-secondary rounded-xl text-xs shadow-xs transition" title="APIキー設定">
-            <i class="fa-solid fa-key"></i>
-          </button>
           <button onclick="shareTripUrl()" class="flex items-center gap-1 px-2.5 py-1.5 bg-white hover:bg-shiorit-light active:scale-95 text-shiorit-dark border border-shiorit-secondary font-bold rounded-xl text-xs shadow-xs transition cursor-pointer" title="LINEで共有">
             <i class="fa-solid fa-share-nodes text-shiorit-primary"></i>
             <span>共有</span>
@@ -276,41 +284,7 @@
   <!-- メインコンテンツ -->
   <main id="mainContainer" class="flex-1 max-w-md w-full mx-auto p-3.5 sm:p-4 space-y-6"></main>
 
-  <!-- APIキー設定・確認モーダル -->
-  <div id="apiKeyModal" class="fixed inset-0 z-[80] bg-shiorit-dark/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-    <div class="glass-card bg-white rounded-3xl max-w-md w-full p-5 shadow-resort border border-shiorit-secondary space-y-4">
-      <div class="flex items-center justify-between pb-2 border-b border-shiorit-secondary/40">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-sm font-bold">
-            <i class="fa-solid fa-key"></i>
-          </div>
-          <h3 class="text-base font-black text-shiorit-dark">Gemini APIキー設定（ダイレクト接続）</h3>
-        </div>
-        <button onclick="closeApiKeyModal()" class="text-shiorit-gray hover:text-shiorit-dark w-8 h-8 flex items-center justify-center rounded-full hover:bg-shiorit-light text-lg">✕</button>
-      </div>
-
-      <div class="space-y-2 text-xs text-shiorit-dark">
-        <p class="text-[11px] text-shiorit-gray leading-relaxed">
-          Google AI Studioで取得したAPIキー（<code>AIzaSy...</code>）を直接設定してテストできます。ブラウザ内に安全に保存されます。
-        </p>
-        <div>
-          <label class="font-bold text-shiorit-dark block mb-1">Gemini API Key</label>
-          <input type="text" id="directApiKeyInput" class="w-full p-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl font-mono text-xs text-shiorit-dark focus:ring-2 focus:ring-amber-500 focus:outline-none" placeholder="AIzaSy...">
-        </div>
-      </div>
-
-      <div class="pt-2 flex gap-2">
-        <button type="button" onclick="saveDirectApiKey()" class="flex-1 py-2.5 bg-amber-500 hover:bg-amber-600 active:scale-98 text-white font-bold rounded-xl text-xs shadow-resort transition">
-          保存して適用する
-        </button>
-        <button type="button" onclick="closeApiKeyModal()" class="px-4 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-gray font-medium rounded-xl text-xs transition">
-          閉じる
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 作成直後の「URL紛失防止・強力コピー保存ポップアップ」モーダル -->
+  <!-- ★【新機能1】作成直後の「URL紛失防止・強力コピー保存ポップアップ」モーダル -->
   <div id="createdUrlModal" class="fixed inset-0 z-[110] bg-shiorit-dark/70 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="glass-card bg-white rounded-3xl max-w-md w-full p-6 shadow-resort border border-shiorit-secondary space-y-4 text-center">
       <div class="w-16 h-16 rounded-3xl bg-shiorit-primary/20 text-shiorit-primary flex items-center justify-center text-2xl mx-auto shadow-resort border border-shiorit-secondary">
@@ -392,14 +366,13 @@
           </div>
 
           <div>
-            <label class="text-[11px] font-bold text-amber-900 block mb-1">現地での主な移動手段</label>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
-              <button type="button" id="trans-opt-car" onclick="selectTransportOption(this, '車・レンタカー')" class="transport-chip py-2 px-1.5 bg-amber-200 border border-amber-400 font-bold rounded-xl text-[11px] text-amber-950 transition text-center">🚗 車・レンタカー</button>
-              <button type="button" id="trans-opt-train" onclick="selectTransportOption(this, '電車・バス')" class="transport-chip py-2 px-1.5 bg-white border border-amber-200 rounded-xl text-[11px] text-amber-950 transition text-center">🚆 電車・バス</button>
-              <button type="button" id="trans-opt-taxi" onclick="selectTransportOption(this, 'タクシー')" class="transport-chip py-2 px-1.5 bg-white border border-amber-200 rounded-xl text-[11px] text-amber-950 transition text-center">🚕 タクシー</button>
-              <button type="button" id="trans-opt-walk" onclick="selectTransportOption(this, '徒歩中心')" class="transport-chip py-2 px-1.5 bg-white border border-amber-200 rounded-xl text-[11px] text-amber-950 transition text-center">🚶 徒歩中心</button>
+            <label class="text-[11px] font-bold text-amber-900 block mb-1">主な移動手段</label>
+            <div class="grid grid-cols-3 gap-1.5">
+              <button type="button" onclick="selectTemplateOption('transport', 'レンタカー・車移動')" class="transport-chip py-1.5 px-2 bg-amber-200 border border-amber-400 font-bold rounded-xl text-[11px] text-amber-950 transition">🚗 レンタカー</button>
+              <button type="button" onclick="selectTemplateOption('transport', '電車・バス・公共交通機関')" class="transport-chip py-1.5 px-2 bg-white border border-amber-200 rounded-xl text-[11px] text-amber-950 transition">🚆 電車・バス</button>
+              <button type="button" onclick="selectTemplateOption('transport', '徒歩・タクシー中心')" class="transport-chip py-1.5 px-2 bg-white border border-amber-200 rounded-xl text-[11px] text-amber-950 transition">🚕 タクシー</button>
             </div>
-            <input type="hidden" id="aiSelectedTransport" value="車・レンタカー">
+            <input type="hidden" id="aiSelectedTransport" value="レンタカー・車移動">
           </div>
 
           <div>
@@ -413,8 +386,8 @@
           </div>
 
           <div>
-            <label class="text-[11px] font-bold text-amber-900 block mb-1">行きたい場所・希望・時間指定（例: 12:00に中華街、15:00ホテル）</label>
-            <textarea id="newTripAiPrompt" rows="3" class="w-full p-2.5 bg-white border border-amber-200 rounded-xl text-xs text-amber-950 placeholder-amber-800/40 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none" placeholder="例：1日目 11:30に新横浜駅集合、お昼は中華街、15:00にハイアットホテルにチェックイン、夜は夜景スポットに行きたい"></textarea>
+            <label class="text-[11px] font-bold text-amber-900 block mb-1">行きたい場所・希望・時間指定（例: 12:00ランチ、15:00ホテル）</label>
+            <textarea id="newTripAiPrompt" rows="2" class="w-full p-2.5 bg-white border border-amber-200 rounded-xl text-xs text-amber-950 placeholder-amber-800/40 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none" placeholder="例：12:00に中華街でランチ、15:00にホテルチェックイン"></textarea>
           </div>
         </div>
 
@@ -424,19 +397,15 @@
             <span>AIで全日プランを自動作成してスタート</span>
           </button>
           <div class="flex gap-2">
-            <button type="submit" name="submitAction" value="blank" class="flex-1 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-dark font-bold rounded-xl text-xs transition">
-              白紙で自分で作る
-            </button>
-            <button type="button" onclick="closeCreateTripModal()" class="px-4 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-gray font-medium rounded-xl text-xs transition">
-              キャンセル
-            </button>
+            <button type="submit" name="submitAction" value="blank" class="flex-1 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-dark font-bold rounded-xl text-xs transition">白紙で自分で作る</button>
+            <button type="button" onclick="closeCreateTripModal()" class="px-4 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-gray font-medium rounded-xl text-xs transition">キャンセル</button>
           </div>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- 汎用カスタム確認モーダル -->
+  <!-- 確認モーダル -->
   <div id="confirmModal" class="fixed inset-0 z-[100] bg-shiorit-dark/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="glass-card bg-white rounded-3xl max-w-xs w-full p-5 shadow-resort border border-shiorit-secondary space-y-4 text-center">
       <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center text-xl mx-auto border border-rose-100">
@@ -588,7 +557,7 @@
 
         <div>
           <label class="font-bold text-shiorit-dark block mb-1">Googleマップ検索キーワード または URL</label>
-          <input type="text" id="editMapQuery" class="w-full p-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark" placeholder="例：ハイアット リージェンシー 横浜、またはGoogleマップのURL">
+          <input type="text" id="editMapQuery" class="w-full p-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark" placeholder="例：スポット名">
         </div>
 
         <div>
@@ -865,10 +834,9 @@
     </button>
   </div>
 
+  <!-- 統合JavaScriptロジック -->
   <script>
-    // 直接Gemini APIを叩くためのキー管理（LocalStorageにも保存可能）
-    let directApiKey = localStorage.getItem('shiorit_gemini_key') || "";
-
+    const cloudflareWorkerEndpoint = "https://travel-gemini-proxy.5890288.workers.dev";
     const firebaseApiKey = "AIzaSyBUbfrWbxBIDN-Y4Ooa_8au9EANbUaWjKs";
     const firebaseProjectId = "travel-shiori-e81a2";
 
@@ -921,28 +889,18 @@
     const selectedThemes = new Set(['ご当地絶品グルメ中心']);
     let hasAutoSetEndTimeOnce = false;
 
-    window.openApiKeyModal = function() {
-      document.getElementById('directApiKeyInput').value = directApiKey;
-      document.getElementById('apiKeyModal').classList.remove('hidden');
-    };
-    window.closeApiKeyModal = function() { document.getElementById('apiKeyModal').classList.add('hidden'); };
-    window.saveDirectApiKey = function() {
-      const val = document.getElementById('directApiKeyInput').value.trim();
-      directApiKey = val;
-      localStorage.setItem('shiorit_gemini_key', val);
-      closeApiKeyModal();
-      showToast(val ? 'APIキーを保存しました' : 'APIキーをクリアしました');
-    };
-
-    window.selectTransportOption = function(btn, value) {
-      document.getElementById('aiSelectedTransport').value = value;
-      document.querySelectorAll('.transport-chip').forEach(b => {
-        b.classList.remove('bg-amber-200', 'border-amber-400', 'font-bold');
-        b.classList.add('bg-white', 'border-amber-200');
-      });
-      if (btn) {
-        btn.classList.add('bg-amber-200', 'border-amber-400', 'font-bold');
-        btn.classList.remove('bg-white');
+    window.selectTemplateOption = function(type, value) {
+      if (type === 'transport') {
+        document.getElementById('aiSelectedTransport').value = value;
+        document.querySelectorAll('.transport-chip').forEach(btn => {
+          if (btn.innerText.includes(value.substring(0, 3))) {
+            btn.classList.add('bg-amber-200', 'border-amber-400');
+            btn.classList.remove('bg-white');
+          } else {
+            btn.classList.remove('bg-amber-200', 'border-amber-400');
+            btn.classList.add('bg-white');
+          }
+        });
       }
     };
 
@@ -1063,9 +1021,7 @@
 
     function getMapUrl(queryOrUrl) {
       if (!queryOrUrl) return 'https://maps.google.com';
-      if (queryOrUrl.startsWith('http://') || queryOrUrl.startsWith('https://')) {
-        return queryOrUrl;
-      }
+      if (queryOrUrl.startsWith('http://') || queryOrUrl.startsWith('https://')) return queryOrUrl;
       return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(queryOrUrl)}`;
     }
 
@@ -1076,16 +1032,11 @@
       document.getElementById('newTripStartDate').value = startD.toISOString().slice(0, 10);
       document.getElementById('newTripEndDate').value = endD.toISOString().slice(0, 10);
       updateCalcDaysDisplay();
-      
-      const defaultTransBtn = document.getElementById('trans-opt-car');
-      selectTransportOption(defaultTransBtn, '車・レンタカー');
-      
+      selectTemplateOption('transport', 'レンタカー・車移動');
       document.getElementById('createTripModal').classList.remove('hidden');
     };
 
-    window.closeCreateTripModal = function() {
-      document.getElementById('createTripModal').classList.add('hidden');
-    };
+    window.closeCreateTripModal = function() { document.getElementById('createTripModal').classList.add('hidden'); };
 
     window.handleCreateTripSubmit = async function(e) {
       e.preventDefault();
@@ -1159,8 +1110,7 @@
       totalTripDays = calc.days;
       await saveToCloud();
 
-      // 作成直後に「URL紛失防止ポップアップ」を表示
-      const currentBaseUrl = window.location.href.split('?')[0].split('#')[0];
+      const currentBaseUrl = window.location.href.split('?')[0];
       newlyCreatedTripUrl = `${currentBaseUrl}?trip=${tripId}`;
       document.getElementById('createdTripUrlInput').value = newlyCreatedTripUrl;
       document.getElementById('createdUrlModal').classList.remove('hidden');
@@ -1178,54 +1128,16 @@
       window.location.search = `?trip=${currentTripKey}`;
     };
 
-    async function callGeminiApiDirect(payload) {
-      const activeKey = directApiKey || "";
-      const modelCandidates = [
-        "gemini-2.5-flash",
-        "gemini-2.0-flash",
-        "gemini-2.5-flash-preview-09-2025"
-      ];
-
-      const delays = [1000, 2000, 4000, 8000];
-      let lastErrMessage = "";
-
-      for (const model of modelCandidates) {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${activeKey}`;
-        for (let attempt = 0; attempt <= 2; attempt++) {
-          try {
-            const res = await fetch(url, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(payload)
-            });
-            if (res.ok) {
-              const data = await res.json();
-              const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-              if (text) return text;
-            } else {
-              const errBody = await res.text();
-              lastErrMessage = `(${model}: ${res.status}) ${errBody.slice(0, 120)}`;
-              if (res.status === 404) break;
-            }
-          } catch(err) {
-            lastErrMessage = err.message;
-          }
-          if (attempt < 2) await new Promise(r => setTimeout(r, delays[attempt] || 1000));
-        }
-      }
-      throw new Error(lastErrMessage || "API通信に失敗しました。右上の鍵マークからAPIキーをご確認ください。");
-    }
-
     async function generateInitialPlanWithAi(title, totalDays, dayDates, members, userPrompt) {
       const systemPrompt = `あなたはプロの旅行ツアープランナーです。指定された旅行タイトル、日数（全${totalDays}日間）、ユーザーの希望条件に基づいて、美しく実用的な旅行しおりのタイムラインJSONを作成してください。
 
 【厳格なプランニング＆時間配分ルール】
-1. すべての予定を同じ時間（10:00など）にしないでください。各日の午前（09:00〜11:30）、昼食（11:30〜13:30）、午後観光・体験（13:30〜17:00）、夕食/宿泊（18:00〜）など、1日の自然な流れに合わせて現実的な時間帯を配分してください。
+1. すべての予定を同じ時間（10:00など）にしないでください。各日の午前（09:00〜11:30）、昼食（11:30〜13:30）、午後観光（13:30〜17:00）、夕食/宿泊（18:00〜）など、1日の自然な流れに合わせて現実的な時間帯を配分してください。
 2. ユーザーが「11:30に集合」「15:00にホテル」などの具体的な時間やスポットを指定している場合は、その時間を最優先・厳守で固定し、前後の予定を自然に組んでください。
 3. 出力は必ず {"steps": [...]} の形式のJSONオブジェクトのみを返してください。
 4. day は 1 〜 ${totalDays} の整数。1日あたり3〜5個の予定を作成してください。
 5. 各予定の mapQuery には、Googleマップで確実にヒットする正確な施設名・店舗名を設定してください。
-6. startTime と endTime は、指定された各日の日付（${JSON.stringify(dayDates)}）と時間を結合した ISO8601形式（例: "${dayDates[1] || '2026-10-02'}T12:00:00"）にしてください。`;
+6. startTime と endTime は、指定された各日の日付と時間を結合した ISO8601形式にしてください。`;
 
       const userQuery = `【旅行先】: ${title}\n【全日程】: ${totalDays}日間\n【各日の日付】: ${JSON.stringify(dayDates)}\n【参加メンバー】: ${members.join(', ')}\n【希望条件】:\n${userPrompt}`;
 
@@ -1235,7 +1147,18 @@
       };
 
       try {
-        const textResp = await callGeminiApiDirect(payload);
+        const res = await fetch(cloudflareWorkerEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        
+        if (!res.ok) throw new Error(`AIサーバー通信エラー (${res.status})`);
+
+        const result = await res.json();
+        const textResp = result.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!textResp) throw new Error("AI応答テキストが取得できませんでした");
+
         const cleanJsonStr = textResp.replace(/```json/gi, '').replace(/```/gi, '').trim();
         const jsonMatch = cleanJsonStr.match(/\{[\s\S]*\}/);
         const targetStr = jsonMatch ? jsonMatch[0] : cleanJsonStr;
@@ -1260,6 +1183,7 @@
         }
       } catch(err) {
         console.error("AI Generation Failed:", err);
+        showToast(`AIプラン生成に失敗: ${err.message}`);
       }
       return null;
     }
@@ -1377,7 +1301,7 @@
   ]
 }`;
 
-      const userQuery = `【旅行先】: ${currentTrip.title}\n【全日程】: ${totalTripDays}日間\n【各日の日付】: ${JSON.stringify(currentTrip.dayDates)}\n【現在のスケジュール】:\n${JSON.stringify(currentTrip.steps, null, 2)}\n\n【相談内容】: ${msg}`;
+      const userQuery = `【旅行先】: ${currentTrip.title}\n【現在のスケジュール】:\n${JSON.stringify(currentTrip.steps, null, 2)}\n\n【相談内容】: ${msg}`;
 
       const payload = {
         contents: [{ parts: [{ text: `${systemPrompt}\n\n${userQuery}` }] }],
@@ -1385,9 +1309,16 @@
       };
 
       try {
-        const textResp = await callGeminiApiDirect(payload);
-        const loadingEl = document.getElementById(loadingId);
-        if (loadingEl) loadingEl.remove();
+        const res = await fetch(cloudflareWorkerEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error("AIサーバー応答エラー");
+
+        const result = await res.json();
+        const textResp = result.candidates?.[0]?.content?.parts?.[0]?.text;
+        document.getElementById(loadingId).remove();
 
         let replyDisplay = textResp;
         let newStepsCandidate = null;
@@ -1429,8 +1360,7 @@
         container.scrollTop = container.scrollHeight;
 
       } catch(err) {
-        const loadingEl = document.getElementById(loadingId);
-        if (loadingEl) loadingEl.remove();
+        document.getElementById(loadingId).remove();
         container.innerHTML += `
           <div class="flex items-start gap-2.5">
             <div class="w-7 h-7 rounded-full bg-rose-500 text-white flex items-center justify-center text-xs shrink-0">
@@ -1996,8 +1926,8 @@
         endTime = `${dayDateStr}T${eH}:${eM}:00`;
         timeText = `${sH}:${sM}〜${eH}:${eM}`;
       } else {
-        const nextHour = String(Math.min(23, parseInt(sH, 10) + 1)).padStart(2, '0');
-        endTime = `${dayDateStr}T${nextHour}:${sM}:00`;
+        const nextH = String(Math.min(23, parseInt(sH, 10) + 1)).padStart(2, '0');
+        endTime = `${dayDateStr}T${nextH}:${sM}:00`;
       }
 
       if (stepId) {
@@ -2072,7 +2002,10 @@
       });
 
       const cards = [];
-      for (let i = 1; i <= totalPages; i++) cards.push(document.getElementById(`card-${i}`));
+      for (let i = 1; i <= totalPages; i++) {
+        cards.push(document.getElementById(`card-${i}`));
+      }
+
       const indicator = document.getElementById('pageIndicator');
 
       if (currentSlide === 0) {
