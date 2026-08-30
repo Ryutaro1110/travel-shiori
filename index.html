@@ -188,8 +188,8 @@
               <i class="fa-solid fa-wand-magic-sparkles"></i>
             </div>
             <div>
-              <h3 class="font-bold text-shiorit-dark">AIがプランを瞬時に再構築</h3>
-              <p class="text-[11px] text-shiorit-gray leading-relaxed">「雨天プランに変えて」「30分遅らせて」「ホテルを追加して」と伝えるだけで、AIが日程と時間を自動で再計算して全員に同期。</p>
+              <h3 class="font-bold text-shiorit-dark">本物のAIがプランを高度に再構築</h3>
+              <p class="text-[11px] text-shiorit-gray leading-relaxed">「Sumikaのライブがあってグッズ列に並ぶ」と伝えるだけで、物販待機・ランチ・開演にタイムラインを賢く分割して全員に同期。</p>
             </div>
           </div>
 
@@ -301,7 +301,7 @@
       <form onsubmit="handleCreateTripSubmit(event)" class="space-y-3.5 text-xs">
         <div>
           <label class="font-bold text-shiorit-dark block mb-1">旅行先・タイトル <span class="text-rose-500">*</span></label>
-          <input type="text" id="newTripTitle" required class="w-full p-3 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl font-bold text-shiorit-dark focus:ring-2 focus:ring-shiorit-primary focus:outline-none" placeholder="例：横浜 2泊3日 リゾート女子旅">
+          <input type="text" id="newTripTitle" required class="w-full p-3 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl font-bold text-shiorit-dark focus:ring-2 focus:ring-shiorit-primary focus:outline-none" placeholder="例：横浜 2泊3日 女子旅">
         </div>
 
         <div class="grid grid-cols-2 gap-2">
@@ -889,13 +889,6 @@
       }
     };
 
-    // テスト用に回数制限を完全解除
-    function getAiRemainingCount() {
-      return 9999;
-    }
-    function decrementAiCount() {
-      return 9999;
-    }
     function updateAiBadge() {
       const badge = document.getElementById('aiCountBadge');
       if (badge) badge.innerText = `Free`;
@@ -980,6 +973,23 @@
       document.getElementById('calcDaysDisplay').innerText = text;
     }
 
+    function getCategoryIcon(cat = '') {
+      if (cat.includes('ランチ') || cat.includes('グルメ') || cat.includes('ディナー')) return 'fa-solid fa-utensils';
+      if (cat.includes('カフェ') || cat.includes('朝食')) return 'fa-solid fa-mug-saucer';
+      if (cat.includes('温泉') || cat.includes('宿泊') || cat.includes('ホテル')) return 'fa-solid fa-hotel';
+      if (cat.includes('ドライブ') || cat.includes('移動')) return 'fa-solid fa-car';
+      if (cat.includes('アクティビティ')) return 'fa-solid fa-compass';
+      return 'fa-solid fa-location-dot';
+    }
+
+    function getMapUrl(queryOrUrl) {
+      if (!queryOrUrl) return 'https://maps.google.com';
+      if (queryOrUrl.startsWith('http://') || queryOrUrl.startsWith('https://')) {
+        return queryOrUrl;
+      }
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(queryOrUrl)}`;
+    }
+
     window.openCreateTripModal = function() {
       const today = new Date();
       const startD = new Date(today); startD.setDate(today.getDate() + 14);
@@ -1039,7 +1049,14 @@
         if (generatedSteps && generatedSteps.length > 0) {
           newTripObj.steps = generatedSteps;
         } else {
-          newTripObj.steps = createSmartPlanEngine(title, calc.days, calc.dayDates, structuredPrompt);
+          newTripObj.steps = [
+            {
+              id: 's_1', day: 1, title: `${title} 集合・スタート`, category: "重要予定",
+              time: "10:00〜11:00", startTime: startDate + "T10:00:00", endTime: startDate + "T11:00:00",
+              icon: "fa-solid fa-flag-checkered", iconBg: "bg-shiorit-light text-shiorit-primary",
+              badge: "集合", desc: "楽しい旅行の始まりです！", tips: "忘れ物がないか確認しましょう。", mapQuery: title
+            }
+          ];
         }
         document.getElementById('aiLoadingOverlay').classList.add('hidden');
       } else {
@@ -1057,19 +1074,19 @@
       localStorage.setItem('shiorit_custom_' + tripId, JSON.stringify(newTripObj));
 
       currentTripKey = tripId;
+      totalTripDays = calc.days;
       await saveToCloud();
       window.location.search = `?trip=${tripId}`;
     };
 
-    // AI初期プラン生成
     async function generateInitialPlanWithAi(title, totalDays, dayDates, members, userPrompt) {
       const systemPrompt = `あなたはプロの旅行ツアープランナーです。指定された旅行タイトル、日数（全${totalDays}日間）、ユーザーの希望条件に基づいて、美しく実用的な旅行しおりのタイムラインJSONを作成してください。
 
 【厳格な出力仕様】
-1. 出力は必ず {"steps": [...]} の形式のJSONオブジェクトのみを返してください（Markdown記法や挨拶は含めないでください）。
+1. 出力は必ず {"steps": [...]} の形式のJSONオブジェクトのみを返してください。
 2. day は 1 〜 ${totalDays} の整数。1日あたり3〜4個の予定（午前・昼・午後・夜）を作成してください。
-3. タイトル（title）はユーザーの話し言葉をそのまま入れず、「〇〇でランチ」「〇〇散策」「〇〇 チェックイン」など正式で洗練された名称にしてください。
-4. 各予定の mapQuery には、Googleマップで一発でピンポイントにヒットする正式な施設名・店舗名（例: "横浜赤レンガ倉庫", "横浜中華街", "横浜アリーナ"）を設定してください。
+3. タイトル（title）は洗練された名称（「〇〇でランチ」「〇〇散策」「〇〇 チェックイン」等）にしてください。
+4. 各予定の mapQuery には、Googleマップで一発でヒットする正式な施設名・店舗名を設定してください。
 5. startTime と endTime は、指定された各日の日付（${JSON.stringify(dayDates)}）と時間を結合した ISO8601形式（例: "${dayDates[1] || '2026-10-02'}T12:00:00"）にしてください。`;
 
       const userQuery = `【旅行先】: ${title}
@@ -1096,15 +1113,11 @@ ${userPrompt}
           body: JSON.stringify(payload)
         });
         
-        if (!res.ok) {
-          const errText = await res.text();
-          console.error("AI Server Error (Initial):", res.status, errText);
-          throw new Error(`AIサーバー通信エラー (${res.status})`);
-        }
+        if (!res.ok) throw new Error(`AIサーバー通信エラー (${res.status})`);
 
         const result = await res.json();
         const textResp = result.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (!textResp) throw new Error("AIから応答テキストが取得できませんでした");
+        if (!textResp) throw new Error("AI応答テキストが取得できませんでした");
 
         const cleanJsonStr = textResp.replace(/```json/gi, '').replace(/```/gi, '').trim();
         const jsonMatch = cleanJsonStr.match(/\{[\s\S]*\}/);
@@ -1135,111 +1148,70 @@ ${userPrompt}
       return null;
     }
 
-    function getCategoryIcon(cat = '') {
-      if (cat.includes('ランチ') || cat.includes('グルメ') || cat.includes('ディナー')) return 'fa-solid fa-utensils';
-      if (cat.includes('カフェ') || cat.includes('朝食')) return 'fa-solid fa-mug-saucer';
-      if (cat.includes('温泉') || cat.includes('宿泊') || cat.includes('ホテル')) return 'fa-solid fa-hotel';
-      if (cat.includes('ドライブ') || cat.includes('移動')) return 'fa-solid fa-car';
-      if (cat.includes('アクティビティ')) return 'fa-solid fa-compass';
-      return 'fa-solid fa-location-dot';
-    }
-
-    function getMapUrl(queryOrUrl) {
-      if (!queryOrUrl) return 'https://maps.google.com';
-      if (queryOrUrl.startsWith('http://') || queryOrUrl.startsWith('https://')) {
-        return queryOrUrl;
-      }
-      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(queryOrUrl)}`;
-    }
-
-    // スマートプラン生成エンジン（フォールバック時も希望条件を解釈）
-    function createSmartPlanEngine(title, totalDays, dayDates, promptText = '') {
-      const area = title.replace(/[0-9０-９泊日旅ツアー]/g, '').trim() || '観光地';
-      const steps = [];
-
-      for (let d = 1; d <= totalDays; d++) {
-        const dateStr = dayDates[d] || '2026-10-02';
-        if (d === 1) {
-          steps.push({
-            id: `step_${Date.now()}_${d}_1`, day: d, title: `${area} 到着・集合`, category: "重要予定",
-            time: "10:00〜11:00", startTime: `${dateStr}T10:00:00`, endTime: `${dateStr}T11:00:00`,
-            icon: "fa-solid fa-flag-checkered", iconBg: "bg-shiorit-light text-shiorit-primary",
-            badge: "集合", desc: "待ち合わせ場所に集合して旅行スタート！", tips: "荷物を預けて身軽に観光へ！", mapQuery: `${area}駅`
-          });
-          steps.push({
-            id: `step_${Date.now()}_${d}_2`, day: d, title: `${area} 名物ご当地ランチ`, category: "ランチ",
-            time: "11:30〜13:00", startTime: `${dateStr}T11:30:00`, endTime: `${dateStr}T13:00:00`,
-            icon: "fa-solid fa-utensils", iconBg: "bg-amber-50 text-amber-600",
-            badge: "名物", desc: "地元で評判の人気ご当地グルメを満喫！", tips: "混雑を避けるため少し早めに入店。", mapQuery: `${area} グルメ ランチ`
-          });
-          steps.push({
-            id: `step_${Date.now()}_${d}_3`, day: d, title: `${area} 定番観光・散策`, category: "観光",
-            time: "13:30〜16:30", startTime: `${dateStr}T13:30:00`, endTime: `${dateStr}T16:30:00`,
-            icon: "fa-solid fa-camera", iconBg: "bg-teal-50 text-teal-600",
-            badge: "散策", desc: "周辺の歴史ある名所や写真映えスポットを散策。", tips: "歩きやすい靴がおすすめ！", mapQuery: `${area} 観光名所`
-          });
-          steps.push({
-            id: `step_${Date.now()}_${d}_4`, day: d, title: `ホテルチェックイン ＆ ディナー`, category: "ディナー",
-            time: "18:00〜20:30", startTime: `${dateStr}T18:00:00`, endTime: `${dateStr}T20:30:00`,
-            icon: "fa-solid fa-wine-glass", iconBg: "bg-shiorit-light text-shiorit-primary",
-            badge: "夜ごはん", desc: "地元食材を使った美味しい料理と乾杯！", tips: "夜景や温泉も楽しみましょう。", mapQuery: `${area} ディナー`
-          });
-        } else if (d === totalDays) {
-          steps.push({
-            id: `step_${Date.now()}_${d}_1`, day: d, title: `絶景カフェでモーニング`, category: "カフェ・朝食",
-            time: "08:30〜10:00", startTime: `${dateStr}T08:30:00`, endTime: `${dateStr}T10:00:00`,
-            icon: "fa-solid fa-mug-saucer", iconBg: "bg-amber-50 text-amber-600",
-            badge: "朝カフェ", desc: "景色の良いカフェでゆったり朝食タイム。", tips: "チェックアウトの準備を済ませて出発。", mapQuery: `${area} カフェ 朝食`
-          });
-          steps.push({
-            id: `step_${Date.now()}_${d}_2`, day: d, title: `お土産ショッピング＆散策`, category: "ショッピング",
-            time: "10:30〜12:30", startTime: `${dateStr}T10:30:00`, endTime: `${dateStr}T12:30:00`,
-            icon: "fa-solid fa-bag-shopping", iconBg: "bg-teal-50 text-teal-600",
-            badge: "お土産", desc: "ご当地のお菓子や名産品を購入！", tips: "買い忘れがないようにチェック。", mapQuery: `${area} お土産`
-          });
-          steps.push({
-            id: `step_${Date.now()}_${d}_3`, day: d, title: `旅の締めくくりランチ＆帰路へ`, category: "重要予定",
-            time: "13:00〜15:00", startTime: `${dateStr}T13:00:00`, endTime: `${dateStr}T15:00:00`,
-            icon: "fa-solid fa-train-subway", iconBg: "bg-shiorit-light text-shiorit-primary",
-            badge: "解散", desc: "最後の絶品ランチを楽しんで笑顔で解散！", tips: "お疲れ様でした！", mapQuery: `${area}駅`
-          });
-        } else {
-          steps.push({
-            id: `step_${Date.now()}_${d}_1`, day: d, title: `${d}日目の朝食＆出発`, category: "カフェ・朝食",
-            time: "08:30〜09:30", startTime: `${dateStr}T08:30:00`, endTime: `${dateStr}T09:30:00`,
-            icon: "fa-solid fa-mug-saucer", iconBg: "bg-amber-50 text-amber-600",
-            badge: "", desc: "美味しい朝食を食べてエナジーチャージ！", tips: "本日の目的地へ出発。", mapQuery: `${area}`
-          });
-          steps.push({
-            id: `step_${Date.now()}_${d}_2`, day: d, title: `${area} アクティビティ・体験`, category: "アクティビティ",
-            time: "10:00〜12:30", startTime: `${dateStr}T10:00:00`, endTime: `${dateStr}T12:30:00`,
-            icon: "fa-solid fa-compass", iconBg: "bg-teal-50 text-teal-600",
-            badge: "体験", desc: "絶景スポットや自然に囲まれたアクティビティを満喫！", tips: "写真撮影をお忘れなく。", mapQuery: `${area} 観光 スポット`
-          });
-          steps.push({
-            id: `step_${Date.now()}_${d}_3`, day: d, title: `人気店でご当地ランチ`, category: "ランチ",
-            time: "12:30〜14:00", startTime: `${dateStr}T12:30:00`, endTime: `${dateStr}T14:00:00`,
-            icon: "fa-solid fa-utensils", iconBg: "bg-amber-50 text-amber-600",
-            badge: "人気店", desc: "旅の途中で立ち寄る絶品ランチ処。", tips: "名物メニューを堪能！", mapQuery: `${area} ランチ 人気`
-          });
-          steps.push({
-            id: `step_${Date.now()}_${d}_4`, day: d, title: `温泉・サウナ＆夜の宴`, category: "ディナー",
-            time: "17:30〜21:00", startTime: `${dateStr}T17:30:00`, endTime: `${dateStr}T21:00:00`,
-            icon: "fa-solid fa-hot-tub-person", iconBg: "bg-shiorit-light text-shiorit-primary",
-            badge: "リラックス", desc: "温泉でゆったり疲れを癒やし、夜のグルメを堪能。", tips: "地酒や名物で楽しい夜を！", mapQuery: `${area} 温泉 ディナー`
-          });
-        }
-      }
-      return steps;
-    }
-
     async function syncFromCloud() {
       if (!currentTripKey) return;
       try {
         const url = `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/travel_plans/${currentTripKey}?key=${firebaseApiKey}`;
         const res = await fetch(url);
         if (res.ok) {
-    // AIプラン変更送信（本物のAI通信のみを実行し、プロンプトを高度に最適化）
+          const doc = await res.json();
+          if (doc.fields) {
+            const rawHash = (doc.fields.stepsJson?.stringValue || '') + (doc.fields.membersJson?.stringValue || '') + (doc.fields.expensesJson?.stringValue || '');
+            if (rawHash && rawHash !== lastCloudSyncHash) {
+              lastCloudSyncHash = rawHash;
+              if (doc.fields.stepsJson) {
+                const steps = JSON.parse(doc.fields.stepsJson.stringValue);
+                if (steps && Array.isArray(steps)) liveTripData[currentTripKey].steps = steps;
+              }
+              if (doc.fields.membersJson) {
+                const members = JSON.parse(doc.fields.membersJson.stringValue);
+                if (members && Array.isArray(members)) liveTripData[currentTripKey].members = members;
+              }
+              if (doc.fields.expensesJson) {
+                const expenses = JSON.parse(doc.fields.expensesJson.stringValue);
+                if (expenses && Array.isArray(expenses)) liveTripData[currentTripKey].expenses = expenses;
+              }
+              renderTabBar();
+              renderMainCards();
+              updateCurrentStep();
+            }
+          }
+        }
+      } catch (err) {}
+    }
+
+    async function saveToCloud() {
+      if (!currentTripKey) return;
+      try {
+        const trip = liveTripData[currentTripKey];
+        if (!trip) return;
+        const rawHash = JSON.stringify(trip.steps) + JSON.stringify(trip.members || []) + JSON.stringify(trip.expenses || []);
+        lastCloudSyncHash = rawHash;
+
+        const url = `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/travel_plans/${currentTripKey}?key=${firebaseApiKey}`;
+        const body = {
+          fields: {
+            stepsJson: { stringValue: JSON.stringify(trip.steps || []) },
+            membersJson: { stringValue: JSON.stringify(trip.members || []) },
+            expensesJson: { stringValue: JSON.stringify(trip.expenses || []) }
+          }
+        };
+        await fetch(url, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+      } catch (err) {}
+    }
+
+    window.openAiPromptModal = function() {
+      updateAiBadge();
+      document.getElementById('aiPromptModal').classList.remove('hidden');
+    };
+    window.closeAiPromptModal = function() { document.getElementById('aiPromptModal').classList.add('hidden'); };
+    window.setPromptExample = function(text) { document.getElementById('aiPromptInput').value = text; };
+
+    // AIプラン変更（本物のAI通信のみを実行・不自然なフォールバック排除）
     window.submitAiPlanChange = async function() {
       const promptText = document.getElementById('aiPromptInput').value.trim();
       if (!promptText) return;
@@ -1255,7 +1227,7 @@ ${userPrompt}
       const systemPrompt = `あなたはプロの旅行ツアープランナーです。ユーザーの要望に従って既存の旅行予定（全${totalTripDays}日間、day: 1〜${totalTripDays}）を賢く再構築・更新してください。
 
 【プロのプランニング・知性ルール】
-1. ユーザーの入力した文章をそのままタイトルにしないでください。
+1. ユーザーの入力文をそのままタイトルにしないでください。
    例: 「中華街でSumikaのライブがあってグッズ列に並ぶ」という要望の場合、以下のようにスマートに分割・整理してください。
    ・予定1: 「Sumika ライブ グッズ販売（物販待機）」(カテゴリ: 重要予定, 時間: 11:30〜14:30, mapQuery: "横浜アリーナ" または "横浜BUNTAI" などライブ会場名)
    ・予定2: 「横浜中華街 飲茶ランチ＆散策」(カテゴリ: ランチ, 時間: 14:30〜16:30, mapQuery: "横浜中華街")
@@ -1345,7 +1317,6 @@ ${JSON.stringify(currentTrip.steps, null, 2)}
         showToast('✨ AIがプランを美しく再構築しました！');
         document.getElementById('aiPromptInput').value = '';
       } else {
-        // ローカルでの文字列切り貼りは行わず、エラー原因を通知
         showToast(`AI更新に失敗しました: ${errorDetail || 'サーバー通信エラー'}`);
       }
     };
@@ -1953,249 +1924,6 @@ ${JSON.stringify(currentTrip.steps, null, 2)}
     };
     window.closeModal = function() { document.getElementById('detailModal').classList.add('hidden'); };
 
-    // AIプラン再構築
-    window.openAiPromptModal = function() {
-      updateAiBadge();
-      document.getElementById('aiPromptModal').classList.remove('hidden');
-    };
-    window.closeAiPromptModal = function() { document.getElementById('aiPromptModal').classList.add('hidden'); };
-    window.setPromptExample = function(text) { document.getElementById('aiPromptInput').value = text; };
-
-    // AIプラン変更送信（自然なタイトル・カテゴリ整形＆正確なGoogleマップクエリ抽出）
-    window.submitAiPlanChange = async function() {
-      const promptText = document.getElementById('aiPromptInput').value.trim();
-      if (!promptText) return;
-
-      closeAiPromptModal();
-      document.getElementById('aiLoadingTitle').innerText = 'AIがプランを再構築中...';
-      document.getElementById('aiLoadingSub').innerText = '最適なスポット名・時間・Googleマップ情報を計算中';
-      document.getElementById('aiLoadingOverlay').classList.remove('hidden');
-
-      const currentTrip = liveTripData[currentTripKey];
-      const areaHint = currentTrip.title.replace(/[0-9０-９泊日旅ツアー]/g, '').trim() || '観光地';
-
-      const systemPrompt = `あなたはプロの旅行ツアープランナーです。ユーザーの要望に従って既存の旅行予定（全${totalTripDays}日間、day: 1〜${totalTripDays}）をプロクオリティで更新・再構成してください。
-
-【重要な出力ルール】
-1. タイトル（title）はユーザーの話し言葉・要望文をそのまま入れず、旅行しおりとして美しい正式な名称に整形してください。
-   悪い例: "1日目泊まるホテルは、横浜駅のハイアットホテルす"
-   良い例: "ハイアット リージェンシー 横浜 チェックイン" / "横浜中華街 飲茶・食べ歩きランチ" / "山下公園＆赤レンガ倉庫 散策"
-2. Googleマップ検索キーワード（mapQuery）には、Googleマップで一発でピンポイントにヒットする「正確な正式店舗名・施設名（必要に応じて地域名）」を設定してください。
-   例: "ハイアット リージェンシー 横浜", "横浜赤レンガ倉庫", "横浜中華街"
-3. カテゴリ（category）は「宿泊・温泉」「ランチ」「ディナー」「カフェ・朝食」「観光」「アクティビティ」「ショッピング」「移動・ドライブ」「重要予定」から適切に設定してください。
-4. 説明（desc）やポイント（tips）も、その施設やスポットの魅力が伝わる自然で具体的な文章を生成してください。
-5. 出力形式は必ず {"steps": [...]} のJSONオブジェクトのみを返してください。
-6. startTime, endTimeは必ず日付文字列と結合し ISO8601形式（例: "${currentTrip.dayDates[1] || '2026-10-02'}T15:00:00"）にしてください。`;
-
-      const userQuery = `【旅行先エリア】: ${areaHint} (${currentTrip.title})
-【全日程】: ${totalTripDays}日間
-【各日の日付】: ${JSON.stringify(currentTrip.dayDates)}
-
-【現在の旅行予定】:
-${JSON.stringify(currentTrip.steps, null, 2)}
-
-【ユーザーからの変更・追加要望】:
-「${promptText}」
-
-上記要望を解釈し、美しいしおりタイトル、適切な時間配分、正確なGoogleマップ検索キーワードを設定した新しいsteps配列JSONを出力してください。`;
-
-      const payload = {
-        contents: [{ parts: [{ text: `${systemPrompt}\n\n${userQuery}` }] }],
-        generationConfig: { responseMimeType: "application/json" }
-      };
-
-      let newSteps = null;
-      for (let attempt = 0; attempt <= 2; attempt++) {
-        try {
-          const res = await fetch(cloudflareWorkerEndpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-          if (res.ok) {
-            const result = await res.json();
-            const textResp = result.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (textResp) {
-              const cleanStr = textResp.replace(/```json/gi, '').replace(/```/gi, '').trim();
-              const match = cleanStr.match(/\{[\s\S]*\}/);
-              const target = match ? match[0] : cleanStr;
-              const parsed = JSON.parse(target);
-              if (parsed.steps && Array.isArray(parsed.steps) && parsed.steps.length > 0) {
-                newSteps = parsed.steps.map((s, idx) => ({
-                  id: s.id || `step_${Date.now()}_${idx}`,
-                  day: Math.min(Math.max(1, parseInt(s.day, 10) || 1), totalTripDays),
-                  title: s.title || "スポット",
-                  category: s.category || "観光",
-                  time: s.time || "10:00〜12:00",
-                  startTime: s.startTime || `${currentTrip.dayDates[s.day || 1]}T10:00:00`,
-                  endTime: s.endTime || `${currentTrip.dayDates[s.day || 1]}T12:00:00`,
-                  icon: s.icon || getCategoryIcon(s.category),
-                  iconBg: s.iconBg || "bg-shiorit-light text-shiorit-primary",
-                  badge: s.badge || "",
-                  desc: s.desc || "",
-                  tips: s.tips || "",
-                  mapQuery: s.mapQuery || s.title
-                }));
-                break;
-              }
-            }
-          }
-        } catch(e){}
-        await new Promise(r => setTimeout(r, 1000));
-      }
-
-      // インテリジェント・ローカルパーサーエンジン（通信不調時や自然文入力時もプロ仕様に自動成型）
-      if (!newSteps || newSteps.length === 0) {
-        newSteps = JSON.parse(JSON.stringify(currentTrip.steps || []));
-        const pLower = promptText.toLowerCase();
-
-        let targetDay = 1;
-        for (let d = 1; d <= totalTripDays; d++) {
-          if (promptText.includes(`${d}日目`) || promptText.includes(`${d}日`)) {
-            targetDay = d;
-            break;
-          }
-        }
-        if (totalTripDays > 1 && !promptText.includes('1日目') && (promptText.includes('午後') || promptText.includes('ホテル') || promptText.includes('宿') || promptText.includes('ディナー'))) {
-          targetDay = targetDay === 1 && (promptText.includes('2日目') || promptText.includes('中日')) ? 2 : targetDay;
-        }
-
-        const dateStr = currentTrip.dayDates[targetDay] || '2026-10-02';
-
-        // ① ホテル・宿泊・チェックインの要望
-        if (promptText.includes('ホテル') || promptText.includes('泊まる') || promptText.includes('宿') || promptText.includes('チェックイン') || promptText.includes('旅館')) {
-          let hotelName = promptText
-            .replace(/([0-9０-９]+日目?に?|泊まる|宿泊する|ホテルは|です|に決定|に変更|にして|を追加|予定)/g, ' ')
-            .replace(/[、,。]/g, ' ')
-            .trim();
-          
-          if (!hotelName.includes('ホテル') && !hotelName.includes('宿') && !hotelName.includes('旅館')) {
-            hotelName += ' ホテル';
-          }
-          if (!hotelName.includes(areaHint) && areaHint.length > 1) {
-            hotelName = `${areaHint} ${hotelName}`;
-          }
-
-          const hotelStep = {
-            id: `step_ai_hotel_${Date.now()}`,
-            day: targetDay,
-            title: `${hotelName} チェックイン`,
-            category: "宿泊・温泉",
-            time: "15:00〜16:30",
-            startTime: `${dateStr}T15:00:00`,
-            endTime: `${dateStr}T16:30:00`,
-            icon: "fa-solid fa-hotel",
-            iconBg: "bg-shiorit-light text-shiorit-primary",
-            badge: "宿泊",
-            desc: `ホテルにチェックインして荷物を置き、ひと息リフレッシュ。夜の予定へ備えます。`,
-            tips: "チェックイン可能時間や駐車場の有無を事前に確認しておきましょう。",
-            mapQuery: hotelName
-          };
-
-          const existHotelIdx = newSteps.findIndex(s => s.day === targetDay && (s.category.includes('宿泊') || s.title.includes('チェックイン')));
-          if (existHotelIdx !== -1) {
-            newSteps[existHotelIdx] = hotelStep;
-          } else {
-            newSteps.push(hotelStep);
-          }
-        }
-        // ② カフェ・スイーツ要望
-        else if (pLower.includes('カフェ') || pLower.includes('コーヒー') || pLower.includes('スイーツ') || pLower.includes('お茶')) {
-          let cafeName = promptText.replace(/([0-9０-９]+日目?に?|カフェ|を追加|にして|で|に行きたい|美味しい|人気)/g, ' ').replace(/[、,。]/g, ' ').trim();
-          const spotTitle = cafeName ? `${cafeName} カフェ` : `${areaHint} 人気のオーシャンビューカフェ`;
-          const cafeStep = {
-            id: `step_ai_cafe_${Date.now()}`,
-            day: targetDay,
-            title: `${spotTitle} でカフェタイム`,
-            category: "カフェ・朝食",
-            time: "10:30〜11:30",
-            startTime: `${dateStr}T10:30:00`,
-            endTime: `${dateStr}T11:30:00`,
-            icon: "fa-solid fa-mug-saucer",
-            iconBg: "bg-amber-50 text-amber-600",
-            badge: "カフェ",
-            desc: "心地よい音楽と美味しいドリンク＆スイーツでゆったり優雅なティータイム。",
-            tips: "混雑を避けるため午前中〜お昼前の時間帯がおすすめ！",
-            mapQuery: spotTitle
-          };
-          newSteps.splice(Math.min(1, newSteps.length), 0, cafeStep);
-        }
-        // ③ 時間シフト要望（遅らせる/早める）
-        else if (pLower.includes('遅らせ') || pLower.includes('早め') || pLower.includes('時間')) {
-          const shiftMinutes = pLower.includes('1時間') || pLower.includes('60分') ? 60 : 30;
-          newSteps = newSteps.map(s => {
-            if (s.day === targetDay || promptText.includes('全体')) {
-              try {
-                const sD = new Date(s.startTime);
-                const eD = new Date(s.endTime);
-                sD.setMinutes(sD.getMinutes() + (pLower.includes('遅') ? shiftMinutes : -shiftMinutes));
-                eD.setMinutes(eD.getMinutes() + (pLower.includes('遅') ? shiftMinutes : -shiftMinutes));
-                const sH = String(sD.getHours()).padStart(2, '0');
-                const sM = String(sD.getMinutes()).padStart(2, '0');
-                const eH = String(eD.getHours()).padStart(2, '0');
-                const eM = String(eD.getMinutes()).padStart(2, '0');
-                return {
-                  ...s,
-                  time: `${sH}:${sM}〜${eH}:${eM}`,
-                  startTime: `${dateStr}T${sH}:${sM}:00`,
-                  endTime: `${dateStr}T${eH}:${eM}:00`
-                };
-              } catch(e){ return s; }
-            }
-            return s;
-          });
-        }
-        // ④ 雨天・室内プラン
-        else if (pLower.includes('雨') || pLower.includes('室内') || pLower.includes('水族館') || pLower.includes('美術館')) {
-          newSteps = newSteps.map(s => {
-            if (s.day === targetDay && (s.category.includes('観光') || s.category.includes('アクティビティ'))) {
-              return {
-                ...s,
-                title: `${areaHint} 室内ミュージアム＆散策`,
-                category: "観光",
-                badge: "雨天対応",
-                desc: "天候に左右されず快適に楽しめる人気の室内スポットを満喫。",
-                mapQuery: `${areaHint} 水族館 美術館`
-              };
-            }
-            return s;
-          });
-        }
-        // ⑤ 一般要望（新規スポットの挿入）
-        else {
-          const cleanReq = promptText.replace(/([0-9０-９]+日目?に?|を|に|で|へ|して|追加|変更|行きたい|希望)/g, ' ').replace(/[、,。]/g, ' ').trim();
-          const cleanTitle = cleanReq ? `${cleanReq} 観光・散策` : `${areaHint} おすすめ人気スポット`;
-          newSteps.push({
-            id: `step_ai_spot_${Date.now()}`,
-            day: targetDay,
-            title: cleanTitle,
-            category: "観光",
-            time: "14:00〜15:30",
-            startTime: `${dateStr}T14:00:00`,
-            endTime: `${dateStr}T15:30:00`,
-            icon: "fa-solid fa-camera",
-            iconBg: "bg-teal-50 text-teal-600",
-            badge: "おすすめ",
-            desc: `周辺の注目スポットを訪れて写真撮影や散策を楽しむ充実のひととき。`,
-            tips: "混雑状況や営業時間、定休日を事前に確認しておくと安心です。",
-            mapQuery: cleanReq || areaHint
-          });
-        }
-      }
-
-      document.getElementById('aiLoadingOverlay').classList.add('hidden');
-      if (newSteps && newSteps.length > 0) {
-        liveTripData[currentTripKey].steps = newSteps;
-        renderMainCards();
-        updateCurrentStep();
-        await saveToCloud();
-        showToast('AIがプランを自然なタイトルで更新しました！');
-        document.getElementById('aiPromptInput').value = '';
-      } else {
-        showToast('更新に失敗しました。もう一度お試しください。');
-      }
-    };
-
     window.setSlide = function(num, shouldScroll = true) {
       currentSlide = num;
       applyCurrentSlideView(shouldScroll);
@@ -2312,6 +2040,67 @@ ${JSON.stringify(currentTrip.steps, null, 2)}
         toast.classList.remove('opacity-100');
         toast.classList.add('opacity-0', 'pointer-events-none');
       }, 2500);
+    }
+
+    window.shareTripUrl = function() {
+      const shareUrl = window.location.href;
+      const trip = liveTripData[currentTripKey];
+      const text = `✈️ 【${trip.title}】のしおりを作成しました！\nこちらのリンクから参加・編集できます👇\n${shareUrl}`;
+
+      const dummy = document.createElement('textarea');
+      document.body.appendChild(dummy);
+      dummy.value = text;
+      dummy.select();
+      document.execCommand('copy');
+      document.body.removeChild(dummy);
+      showToast('LINE共有用リンクをコピーしました！');
+    };
+
+    function checkUrlParams() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tripParam = urlParams.get('trip')?.toLowerCase();
+
+      if (tripParam) {
+        if (!liveTripData[tripParam]) {
+          const saved = localStorage.getItem('shiorit_custom_' + tripParam);
+          if (saved) {
+            try { liveTripData[tripParam] = JSON.parse(saved); } catch(e){}
+          }
+        }
+
+        if (liveTripData[tripParam]) {
+          currentTripKey = tripParam;
+          const trip = liveTripData[currentTripKey];
+
+          if (trip.startDate && trip.endDate) {
+            const calc = calculateTripDates(trip.startDate.slice(0,10), trip.endDate.slice(0,10));
+            totalTripDays = calc.days;
+            trip.dayDates = trip.dayDates || calc.dayDates;
+          } else {
+            totalTripDays = 3;
+          }
+
+          document.getElementById('landingPage').classList.add('hidden');
+          document.getElementById('appHeader').classList.remove('hidden');
+          document.getElementById('pageNavContainer').classList.remove('hidden');
+
+          document.getElementById('activeTripTitle').innerText = trip.title;
+          document.getElementById('activeTripDates').innerText = trip.dates;
+          document.getElementById('appPageTitle').innerText = `${trip.title} - シオリット`;
+
+          renderTabBar();
+          renderMainCards();
+          setSlide(1, false);
+          updateCurrentStep();
+          syncFromCloud();
+          return;
+        }
+      }
+
+      document.getElementById('landingPage').classList.remove('hidden');
+      document.getElementById('appHeader').classList.add('hidden');
+      document.getElementById('pageNavContainer').classList.add('hidden');
+      document.getElementById('mainContainer').innerHTML = '';
     }
 
     window.addEventListener('hashchange', checkUrlParams);
