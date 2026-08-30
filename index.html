@@ -350,13 +350,14 @@
           </div>
 
           <div>
-            <label class="text-[11px] font-bold text-amber-900 block mb-1">主な移動手段</label>
-            <div class="grid grid-cols-3 gap-1.5">
-              <button type="button" onclick="selectTemplateOption('transport', 'レンタカー・車移動')" class="transport-chip py-1.5 px-2 bg-amber-200 border border-amber-400 font-bold rounded-xl text-[11px] text-amber-950 transition">🚗 レンタカー</button>
-              <button type="button" onclick="selectTemplateOption('transport', '電車・バス・公共交通機関')" class="transport-chip py-1.5 px-2 bg-white border border-amber-200 rounded-xl text-[11px] text-amber-950 transition">🚆 電車・バス</button>
-              <button type="button" onclick="selectTemplateOption('transport', '徒歩・タクシー中心')" class="transport-chip py-1.5 px-2 bg-white border border-amber-200 rounded-xl text-[11px] text-amber-950 transition">🚕 タクシー</button>
+            <label class="text-[11px] font-bold text-amber-900 block mb-1">現地での主な移動手段</label>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+              <button type="button" id="trans-opt-car" onclick="selectTransportOption(this, '車・レンタカー')" class="transport-chip py-2 px-1.5 bg-amber-200 border border-amber-400 font-bold rounded-xl text-[11px] text-amber-950 transition text-center">🚗 車・レンタカー</button>
+              <button type="button" id="trans-opt-train" onclick="selectTransportOption(this, '電車・バス')" class="transport-chip py-2 px-1.5 bg-white border border-amber-200 rounded-xl text-[11px] text-amber-950 transition text-center">🚆 電車・バス</button>
+              <button type="button" id="trans-opt-taxi" onclick="selectTransportOption(this, 'タクシー')" class="transport-chip py-2 px-1.5 bg-white border border-amber-200 rounded-xl text-[11px] text-amber-950 transition text-center">🚕 タクシー</button>
+              <button type="button" id="trans-opt-walk" onclick="selectTransportOption(this, '徒歩中心')" class="transport-chip py-2 px-1.5 bg-white border border-amber-200 rounded-xl text-[11px] text-amber-950 transition text-center">🚶 徒歩中心</button>
             </div>
-            <input type="hidden" id="aiSelectedTransport" value="レンタカー・車移動">
+            <input type="hidden" id="aiSelectedTransport" value="車・レンタカー">
           </div>
 
           <div>
@@ -876,18 +877,15 @@
     let newlyCreatedTripUrl = "";
     const selectedThemes = new Set(['ご当地絶品グルメ中心']);
 
-    window.selectTemplateOption = function(type, value) {
-      if (type === 'transport') {
-        document.getElementById('aiSelectedTransport').value = value;
-        document.querySelectorAll('.transport-chip').forEach(btn => {
-          if (btn.innerText.includes(value.substring(0, 3))) {
-            btn.classList.add('bg-amber-200', 'border-amber-400');
-            btn.classList.remove('bg-white');
-          } else {
-            btn.classList.remove('bg-amber-200', 'border-amber-400');
-            btn.classList.add('bg-white');
-          }
-        });
+    window.selectTransportOption = function(btn, value) {
+      document.getElementById('aiSelectedTransport').value = value;
+      document.querySelectorAll('.transport-chip').forEach(b => {
+        b.classList.remove('bg-amber-200', 'border-amber-400', 'font-bold');
+        b.classList.add('bg-white', 'border-amber-200');
+      });
+      if (btn) {
+        btn.classList.add('bg-amber-200', 'border-amber-400', 'font-bold');
+        btn.classList.remove('bg-white');
       }
     };
 
@@ -1004,7 +1002,10 @@
       document.getElementById('newTripStartDate').value = startD.toISOString().slice(0, 10);
       document.getElementById('newTripEndDate').value = endD.toISOString().slice(0, 10);
       updateCalcDaysDisplay();
-      selectTemplateOption('transport', 'レンタカー・車移動');
+      
+      const defaultTransBtn = document.getElementById('trans-opt-car');
+      selectTransportOption(defaultTransBtn, '車・レンタカー');
+      
       document.getElementById('createTripModal').classList.remove('hidden');
     };
 
