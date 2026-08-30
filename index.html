@@ -96,10 +96,11 @@
             <span>予定追加</span>
           </button>
 
-          <!-- AIプラン変更ボタン -->
-          <button onclick="openAiPromptModal()" class="flex items-center gap-1 px-2.5 py-1.5 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 active:opacity-90 text-slate-950 font-black rounded-xl text-xs shadow-lg transition cursor-pointer">
+          <!-- AIプラン変更ボタン（残り回数バッジ付き） -->
+          <button onclick="openAiPromptModal()" class="flex items-center gap-1.5 px-2.5 py-1.5 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 active:opacity-90 text-slate-950 font-black rounded-xl text-xs shadow-lg transition cursor-pointer">
             <i class="fa-solid fa-wand-magic-sparkles text-slate-950"></i>
             <span>AI変更</span>
+            <span id="aiHeaderRemainingBadge" class="bg-slate-950/80 text-amber-300 px-1.5 py-0.2 rounded-md text-[10px] font-mono">3/3</span>
           </button>
         </div>
 
@@ -536,8 +537,11 @@
             <i class="fa-solid fa-wand-magic-sparkles"></i>
           </div>
           <div>
-            <span class="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full font-bold">AI自動プラン書き換え ＆ 全員同期</span>
-            <h3 class="text-base font-black text-slate-800 mt-0.5">プラン変更の内容を入力</h3>
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full font-bold">AI自動プラン書き換え</span>
+              <span id="aiModalRemainingBadge" class="text-[10px] bg-slate-800 text-amber-300 px-2 py-0.5 rounded-full font-bold font-mono">本日残り 3/3回</span>
+            </div>
+            <h3 class="text-base font-black text-slate-800 mt-1">プラン変更の内容を入力</h3>
           </div>
         </div>
         <button onclick="closeAiPromptModal()" class="text-slate-400 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-lg">✕</button>
@@ -545,7 +549,7 @@
 
       <div class="space-y-2 text-xs text-slate-600">
         <p class="text-[11px] text-slate-600 leading-relaxed">
-          変更したい内容を入力してください。AIがスケジュールを再計算し、参加者全員の画面を自動更新します。
+          変更したい内容を入力してください。AIがスケジュールを再計算し、参加者全員の画面を自動更新します。（毎日0時にリセット）
         </p>
 
         <div class="relative">
@@ -604,6 +608,9 @@
     // Firestore REST API（同期用）
     const firebaseApiKey = "AIzaSyBUbfrWbxBIDN-Y4Ooa_8au9EANbUaWjKs";
     const firebaseProjectId = "travel-shiori-e81a2";
+
+    // 1日あたりのAI利用上限
+    const MAX_DAILY_AI_LIMIT = 3;
 
     const defaultTripData = {
       yamaguchi: {
@@ -687,6 +694,66 @@
     let currentSelectedMember = null;
     let lastCloudSyncHash = '';
     let confirmActionCallback = null;
+
+    // --- AI利用回数制限（1日3回、毎朝0時リセット）ロジック ---
+    function getTodayKey() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function getAiUsageCount() {
+      const today = getTodayKey();
+      const storageKey = `ai_count_${currentTripKey}_${today}`;
+      const count = parseInt(localStorage.getItem(storageKey), 10);
+      return isNaN(count) ? 0 : count;
+    }
+
+    function incrementAiUsageCount() {
+      const today = getTodayKey();
+      const storageKey = `ai_count_${currentTripKey}_${today}`;
+      const current = getAiUsageCount();
+      localStorage.setItem(storageKey, String(current + 1));
+      updateAiRemainingUI();
+    }
+
+    function updateAiRemainingUI() {
+      const used = getAiUsageCount();
+      const remaining = Math.max(0, MAX_DAILY_AI_LIMIT - used);
+      
+      const headerBadge = document.getElementById('aiHeaderRemainingBadge');
+      if (headerBadge) {
+        headerBadge.innerText = `${remaining}/${MAX_DAILY_AI_LIMIT}`;
+        if (remaining === 0) {
+          headerBadge.className = 'bg-rose-950 text-rose-300 border border-rose-500/40 px-1.5 py-0.2 rounded-md text-[10px] font-mono';
+        } else {
+          headerBadge.className = 'bg-slate-950/80 text-amber-300 px-1.5 py-0.2 rounded-md text-[10px] font-mono';
+        }
+      }
+
+      const modalBadge = document.getElementById('aiModalRemainingBadge');
+      if (modalBadge) {
+        modalBadge.innerText = `本日残り ${remaining}/${MAX_DAILY_AI_LIMIT}回`;
+        if (remaining === 0) {
+          modalBadge.className = 'text-[10px] bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full font-bold font-mono';
+        } else {
+          modalBadge.className = 'text-[10px] bg-slate-800 text-amber-300 px-2 py-0.5 rounded-full font-bold font-mono';
+        }
+      }
+
+      const submitBtn = document.getElementById('aiSubmitBtn');
+      if (submitBtn) {
+        if (remaining === 0) {
+          submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+          submitBtn.innerHTML = '<i class="fa-solid fa-ban"></i><span>本日の上限（3回）に達しました</span>';
+        } else {
+          submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+          submitBtn.innerHTML = '<i class="fa-solid fa-sparkles"></i><span>この内容でプランを更新する</span>';
+        }
+      }
+    }
 
     // カスタム確認モーダル制御（最前面）
     window.showCustomConfirm = function(title, message, onConfirm) {
@@ -826,6 +893,7 @@
       renderMainCards();
       setSlide(1, false);
       updateCurrentStep();
+      updateAiRemainingUI();
       syncFromCloud();
     }
 
@@ -847,6 +915,7 @@
       renderMainCards();
       setSlide(1, false);
       updateCurrentStep();
+      updateAiRemainingUI();
       syncFromCloud();
     };
 
@@ -1827,8 +1896,9 @@
       document.getElementById('detailModal').classList.add('hidden');
     };
 
-    // AIプラン変更（Cloudflare Workers プロキシ経由で安全に実行）
+    // AIプラン変更（Cloudflare Workers プロキシ経由で安全に実行 ＆ 1日3回制限）
     window.openAiPromptModal = function() {
+      updateAiRemainingUI();
       document.getElementById('aiPromptModal').classList.remove('hidden');
     };
     window.closeAiPromptModal = function() {
@@ -1839,6 +1909,12 @@
     };
 
     window.submitAiPlanChange = async function() {
+      const used = getAiUsageCount();
+      if (used >= MAX_DAILY_AI_LIMIT) {
+        showToast('本日のAI変更可能回数（3回）を超えました。明日0時にリセットされます。');
+        return;
+      }
+
       const promptText = document.getElementById('aiPromptInput').value.trim();
       if (!promptText) {
         showToast('変更内容を入力してください');
@@ -1906,7 +1982,6 @@ ${promptText}
 
       for (let attempt = 0; attempt <= 5; attempt++) {
         try {
-          // Cloudflare Workersの安全な中継エンドポイントへPOST
           const response = await fetch(cloudflareWorkerEndpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -1934,11 +2009,14 @@ ${promptText}
       document.getElementById('aiLoadingOverlay').classList.add('hidden');
 
       if (newSteps) {
+        incrementAiUsageCount(); // 利用回数を1回カウント
         liveTripData[currentTripKey].steps = newSteps;
         renderMainCards();
         updateCurrentStep();
         await saveToCloud();
-        showToast('プランを更新し、全員へ同期しました');
+        
+        const remainingNow = Math.max(0, MAX_DAILY_AI_LIMIT - getAiUsageCount());
+        showToast(`プランを更新しました！（本日残り ${remainingNow}回）`);
         document.getElementById('aiPromptInput').value = '';
       } else {
         showToast('プランの更新に失敗しました。もう一度お試しください。');
