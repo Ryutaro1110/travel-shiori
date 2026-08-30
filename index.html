@@ -876,6 +876,7 @@
     let currentSelectedMember = null;
     let newlyCreatedTripUrl = "";
     const selectedThemes = new Set(['ご当地絶品グルメ中心']);
+    let hasAutoSetEndTimeOnce = false;
 
     window.selectTransportOption = function(btn, value) {
       document.getElementById('aiSelectedTransport').value = value;
@@ -939,6 +940,26 @@
         startM.innerHTML += `<option value="${val}">${val}分</option>`;
         endM.innerHTML += `<option value="${val}">${val}分</option>`;
       }
+
+      // 開始時間を変更した際、初回のみ終了時間を自動で1時間後にセットするリスナー
+      const handleStartTimeChange = () => {
+        if (!hasAutoSetEndTimeOnce) {
+          const sHVal = parseInt(startH.value, 10);
+          if (!isNaN(sHVal)) {
+            const nextH = Math.min(23, sHVal + 1);
+            endH.value = String(nextH).padStart(2, '0');
+            endM.value = startM.value || '00';
+            hasAutoSetEndTimeOnce = true;
+          }
+        }
+      };
+
+      startH.onchange = handleStartTimeChange;
+      startM.onchange = handleStartTimeChange;
+
+      // ユーザーが手動で終了時間を選択した場合は、以降の自動上書きを停止
+      endH.onchange = () => { hasAutoSetEndTimeOnce = true; };
+      endM.onchange = () => { hasAutoSetEndTimeOnce = true; };
     }
 
     function calculateTripDates(startDateStr, endDateStr) {
@@ -1879,6 +1900,7 @@ ${userPrompt}
 
     window.openEditModal = function(stepId = null, targetDay = 1) {
       initTimePickers();
+      hasAutoSetEndTimeOnce = false; // モーダルを開くたびに初回自動セットフラグをリセット
       const trip = liveTripData[currentTripKey];
 
       const daySelect = document.getElementById('editDaySelect');
@@ -1901,6 +1923,27 @@ ${userPrompt}
         document.getElementById('editMapQuery').value = step.mapQuery || step.title;
         document.getElementById('editDesc').value = step.desc || '';
         document.getElementById('editTips').value = step.tips || '';
+
+        // 既存の開始時間・終了時間をピッカーに反映
+        if (step.startTime) {
+          const sDate = new Date(step.startTime);
+          if (!isNaN(sDate.getTime())) {
+            document.getElementById('editStartHour').value = String(sDate.getHours()).padStart(2, '0');
+            const m = Math.round(sDate.getMinutes() / 5) * 5;
+            document.getElementById('editStartMin').value = String(m >= 60 ? 55 : m).padStart(2, '0');
+          }
+        }
+        if (step.endTime) {
+          const eDate = new Date(step.endTime);
+          if (!isNaN(eDate.getTime())) {
+            document.getElementById('editEndHour').value = String(eDate.getHours()).padStart(2, '0');
+            const em = Math.round(eDate.getMinutes() / 5) * 5;
+            document.getElementById('editEndMin').value = String(em >= 60 ? 55 : em).padStart(2, '0');
+          }
+        } else {
+          document.getElementById('editEndHour').value = '';
+          document.getElementById('editEndMin').value = '';
+        }
       } else {
         currentSelectedStepId = null;
         document.getElementById('editModalHeading').innerText = '新しい予定を追加';
@@ -1914,6 +1957,8 @@ ${userPrompt}
         document.getElementById('editTips').value = '';
         document.getElementById('editStartHour').value = '10';
         document.getElementById('editStartMin').value = '00';
+        document.getElementById('editEndHour').value = '11';
+        document.getElementById('editEndMin').value = '00';
       }
       closeModal();
       document.getElementById('editModal').classList.remove('hidden');
