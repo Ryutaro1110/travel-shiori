@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-title" content="Shiorit">
   <meta name="theme-color" content="#EAF7FB">
 
-  <!-- アイコン（SVG） -->
+  <!-- iPhoneホーム画面追加用アイコン（青背景グラデーション＋Shiorit文字） -->
   <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><defs><linearGradient id='bg' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%2338bdf8'/><stop offset='100%' stop-color='%230284c7'/></linearGradient></defs><rect width='512' height='512' rx='112' fill='url(%23bg)'/><text x='50%' y='46%' font-family='-apple-system, BlinkMacSystemFont, sans-serif' font-weight='900' font-size='88' fill='%23ffffff' text-anchor='middle'>Shiorit</text><text x='50%' y='64%' font-family='-apple-system, BlinkMacSystemFont, sans-serif' font-weight='700' font-size='32' fill='%23e0f2fe' text-anchor='middle'>シオリット</text></svg>">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='%230284c7'/><text x='50%' y='55%' font-family='sans-serif' font-weight='900' font-size='90' fill='%23ffffff' text-anchor='middle'>Shiorit</text></svg>">
 
@@ -36,6 +36,7 @@
           boxShadow: {
             'resort': '0 12px 32px -4px rgba(100, 205, 227, 0.18), 0 4px 12px -2px rgba(31, 45, 61, 0.05)',
             'resort-hover': '0 20px 40px -6px rgba(100, 205, 227, 0.28), 0 8px 16px -4px rgba(31, 45, 61, 0.06)',
+            'glass': '0 8px 32px 0 rgba(100, 205, 227, 0.12)',
           }
         }
       }
@@ -56,7 +57,7 @@
       color: #1F2D3D;
     }
     .glass-card {
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 255, 255, 0.90);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       border: 1px solid rgba(174, 229, 239, 0.7);
@@ -93,24 +94,450 @@
 
   <!-- トップページ（LP） -->
   <div id="landingPage" class="hidden flex-1 flex flex-col justify-between">
+    <!-- LP ヘッダー -->
     <header class="glass-header px-4 py-3 sticky top-0 z-30 flex items-center justify-between">
       <div class="flex items-center gap-2.5">
         <div class="w-8 h-8 rounded-xl bg-shiorit-primary/15 flex items-center justify-center text-shiorit-primary font-bold shadow-xs">
           <i class="fa-solid fa-map-location-dot text-sm"></i>
         </div>
         <div>
-          <label class="font-bold text-shiorit-dark block mb-1">バッジ（任意）</label>
-          <input type="text" id="editBadge" class="w-full p-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark" placeholder="例：予約済">
+          <span class="font-black text-sm tracking-tight text-shiorit-dark block leading-none">シオリット</span>
+          <span class="text-[9px] font-medium text-shiorit-primary">旅のしおりを、かんたんに。</span>
+        </div>
+      </div>
+      <button onclick="openCreateTripModal()" class="px-3.5 py-1.5 bg-shiorit-primary hover:opacity-90 active:scale-95 text-white font-bold rounded-xl text-xs shadow-resort transition cursor-pointer">
+        しおりを作成する
+      </button>
+    </header>
+
+    <!-- LP メインビジュアル ＆ アクション -->
+    <div class="max-w-md w-full mx-auto p-4 sm:p-6 space-y-6 my-auto">
+      
+      <!-- メインキャッチコピーカード -->
+      <div class="glass-card rounded-3xl p-6 text-center space-y-4 shadow-resort relative overflow-hidden">
+        <div class="absolute -right-8 -top-8 w-32 h-32 bg-shiorit-secondary/40 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute -left-8 -bottom-8 w-32 h-32 bg-shiorit-primary/20 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div class="w-20 h-20 rounded-3xl bg-gradient-to-b from-white to-shiorit-light mx-auto flex items-center justify-center shadow-resort border border-shiorit-secondary/80">
+          <div class="relative flex items-center justify-center">
+            <i class="fa-solid fa-bookmark text-shiorit-primary text-3xl opacity-80"></i>
+            <i class="fa-solid fa-location-dot text-shiorit-dark text-lg absolute -top-1"></i>
+          </div>
+        </div>
+
+        <div class="space-y-1.5 relative z-10">
+          <span class="inline-block text-[11px] font-bold px-3 py-1 rounded-full bg-shiorit-primary/15 text-shiorit-dark border border-shiorit-primary/30">
+            アプリ不要・LINEで送るだけ
+          </span>
+          <h1 class="text-2xl sm:text-3xl font-black text-shiorit-dark tracking-tight leading-tight">
+            みんなで作る、<br><span class="text-shiorit-primary">次世代の旅行しおり ＆ 割り勘。</span>
+          </h1>
+          <p class="text-xs text-shiorit-gray leading-relaxed pt-1 max-w-xs mx-auto">
+            友達にURLを送るだけで全員が1秒で参加！スケジュール管理、Googleマップ連携、割り勘最小ルート計算、AIプラン再計算がすべてリアルタイム同期。
+          </p>
+        </div>
+
+        <button onclick="openCreateTripModal()" class="w-full py-4 bg-gradient-to-r from-shiorit-primary via-sky-400 to-teal-400 hover:opacity-95 active:scale-98 text-white font-black rounded-2xl text-sm shadow-resort flex items-center justify-center gap-2 transition cursor-pointer relative z-10">
+          <i class="fa-solid fa-plus-circle text-base"></i>
+          <span>新しく旅行しおりを作る（無料）</span>
+        </button>
+      </div>
+
+      <!-- サンプルしおりリンク -->
+      <div class="space-y-2">
+        <span class="text-[11px] font-bold text-shiorit-gray block text-center">サンプルしおりを体験する</span>
+        <div class="grid grid-cols-2 gap-2.5">
+          <a href="?trip=yamaguchi" class="glass-card p-3.5 rounded-2xl text-center hover:shadow-resort transition group border border-shiorit-secondary/70">
+            <span class="text-xs font-bold text-shiorit-dark group-hover:text-shiorit-primary transition block">🐡 山口 2泊3日</span>
+            <span class="text-[10px] text-shiorit-gray">萩・下関・角島</span>
+          </a>
+          <a href="?trip=karuizawa" class="glass-card p-3.5 rounded-2xl text-center hover:shadow-resort transition group border border-shiorit-secondary/70">
+            <span class="text-xs font-bold text-shiorit-dark group-hover:text-shiorit-primary transition block">🌲 軽井沢 2泊3日</span>
+            <span class="text-[10px] text-shiorit-gray">ピレネー・リゾート</span>
+          </a>
         </div>
       </div>
 
-      <div>
-        <label class="font-bold text-shiorit-dark block mb-1">Googleマップ検索キーワード または URL</label>
-        <input type="text" id="editMapQuery" class="w-full p-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark" placeholder="例：ハイアット リージェンシー 横浜、またはGoogleマップのURL">
+      <!-- シオリットの強みカード一覧 -->
+      <div class="space-y-3 pt-2">
+        <h2 class="text-xs font-black tracking-widest text-shiorit-primary uppercase text-center">シオリットの圧倒的強み</h2>
+        
+        <div class="space-y-2.5 text-xs">
+          <div class="glass-card p-4 rounded-2xl space-y-1 shadow-xs flex gap-3.5 items-start">
+            <div class="w-9 h-9 rounded-xl bg-shiorit-primary/20 text-shiorit-dark flex items-center justify-center shrink-0 font-black text-sm">
+              <i class="fa-solid fa-location-dot text-shiorit-primary"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-shiorit-dark">LINEで送るだけ（会員登録＆DL不要）</h3>
+              <p class="text-[11px] text-shiorit-gray leading-relaxed">全員のアプリDL・会員登録は一切不要。URLをLINEで開くだけで即座に全員が共同編集できます。</p>
+            </div>
+          </div>
+
+          <div class="glass-card p-4 rounded-2xl space-y-1 shadow-xs flex gap-3.5 items-start">
+            <div class="w-9 h-9 rounded-xl bg-shiorit-primary/20 text-shiorit-dark flex items-center justify-center shrink-0 font-black text-sm">
+              <i class="fa-solid fa-calculator text-shiorit-primary"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-shiorit-dark">割り勘 ＆ 送金ナビ（最小送金ルート）</h3>
+              <p class="text-[11px] text-shiorit-gray leading-relaxed">立て替えた支払いを記録するだけで、「誰が誰にいくら送金すれば良いか」を最小回数で自動算出。</p>
+            </div>
+          </div>
+
+          <div class="glass-card p-4 rounded-2xl space-y-1 shadow-xs flex gap-3.5 items-start">
+            <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 font-black text-sm">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-shiorit-dark">AIがプランを瞬時に再構築</h3>
+              <p class="text-[11px] text-shiorit-gray leading-relaxed">「雨天プランに変えて」「30分遅らせて」「ホテルを追加して」と伝えるだけで、AIが日程と時間を自動で再計算して全員に同期。</p>
+            </div>
+          </div>
+
+          <div class="glass-card p-4 rounded-2xl space-y-1 shadow-xs flex gap-3.5 items-start">
+            <div class="w-9 h-9 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center shrink-0 font-black text-sm">
+              <i class="fa-solid fa-map-location-dot"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-shiorit-dark">Googleマップ連携 ＆ 進行中ハイライト</h3>
+              <p class="text-[11px] text-shiorit-gray leading-relaxed">現在進行中の予定が自動ハイライト。タップするだけでGoogleマップのナビがワンタップ起動します。</p>
+            </div>
+          </div>
+        </div>
       </div>
 
+    </div>
+
+    <!-- フッター -->
+    <footer class="py-6 text-center text-[10px] text-shiorit-gray border-t border-shiorit-secondary/40">
+      &copy; Shiorit (シオリット) All Rights Reserved.
+    </footer>
+  </div>
+
+  <!-- アプリヘッダー（しおり閲覧・編集時） -->
+  <header id="appHeader" class="hidden sticky top-0 z-40 glass-header px-3.5 py-2.5 space-y-2">
+    <div class="max-w-md mx-auto space-y-2">
+      
+      <!-- タイトル＆アクションボタン -->
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2 flex-1 truncate">
+          <a href="./" class="w-8 h-8 rounded-xl bg-white border border-shiorit-secondary text-shiorit-dark flex items-center justify-center text-xs shadow-xs hover:bg-shiorit-light transition shrink-0" title="トップへ戻る">
+            <i class="fa-solid fa-house text-shiorit-primary"></i>
+          </a>
+          <div class="truncate">
+            <h1 id="activeTripTitle" class="font-black text-xs text-shiorit-dark truncate leading-tight">旅のしおり</h1>
+            <p id="activeTripDates" class="text-[10px] text-shiorit-gray font-medium">日程</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button onclick="shareTripUrl()" class="flex items-center gap-1 px-2.5 py-1.5 bg-white hover:bg-shiorit-light active:scale-95 text-shiorit-dark border border-shiorit-secondary font-bold rounded-xl text-xs shadow-xs transition cursor-pointer" title="LINEで共有">
+            <i class="fa-solid fa-share-nodes text-shiorit-primary"></i>
+            <span>共有</span>
+          </button>
+          <button onclick="openEditModal(null, currentSlide >= 1 && currentSlide <= totalTripDays ? currentSlide : 1)" class="flex items-center gap-1 px-2.5 py-1.5 bg-white hover:bg-shiorit-light active:scale-95 text-shiorit-dark border border-shiorit-secondary font-bold rounded-xl text-xs shadow-xs transition cursor-pointer">
+            <i class="fa-solid fa-plus text-teal-600"></i>
+            <span>追加</span>
+          </button>
+          <button onclick="openAiPromptModal()" class="flex items-center gap-1 px-2.5 py-1.5 bg-gradient-to-r from-amber-400 via-orange-400 to-rose-400 active:opacity-90 text-white font-black rounded-xl text-xs shadow-resort transition cursor-pointer" title="AIプラン変更">
+            <i class="fa-solid fa-wand-magic-sparkles text-white text-[11px]"></i>
+            <span>AI</span>
+            <span id="aiCountBadge" class="px-1.5 py-0.2 bg-black/25 text-white rounded-md text-[9px] font-bold">Free</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 動的スライド切り替えタブ -->
+      <div class="flex items-center justify-between gap-1">
+        <div id="dynamicTabBar" class="flex items-center gap-1 bg-shiorit-light/90 p-1 rounded-2xl border border-shiorit-secondary text-xs flex-1 overflow-x-auto no-scrollbar">
+          <!-- JSで日数に応じて動的生成 -->
+        </div>
+      </div>
+
+      <!-- 現在ステータスバー -->
+      <div class="flex items-center justify-between text-[11px] bg-white/70 px-3 py-1.5 rounded-xl border border-shiorit-secondary text-shiorit-dark">
+        <div class="flex items-center gap-1.5 truncate max-w-[210px]">
+          <span class="relative flex h-2 w-2 shrink-0">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-shiorit-primary opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-shiorit-primary"></span>
+          </span>
+          <span id="currentStatusText" class="font-bold text-shiorit-dark truncate">現在時刻を確認中...</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="inline-flex items-center gap-1 text-[10px] bg-shiorit-primary/15 text-shiorit-dark border border-shiorit-primary/30 px-2 py-0.5 rounded-md font-bold">
+            <i class="fa-solid fa-cloud-check text-shiorit-primary"></i> 同期中
+          </span>
+          <span id="nowTimeDisplay" class="font-mono text-shiorit-primary font-bold">--:--</span>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- トースト通知 -->
+  <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-[110] glass-card border border-shiorit-secondary text-shiorit-dark px-5 py-3 rounded-2xl shadow-resort flex items-center gap-2 text-xs font-bold opacity-0 pointer-events-none transition duration-300">
+    <i class="fa-solid fa-circle-check text-shiorit-primary"></i>
+    <span id="toastMsg">データを更新しました</span>
+  </div>
+
+  <!-- メインコンテンツ -->
+  <main id="mainContainer" class="flex-1 max-w-md w-full mx-auto p-3.5 sm:p-4 space-y-6"></main>
+
+  <!-- 新規旅行作成モーダル -->
+  <div id="createTripModal" class="fixed inset-0 z-[70] bg-shiorit-dark/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="glass-card bg-white/95 rounded-3xl max-w-md w-full p-5 shadow-resort border border-shiorit-secondary max-h-[92vh] overflow-y-auto space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-shiorit-secondary/40">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-shiorit-primary/20 text-shiorit-dark flex items-center justify-center text-lg font-bold">
+            <i class="fa-solid fa-plane-departure text-shiorit-primary"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-black text-shiorit-dark">新しい旅行しおりを作成</h3>
+            <p class="text-[10px] text-shiorit-gray font-medium">AI自動プラン構築 ＆ 共有URL即時発行</p>
+          </div>
+        </div>
+        <button onclick="closeCreateTripModal()" class="text-shiorit-gray hover:text-shiorit-dark w-8 h-8 flex items-center justify-center rounded-full hover:bg-shiorit-light text-lg">✕</button>
+      </div>
+
+      <form onsubmit="handleCreateTripSubmit(event)" class="space-y-3.5 text-xs">
+        <div>
+          <label class="font-bold text-shiorit-dark block mb-1">旅行先・タイトル <span class="text-rose-500">*</span></label>
+          <input type="text" id="newTripTitle" required class="w-full p-3 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl font-bold text-shiorit-dark focus:ring-2 focus:ring-shiorit-primary focus:outline-none" placeholder="例：横浜 2泊3日 リゾート女子旅">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="font-bold text-shiorit-dark block mb-1">開始日 <span class="text-rose-500">*</span></label>
+            <input type="date" id="newTripStartDate" required onchange="updateCalcDaysDisplay()" class="w-full p-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark font-bold focus:ring-2 focus:ring-shiorit-primary focus:outline-none">
+          </div>
+          <div>
+            <label class="font-bold text-shiorit-dark block mb-1">終了日 <span class="text-rose-500">*</span></label>
+            <input type="date" id="newTripEndDate" required onchange="updateCalcDaysDisplay()" class="w-full p-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark font-bold focus:ring-2 focus:ring-shiorit-primary focus:outline-none">
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between px-3 py-2 bg-shiorit-primary/10 rounded-xl border border-shiorit-primary/30">
+          <span class="text-[11px] font-bold text-shiorit-dark">計算された旅行日数</span>
+          <span id="calcDaysDisplay" class="font-bold text-xs text-shiorit-primary font-mono">2泊3日（3日間）</span>
+        </div>
+
+        <div>
+          <label class="font-bold text-shiorit-dark block mb-1">参加メンバー（カンマ区切り） <span class="text-rose-500">*</span></label>
+          <input type="text" id="newTripMembers" required class="w-full p-3 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark font-bold focus:ring-2 focus:ring-shiorit-primary focus:outline-none" value="たろう, はなこ">
+        </div>
+
+        <!-- AI希望条件入力 -->
+        <div class="bg-gradient-to-br from-amber-50/80 to-orange-50/80 border border-amber-200/80 rounded-2xl p-3.5 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="font-black text-amber-950 text-xs flex items-center gap-1.5">
+              <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i> AIプラン生成の希望条件
+            </span>
+            <span class="text-[10px] bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-full">おすすめ</span>
+          </div>
+
+          <!-- 移動手段 -->
+          <div>
+            <label class="text-[11px] font-bold text-amber-900 block mb-1">主な移動手段</label>
+            <div class="grid grid-cols-3 gap-1.5">
+              <button type="button" onclick="selectTemplateOption('transport', 'レンタカー・車移動')" class="transport-chip py-1.5 px-2 bg-amber-200 border border-amber-400 font-bold rounded-xl text-[11px] text-amber-950 transition">🚗 レンタカー</button>
+              <button type="button" onclick="selectTemplateOption('transport', '電車・バス・公共交通機関')" class="transport-chip py-1.5 px-2 bg-white border border-amber-200 rounded-xl text-[11px] text-amber-950 transition">🚆 電車・バス</button>
+              <button type="button" onclick="selectTemplateOption('transport', '徒歩・タクシー中心')" class="transport-chip py-1.5 px-2 bg-white border border-amber-200 rounded-xl text-[11px] text-amber-950 transition">🚕 タクシー</button>
+            </div>
+            <input type="hidden" id="aiSelectedTransport" value="レンタカー・車移動">
+          </div>
+
+          <!-- テーマ -->
+          <div>
+            <label class="text-[11px] font-bold text-amber-900 block mb-1">旅のテーマ（複数選択可）</label>
+            <div class="flex flex-wrap gap-1.5">
+              <button type="button" onclick="toggleThemeChip(this, 'ご当地絶品グルメ中心')" class="theme-chip py-1 px-2.5 bg-amber-200 border border-amber-400 font-bold rounded-lg text-[10px] text-amber-950 transition">🍣 名物グルメ</button>
+              <button type="button" onclick="toggleThemeChip(this, '温泉・リゾートでまったり癒やし')" class="theme-chip py-1 px-2.5 bg-white border border-amber-200 rounded-lg text-[10px] text-amber-950 transition">♨️ 温泉・まったり</button>
+              <button type="button" onclick="toggleThemeChip(this, 'SNS映え・絶景スポット巡り')" class="theme-chip py-1 px-2.5 bg-white border border-amber-200 rounded-lg text-[10px] text-amber-950 transition">📸 絶景・映え</button>
+              <button type="button" onclick="toggleThemeChip(this, 'アクティビティ・自然体験')" class="theme-chip py-1 px-2.5 bg-white border border-amber-200 rounded-lg text-[10px] text-amber-950 transition">🏄 アクティブ</button>
+            </div>
+          </div>
+
+          <!-- 自由要望 -->
+          <div>
+            <label class="text-[11px] font-bold text-amber-900 block mb-1">行きたい場所・希望（書ける範囲でOK）</label>
+            <textarea id="newTripAiPrompt" rows="2" class="w-full p-2.5 bg-white border border-amber-200 rounded-xl text-xs text-amber-950 placeholder-amber-800/40 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none" placeholder="例：ハイアットホテルに泊まりたい、中華街でランチしたい"></textarea>
+          </div>
+        </div>
+
+        <div class="pt-2 flex flex-col gap-2">
+          <button type="submit" name="submitAction" value="ai" class="w-full py-3.5 bg-gradient-to-r from-shiorit-primary via-sky-400 to-teal-400 hover:opacity-95 active:scale-98 text-white font-black rounded-2xl text-xs flex items-center justify-center gap-2 shadow-resort transition cursor-pointer">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>AIで全日プランを自動作成してスタート</span>
+          </button>
+          <div class="flex gap-2">
+            <button type="submit" name="submitAction" value="blank" class="flex-1 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-dark font-bold rounded-xl text-xs transition">
+              白紙で自分で作る
+            </button>
+            <button type="button" onclick="closeCreateTripModal()" class="px-4 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-gray font-medium rounded-xl text-xs transition">
+              キャンセル
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 汎用カスタム確認モーダル -->
+  <div id="confirmModal" class="fixed inset-0 z-[100] bg-shiorit-dark/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="glass-card bg-white rounded-3xl max-w-xs w-full p-5 shadow-resort border border-shiorit-secondary space-y-4 text-center">
+      <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center text-xl mx-auto border border-rose-100">
+        <i class="fa-regular fa-trash-can"></i>
+      </div>
       <div>
-        <label class="font-bold text-shiorit-dark block mb-1">詳細説明・予定メモ</label>
+        <h3 id="confirmModalTitle" class="text-base font-black text-shiorit-dark">削除の確認</h3>
+        <p id="confirmModalMessage" class="text-xs text-shiorit-gray mt-1 leading-relaxed">本当に削除しますか？</p>
+      </div>
+      <div class="pt-2 flex gap-2">
+        <button type="button" onclick="closeConfirmModal()" class="flex-1 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-dark font-bold rounded-xl text-xs transition">キャンセル</button>
+        <button type="button" id="confirmModalExecuteBtn" class="flex-1 py-2.5 bg-rose-500 hover:bg-rose-600 active:scale-95 text-white font-bold rounded-xl text-xs shadow transition">削除する</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- スポット詳細モーダル -->
+  <div id="detailModal" class="fixed inset-0 z-[60] bg-shiorit-dark/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="glass-card bg-white rounded-3xl max-w-md w-full p-5 shadow-resort border border-shiorit-secondary max-h-[88vh] overflow-y-auto space-y-4">
+      <div class="flex items-start justify-between pb-3 border-b border-shiorit-secondary/40">
+        <div class="flex items-center gap-2.5">
+          <div id="modalIconBox" class="w-10 h-10 rounded-2xl bg-shiorit-light text-shiorit-primary border border-shiorit-secondary flex items-center justify-center text-lg shadow-xs">
+            <i class="fa-solid fa-location-dot"></i>
+          </div>
+          <div>
+            <span id="modalCategory" class="text-[10px] bg-shiorit-primary/15 text-shiorit-dark px-2.5 py-0.5 rounded-full font-bold">スポット詳細</span>
+            <h3 id="modalTitle" class="text-base font-black text-shiorit-dark mt-0.5">スポット名</h3>
+          </div>
+        </div>
+        <button onclick="closeModal()" class="text-shiorit-gray hover:text-shiorit-dark w-8 h-8 flex items-center justify-center rounded-full hover:bg-shiorit-light text-lg">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs text-shiorit-dark">
+        <div class="flex items-center justify-between bg-shiorit-light/60 border border-shiorit-secondary/50 px-3 py-2 rounded-xl">
+          <div class="flex items-center gap-1.5 text-shiorit-dark font-bold">
+            <i class="fa-regular fa-clock text-shiorit-primary"></i>
+            <span id="modalTime">予定時間</span>
+          </div>
+          <span id="modalBadge" class="hidden text-[10px] bg-white text-shiorit-dark border border-shiorit-secondary px-2 py-0.5 rounded-md font-bold"></span>
+        </div>
+        
+        <div id="modalDescription" class="leading-relaxed bg-shiorit-light/40 p-3.5 rounded-2xl border border-shiorit-secondary/40 text-shiorit-dark whitespace-pre-line"></div>
+        
+        <div id="modalTipsBox" class="bg-amber-50/80 border border-amber-200/80 rounded-2xl p-3 space-y-1">
+          <div class="font-bold text-amber-900 flex items-center gap-1.5">
+            <i class="fa-solid fa-lightbulb text-amber-500"></i> ポイント・事前確認
+          </div>
+          <p id="modalTips" class="text-[11px] text-amber-800 leading-tight"></p>
+        </div>
+      </div>
+
+      <div class="pt-2 flex flex-col gap-2">
+        <div class="flex gap-2">
+          <a id="modalMapLink" href="https://maps.google.com" target="_blank" class="flex-1 py-2.5 bg-shiorit-primary hover:opacity-90 text-white font-bold rounded-xl text-xs text-center flex items-center justify-center gap-1.5 shadow-resort transition">
+            <i class="fa-solid fa-map-pin"></i>
+            <span>Googleマップで開く</span>
+          </a>
+          <button id="modalEditBtn" class="px-3.5 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-dark font-bold rounded-xl text-xs flex items-center gap-1 transition">
+            <i class="fa-solid fa-pen-to-square text-shiorit-primary"></i>
+            <span>編集</span>
+          </button>
+        </div>
+        <div class="flex justify-between items-center pt-1 border-t border-shiorit-secondary/30">
+          <button id="modalDeleteBtn" class="text-rose-500 hover:text-rose-700 text-xs font-bold py-1 px-2 flex items-center gap-1">
+            <i class="fa-regular fa-trash-can"></i>
+            <span>この予定を削除</span>
+          </button>
+          <button onclick="closeModal()" class="px-4 py-1.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-gray font-medium rounded-lg text-xs transition">閉じる</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 手動 予定追加・編集モーダル -->
+  <div id="editModal" class="fixed inset-0 z-[60] bg-shiorit-dark/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="glass-card bg-white rounded-3xl max-w-md w-full p-5 shadow-resort border border-shiorit-secondary max-h-[90vh] overflow-y-auto space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-shiorit-secondary/40">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-shiorit-light text-shiorit-primary border border-shiorit-secondary flex items-center justify-center text-sm font-bold">
+            <i id="editModalIcon" class="fa-solid fa-pen-to-square"></i>
+          </div>
+          <h3 id="editModalHeading" class="text-base font-black text-shiorit-dark">予定を手動で編集</h3>
+        </div>
+        <button onclick="closeEditModal()" class="text-shiorit-gray hover:text-shiorit-dark w-8 h-8 flex items-center justify-center rounded-full hover:bg-shiorit-light text-lg">✕</button>
+      </div>
+
+      <form id="editForm" onsubmit="saveManualStep(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="editStepId" value="">
+
+        <div>
+          <label class="font-bold text-shiorit-dark block mb-1">対象の日程</label>
+          <select id="editDaySelect" class="w-full p-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl font-bold text-shiorit-dark focus:ring-2 focus:ring-shiorit-primary focus:outline-none"></select>
+        </div>
+
+        <div>
+          <label class="font-bold text-shiorit-dark block mb-1">予定・スポット名 <span class="text-rose-500">*</span></label>
+          <input type="text" id="editTitle" required class="w-full p-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark font-bold focus:ring-2 focus:ring-shiorit-primary focus:outline-none" placeholder="例：ビーチカフェ、マリンアクティビティ">
+        </div>
+
+        <div class="bg-shiorit-light/60 border border-shiorit-secondary/60 rounded-2xl p-3 space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="font-bold text-shiorit-dark flex items-center gap-1">
+              <i class="fa-regular fa-clock text-shiorit-primary"></i> 時間の設定（時・分）
+            </label>
+            <span class="text-[10px] text-shiorit-gray font-bold">5分刻み</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <span class="text-[10px] text-shiorit-gray block mb-1">開始時間</span>
+              <div class="flex items-center gap-1">
+                <select id="editStartHour" class="flex-1 p-2 bg-white border border-shiorit-secondary rounded-xl text-center font-bold text-shiorit-dark text-xs"></select>
+                <span class="font-bold text-shiorit-gray">:</span>
+                <select id="editStartMin" class="flex-1 p-2 bg-white border border-shiorit-secondary rounded-xl text-center font-bold text-shiorit-dark text-xs"></select>
+              </div>
+            </div>
+
+            <div>
+              <span class="text-[10px] text-shiorit-gray block mb-1">終了時間（任意）</span>
+              <div class="flex items-center gap-1">
+                <select id="editEndHour" class="flex-1 p-2 bg-white border border-shiorit-secondary rounded-xl text-center font-bold text-shiorit-dark text-xs"></select>
+                <span class="font-bold text-shiorit-gray">:</span>
+                <select id="editEndMin" class="flex-1 p-2 bg-white border border-shiorit-secondary rounded-xl text-center font-bold text-shiorit-dark text-xs"></select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="font-bold text-shiorit-dark block mb-1">カテゴリ</label>
+            <select id="editCategory" class="w-full p-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark font-medium">
+              <option value="観光">観光</option>
+              <option value="ランチ">ランチ</option>
+              <option value="ディナー">ディナー</option>
+              <option value="カフェ・朝食">カフェ・朝食</option>
+              <option value="移動・ドライブ">移動・ドライブ</option>
+              <option value="アクティビティ">アクティビティ</option>
+              <option value="宿泊・温泉">宿泊・温泉</option>
+              <option value="ショッピング">ショッピング</option>
+              <option value="重要予定">重要予定</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-bold text-shiorit-dark block mb-1">バッジ（任意）</label>
+            <input type="text" id="editBadge" class="w-full p-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark" placeholder="例：予約済">
+          </div>
+        </div>
+
+        <div>
+          <label class="font-bold text-shiorit-dark block mb-1">Googleマップ検索キーワード または URL</label>
+          <input type="text" id="editMapQuery" class="w-full p-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark" placeholder="例：ハイアット リージェンシー 横浜、またはGoogleマップのURL">
+        </div>
+
+        <div>
+          <label class="font-bold text-shiorit-dark block mb-1">詳細説明・予定メモ</label>
           <textarea id="editDesc" rows="2" class="w-full p-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark resize-none" placeholder="予定の詳細や持ち物メモ"></textarea>
         </div>
 
@@ -312,7 +739,7 @@
     </div>
   </div>
 
-  <!-- 既存しおり AIプラン変更 入力モーダル -->
+  <!-- AIプラン変更 入力モーダル -->
   <div id="aiPromptModal" class="fixed inset-0 z-[60] bg-shiorit-dark/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="glass-card bg-white rounded-3xl max-w-md w-full p-5 shadow-resort border border-shiorit-secondary space-y-4">
       <div class="flex items-start justify-between pb-2 border-b border-shiorit-secondary/40">
@@ -1605,7 +2032,6 @@ ${JSON.stringify(currentTrip.steps, null, 2)}
         newSteps = JSON.parse(JSON.stringify(currentTrip.steps || []));
         const pLower = promptText.toLowerCase();
 
-        // 対象日の判定
         let targetDay = 1;
         for (let d = 1; d <= totalTripDays; d++) {
           if (promptText.includes(`${d}日目`) || promptText.includes(`${d}日`)) {
@@ -1621,7 +2047,6 @@ ${JSON.stringify(currentTrip.steps, null, 2)}
 
         // ① ホテル・宿泊・チェックインの要望
         if (promptText.includes('ホテル') || promptText.includes('泊まる') || promptText.includes('宿') || promptText.includes('チェックイン') || promptText.includes('旅館')) {
-          // 施設名のクレンジング抽出（例: 「1日目に泊まるホテルは、横浜駅のハイアットホテルです」➔「ハイアットホテル」）
           let hotelName = promptText
             .replace(/([0-9０-９]+日目?に?|泊まる|宿泊する|ホテルは|です|に決定|に変更|にして|を追加|予定)/g, ' ')
             .replace(/[、,。]/g, ' ')
@@ -1650,7 +2075,6 @@ ${JSON.stringify(currentTrip.steps, null, 2)}
             mapQuery: hotelName
           };
 
-          // 既存の同日チェックインがあれば置き換え、なければ夕方前に挿入
           const existHotelIdx = newSteps.findIndex(s => s.day === targetDay && (s.category.includes('宿泊') || s.title.includes('チェックイン')));
           if (existHotelIdx !== -1) {
             newSteps[existHotelIdx] = hotelStep;
