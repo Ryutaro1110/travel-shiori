@@ -1063,22 +1063,30 @@
 
     // AI初期プラン生成
     async function generateInitialPlanWithAi(title, totalDays, dayDates, members, userPrompt) {
-      const systemPrompt = `あなたはプロの旅行ツアープランナーです。指定された日数（1日目〜${totalDays}日目）の全日程の旅行プランJSONを作成してください。
-出力形式: {"steps": [...]}
-day は 1 〜 ${totalDays} の整数。各日ごとに必ず3〜4個の工程（午前・昼・午後・夜）を作成すること。
-startTimeとendTimeは必ず指定された日付文字列と結合し ISO8601形式（例: "YYYY-MM-DDT10:00:00"）にすること。`;
+      const systemPrompt = `あなたはプロの旅行ツアープランナーです。指定された旅行タイトル、日数（全${totalDays}日間）、ユーザーの希望条件に基づいて、美しく実用的な旅行しおりのタイムラインJSONを作成してください。
+
+【厳格な出力仕様】
+1. 出力は必ず {"steps": [...]} の形式のJSONオブジェクトのみを返してください（Markdown記法や挨拶は含めないでください）。
+2. day は 1 〜 ${totalDays} の整数。1日あたり3〜4個の予定（午前・昼・午後・夜）を作成してください。
+3. タイトル（title）はユーザーの話し言葉をそのまま入れず、「〇〇でランチ」「〇〇散策」「〇〇 チェックイン」など正式で洗練された名称にしてください。
+4. 各予定の mapQuery には、Googleマップで一発でピンポイントにヒットする正式な施設名・店舗名（例: "横浜赤レンガ倉庫", "横浜中華街", "横浜アリーナ"）を設定してください。
+5. startTime と endTime は、指定された各日の日付（${JSON.stringify(dayDates)}）と時間を結合した ISO8601形式（例: "${dayDates[1] || '2026-10-02'}T12:00:00"）にしてください。`;
 
       const userQuery = `【旅行先】: ${title}
 【全日程】: ${totalDays}日間
 【各日の日付】: ${JSON.stringify(dayDates)}
-【希望条件】:
+【参加メンバー】: ${members.join(', ')}
+【ユーザーの希望条件】:
 ${userPrompt}
 
-全${totalDays}日分の steps 配列を作成してください。`;
+上記を反映した全${totalDays}日分の旅行プラン steps 配列を作成してください。`;
 
       const payload = {
         contents: [{ parts: [{ text: `${systemPrompt}\n\n${userQuery}` }] }],
-        generationConfig: { responseMimeType: "application/json" }
+        generationConfig: { 
+          responseMimeType: "application/json",
+          temperature: 0.7
+        }
       };
 
       try {
@@ -1087,34 +1095,43 @@ ${userPrompt}
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
-        if (res.ok) {
-          const result = await res.json();
-          const textResp = result.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (textResp) {
-            const cleanJsonStr = textResp.replace(/```json/gi, '').replace(/```/gi, '').trim();
-            const jsonMatch = cleanJsonStr.match(/\{[\s\S]*\}/);
-            const targetStr = jsonMatch ? jsonMatch[0] : cleanJsonStr;
-            const parsed = JSON.parse(targetStr);
-            if (parsed.steps && Array.isArray(parsed.steps) && parsed.steps.length > 0) {
-              return parsed.steps.map((s, idx) => ({
-                id: s.id || `ai_step_${Date.now()}_${idx}`,
-                day: Math.min(Math.max(1, parseInt(s.day, 10) || 1), totalDays),
-                title: s.title || "観光スポット",
-                category: s.category || "観光",
-                time: s.time || "10:00〜12:00",
-                startTime: s.startTime || `${dayDates[s.day || 1]}T10:00:00`,
-                endTime: s.endTime || `${dayDates[s.day || 1]}T12:00:00`,
-                icon: s.icon || getCategoryIcon(s.category),
-                iconBg: s.iconBg || "bg-shiorit-light text-shiorit-primary",
-                badge: s.badge || "",
-                desc: s.desc || "",
-                tips: s.tips || "",
-                mapQuery: s.mapQuery || s.title || title
-              }));
-            }
-          }
+        
+        if (!res.ok) {
+          const errText = await res.text();
+          console.error("AI Server Error (Initial):", res.status, errText);
+          throw new Error(`AIサーバー通信エラー (${res.status})`);
         }
-      } catch(e){}
+
+        const result = await res.json();
+        const textResp = result.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!textResp) throw new Error("AIから応答テキストが取得できませんでした");
+
+        const cleanJsonStr = textResp.replace(/```json/gi, '').replace(/```/gi, '').trim();
+        const jsonMatch = cleanJsonStr.match(/\{[\s\S]*\}/);
+        const targetStr = jsonMatch ? jsonMatch[0] : cleanJsonStr;
+        const parsed = JSON.parse(targetStr);
+
+        if (parsed.steps && Array.isArray(parsed.steps) && parsed.steps.length > 0) {
+          return parsed.steps.map((s, idx) => ({
+            id: s.id || `ai_step_${Date.now()}_${idx}`,
+            day: Math.min(Math.max(1, parseInt(s.day, 10) || 1), totalDays),
+            title: s.title || "観光スポット",
+            category: s.category || "観光",
+            time: s.time || "10:00〜12:00",
+            startTime: s.startTime || `${dayDates[s.day || 1]}T10:00:00`,
+            endTime: s.endTime || `${dayDates[s.day || 1]}T12:00:00`,
+            icon: s.icon || getCategoryIcon(s.category),
+            iconBg: s.iconBg || "bg-shiorit-light text-shiorit-primary",
+            badge: s.badge || "",
+            desc: s.desc || "",
+            tips: s.tips || "",
+            mapQuery: s.mapQuery || s.title || title
+          }));
+        }
+      } catch(err) {
+        console.error("AI Generation Failed:", err);
+        showToast(`AIプラン生成に失敗: ${err.message}`);
+      }
       return null;
     }
 
@@ -1222,114 +1239,114 @@ ${userPrompt}
         const url = `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/travel_plans/${currentTripKey}?key=${firebaseApiKey}`;
         const res = await fetch(url);
         if (res.ok) {
-          const doc = await res.json();
-          if (doc.fields) {
-            const rawHash = (doc.fields.stepsJson?.stringValue || '') + (doc.fields.membersJson?.stringValue || '') + (doc.fields.expensesJson?.stringValue || '');
-            if (rawHash && rawHash !== lastCloudSyncHash) {
-              lastCloudSyncHash = rawHash;
-              if (doc.fields.stepsJson) {
-                const steps = JSON.parse(doc.fields.stepsJson.stringValue);
-                if (steps && Array.isArray(steps)) liveTripData[currentTripKey].steps = steps;
-              }
-              if (doc.fields.membersJson) {
-                const members = JSON.parse(doc.fields.membersJson.stringValue);
-                if (members && Array.isArray(members)) liveTripData[currentTripKey].members = members;
-              }
-              if (doc.fields.expensesJson) {
-                const expenses = JSON.parse(doc.fields.expensesJson.stringValue);
-                if (expenses && Array.isArray(expenses)) liveTripData[currentTripKey].expenses = expenses;
-              }
-              renderMainCards();
-              updateCurrentStep();
-            }
-          }
+    // AIプラン変更送信（本物のAI通信のみを実行し、プロンプトを高度に最適化）
+    window.submitAiPlanChange = async function() {
+      const promptText = document.getElementById('aiPromptInput').value.trim();
+      if (!promptText) return;
+
+      closeAiPromptModal();
+      document.getElementById('aiLoadingTitle').innerText = 'AIがプランを再構築中...';
+      document.getElementById('aiLoadingSub').innerText = '要望を解析し、時間配分とGoogleマップ情報を最適化中';
+      document.getElementById('aiLoadingOverlay').classList.remove('hidden');
+
+      const currentTrip = liveTripData[currentTripKey];
+      const areaHint = currentTrip.title.replace(/[0-9０-９泊日旅ツアー]/g, '').trim() || '観光地';
+
+      const systemPrompt = `あなたはプロの旅行ツアープランナーです。ユーザーの要望に従って既存の旅行予定（全${totalTripDays}日間、day: 1〜${totalTripDays}）を賢く再構築・更新してください。
+
+【プロのプランニング・知性ルール】
+1. ユーザーの入力した文章をそのままタイトルにしないでください。
+   例: 「中華街でSumikaのライブがあってグッズ列に並ぶ」という要望の場合、以下のようにスマートに分割・整理してください。
+   ・予定1: 「Sumika ライブ グッズ販売（物販待機）」(カテゴリ: 重要予定, 時間: 11:30〜14:30, mapQuery: "横浜アリーナ" または "横浜BUNTAI" などライブ会場名)
+   ・予定2: 「横浜中華街 飲茶ランチ＆散策」(カテゴリ: ランチ, 時間: 14:30〜16:30, mapQuery: "横浜中華街")
+   ・予定3: 「Sumika ライブ本番開演」(カテゴリ: 重要予定, 時間: 17:30〜20:30, mapQuery: "ライブ会場名")
+2. ホテル宿泊の希望なら「〇〇ホテル チェックイン」、カフェの希望なら「〇〇カフェでティータイム」のように、美しいしおりタイトルに整えてください。
+3. Googleマップ検索キーワード（mapQuery）には、Googleマップで確実にピンポイントに検索できる「正確な施設名・会場名・店舗名」を設定してください。
+4. 出力は必ず {"steps": [...]} のJSONオブジェクトのみを返してください。
+5. 各ステップの startTime, endTime は、日付（${JSON.stringify(currentTrip.dayDates)}）と時間を結合した ISO8601形式（例: "${currentTrip.dayDates[1] || '2026-10-02'}T15:00:00"）にしてください。`;
+
+      const userQuery = `【旅行先エリア】: ${areaHint} (${currentTrip.title})
+【全日程】: ${totalTripDays}日間
+【各日の日付】: ${JSON.stringify(currentTrip.dayDates)}
+
+【現在の旅行スケジュール】:
+${JSON.stringify(currentTrip.steps, null, 2)}
+
+【ユーザーからの変更・追加・調整の要望】:
+「${promptText}」
+
+上記要望を反映した、全日程の新しい steps 配列JSONを出力してください。`;
+
+      const payload = {
+        contents: [{ parts: [{ text: `${systemPrompt}\n\n${userQuery}` }] }],
+        generationConfig: { 
+          responseMimeType: "application/json",
+          temperature: 0.7
         }
-      } catch (err) {}
-    }
+      };
 
-    async function saveToCloud() {
-      if (!currentTripKey) return;
-      try {
-        const trip = liveTripData[currentTripKey];
-        if (!trip) return;
-        const rawHash = JSON.stringify(trip.steps) + JSON.stringify(trip.members || []) + JSON.stringify(trip.expenses || []);
-        lastCloudSyncHash = rawHash;
+      let newSteps = null;
+      let errorDetail = null;
 
-        const url = `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/travel_plans/${currentTripKey}?key=${firebaseApiKey}`;
-        const body = {
-          fields: {
-            stepsJson: { stringValue: JSON.stringify(trip.steps) },
-            membersJson: { stringValue: JSON.stringify(trip.members || []) },
-            expensesJson: { stringValue: JSON.stringify(trip.expenses || []) }
+      for (let attempt = 0; attempt <= 2; attempt++) {
+        try {
+          const res = await fetch(cloudflareWorkerEndpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          if (!res.ok) {
+            const errBody = await res.text();
+            throw new Error(`サーバー応答エラー (${res.status}): ${errBody.slice(0, 100)}`);
           }
-        };
-        await fetch(url, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
-      } catch (err) {}
-    }
 
-    function checkUrlParams() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const tripParam = urlParams.get('trip')?.toLowerCase();
+          const result = await res.json();
+          const textResp = result.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (!textResp) throw new Error("AIからの応答が空でした");
 
-      if (tripParam) {
-        if (!liveTripData[tripParam]) {
-          const saved = localStorage.getItem('shiorit_custom_' + tripParam);
-          if (saved) {
-            try { liveTripData[tripParam] = JSON.parse(saved); } catch(e){}
+          const cleanStr = textResp.replace(/```json/gi, '').replace(/```/gi, '').trim();
+          const match = cleanStr.match(/\{[\s\S]*\}/);
+          const target = match ? match[0] : cleanStr;
+          const parsed = JSON.parse(target);
+
+          if (parsed.steps && Array.isArray(parsed.steps) && parsed.steps.length > 0) {
+            newSteps = parsed.steps.map((s, idx) => ({
+              id: s.id || `step_${Date.now()}_${idx}`,
+              day: Math.min(Math.max(1, parseInt(s.day, 10) || 1), totalTripDays),
+              title: s.title || "スポット",
+              category: s.category || "観光",
+              time: s.time || "10:00〜12:00",
+              startTime: s.startTime || `${currentTrip.dayDates[s.day || 1]}T10:00:00`,
+              endTime: s.endTime || `${currentTrip.dayDates[s.day || 1]}T12:00:00`,
+              icon: s.icon || getCategoryIcon(s.category),
+              iconBg: s.iconBg || "bg-shiorit-light text-shiorit-primary",
+              badge: s.badge || "",
+              desc: s.desc || "",
+              tips: s.tips || "",
+              mapQuery: s.mapQuery || s.title || areaHint
+            }));
+            break;
           }
-        }
-
-        if (liveTripData[tripParam]) {
-          currentTripKey = tripParam;
-          document.getElementById('landingPage').classList.add('hidden');
-          document.getElementById('appHeader').classList.remove('hidden');
-          document.getElementById('pageNavContainer').classList.remove('hidden');
-
-          const trip = liveTripData[currentTripKey];
-          document.getElementById('activeTripTitle').innerText = trip.title;
-          document.getElementById('activeTripDates').innerText = trip.dates;
-          document.getElementById('appPageTitle').innerText = `${trip.title} - シオリット`;
-
-          const calc = calculateTripDates(trip.startDate?.slice(0,10), trip.endDate?.slice(0,10));
-          totalTripDays = calc.days;
-          trip.dayDates = calc.dayDates;
-
-          renderTabBar();
-          renderMainCards();
-          setSlide(1, false);
-          updateCurrentStep();
-          syncFromCloud();
-          return;
+        } catch(err) {
+          console.error(`AI Attempt ${attempt + 1} Failed:`, err);
+          errorDetail = err.message;
+          await new Promise(r => setTimeout(r, 1000));
         }
       }
 
-      document.getElementById('landingPage').classList.remove('hidden');
-      document.getElementById('appHeader').classList.add('hidden');
-      document.getElementById('pageNavContainer').classList.add('hidden');
-      document.getElementById('mainContainer').innerHTML = '';
-    }
+      document.getElementById('aiLoadingOverlay').classList.add('hidden');
 
-    window.shareTripUrl = function() {
-      const shareUrl = window.location.href;
-      const trip = liveTripData[currentTripKey];
-      const text = `✈️ 【${trip.title}】のしおりを作成しました！\nこちらのリンクから参加・編集できます👇\n${shareUrl}`;
-
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(text).then(() => {
-          showToast('LINE共有用リンクをコピーしました！');
-        });
+      if (newSteps && newSteps.length > 0) {
+        liveTripData[currentTripKey].steps = newSteps;
+        renderMainCards();
+        updateCurrentStep();
+        await saveToCloud();
+        showToast('✨ AIがプランを美しく再構築しました！');
+        document.getElementById('aiPromptInput').value = '';
       } else {
-        const dummy = document.createElement('textarea');
-        document.body.appendChild(dummy);
-        dummy.value = text;
-        dummy.select();
-        document.execCommand('copy');
-        document.body.removeChild(dummy);
-        showToast('LINE共有用リンクをコピーしました！');
+        // ローカルでの文字列切り貼りは行わず、エラー原因を通知
+        showToast(`AI更新に失敗しました: ${errorDetail || 'サーバー通信エラー'}`);
       }
     };
 
