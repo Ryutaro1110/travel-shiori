@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-title" content="シオリット">
   <meta name="theme-color" content="#64CDE3">
   
-  <!-- ChatGPT仕様のブランドカラー ＆ 構成に完全準拠した新SVGアイコン -->
+  <!-- 添付いただいたデザイン仕様に完全準拠した新SVGアイコン -->
   <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><defs><linearGradient id='bg' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23EAF7FB'/><stop offset='50%' stop-color='%23AEE5EF'/><stop offset='100%' stop-color='%2364CDE3'/></linearGradient><linearGradient id='ribbon' x1='0%' y1='0%' x2='0%' y2='100%'><stop offset='0%' stop-color='%2364CDE3'/><stop offset='100%' stop-color='%2338bdf8'/></linearGradient></defs><rect width='512' height='512' rx='112' fill='url(%23bg)'/><g transform='translate(96, 64)'><path d='M30 30 C30 20 40 10 50 10 L270 10 C280 10 290 20 290 30 L290 320 L160 270 L30 320 Z' fill='%23ffffff' fill-opacity='0.85' stroke='%238CCFE3' stroke-width='4'/><path d='M90 60 L230 60 M90 110 L230 110 M90 160 L230 160' stroke='%23D3F0F6' stroke-width='3' stroke-linecap='round'/><path d='M90 60 Q160 100 230 60 M90 110 Q160 150 230 110' fill='none' stroke='%23D3F0F6' stroke-width='2'/><path d='M100 280 L160 380 L220 280 Z' fill='url(%23ribbon)' stroke='%2364CDE3' stroke-width='3'/><circle cx='160' cy='120' r='36' fill='%2364CDE3' stroke='%23ffffff' stroke-width='6'/><circle cx='160' cy='120' r='14' fill='%23ffffff'/></g></svg>">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='bg' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23AEE5EF'/><stop offset='100%' stop-color='%2364CDE3'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23bg)'/><path d='M10 10 C10 6 14 2 18 2 L82 2 C86 2 90 6 90 10 L90 75 L50 60 L10 75 Z' fill='white' fill-opacity='0.9' stroke='%238CCFE3' stroke-width='1.5'/><polygon points='32,62 50,92 68,62' fill='%2364CDE3'/><circle cx='50' cy='32' r='11' fill='%2364CDE3' stroke='white' stroke-width='2'/><circle cx='50' cy='32' r='4' fill='white'/></svg>">
 
@@ -350,23 +350,6 @@
     </div>
   </div>
 
-  <!-- 確認モーダル -->
-  <div id="confirmModal" class="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-xs w-full p-5 shadow-2xl border border-slate-100 space-y-4 text-center">
-      <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl mx-auto shadow-inner">
-        <i class="fa-regular fa-trash-can"></i>
-      </div>
-      <div>
-        <h3 id="confirmModalTitle" class="text-base font-black text-slate-800">削除の確認</h3>
-        <p id="confirmModalMessage" class="text-xs text-slate-500 mt-1 leading-relaxed">本当に削除しますか？</p>
-      </div>
-      <div class="pt-2 flex gap-2">
-        <button type="button" onclick="closeConfirmModal()" class="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">キャンセル</button>
-        <button type="button" id="confirmModalExecuteBtn" class="flex-1 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-xl text-xs shadow-lg transition">削除する</button>
-      </div>
-    </div>
-  </div>
-
   <!-- スポット詳細モーダル -->
   <div id="detailModal" class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl border border-slate-100 max-h-[88vh] overflow-y-auto space-y-4">
@@ -473,7 +456,6 @@
     </div>
   </div>
 
-  <!-- メンバー詳細 / 支払い詳細 / 支払い登録 / メンバー追加 / AIプロンプト モーダル群省略せずインクルード -->
   <!-- AIプラン変更モーダル -->
   <div id="aiPromptModal" class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl border border-slate-100 space-y-4">
@@ -531,7 +513,7 @@
     </button>
   </div>
 
-  <!-- メンバー別詳細・支払い詳細・メンバー追加・支払い登録等のモーダル・スクリプト群 -->
+  <!-- 割り勘用モーダル群 -->
   <div id="memberDetailModal" class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl max-h-[90vh] overflow-y-auto space-y-4">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -642,7 +624,6 @@
     let currentSlide = 1;
     let liveTripData = JSON.parse(JSON.stringify(defaultTripData));
     let lastCloudSyncHash = '';
-    let confirmActionCallback = null;
 
     function getTodayKey() {
       const now = new Date();
