@@ -7,10 +7,13 @@
   
   <!-- iOS PWA・全画面スタンドアロン設定 -->
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="シオリット">
-  <meta name="theme-color" content="#0f172a">
-  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/854/854878.png">
+  <meta name="theme-color" content="#0ea5e9">
+  
+  <!-- 新アイコニックロゴ（しおりリボン × 旅立つ紙飛行機 / エメラルドシアンブルー） -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><defs><linearGradient id='bg' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%2306b6d4'/><stop offset='50%' stop-color='%230ea5e9'/><stop offset='100%' stop-color='%232563eb'/></linearGradient><linearGradient id='glow' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23ffffff' stop-opacity='0.45'/><stop offset='100%' stop-color='%23ffffff' stop-opacity='0'/></linearGradient></defs><rect width='120' height='120' rx='28' fill='url(%23bg)'/><rect x='4' y='4' width='112' height='56' rx='24' fill='url(%23glow)'/><path d='M38 24 L82 24 C86 24 88 28 86 32 L78 68 C77 71 74 74 70 74 L46 74 L34 94 L34 30 C34 26 36 24 38 24 Z' fill='white' fill-opacity='0.95'/><path d='M50 36 L86 44 L60 62 L56 78 L50 64 L36 58 Z' fill='%230284c7'/><circle cx='86' cy='44' r='4' fill='%23fbbf24'/></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='b' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%2306b6d4'/><stop offset='100%' stop-color='%232563eb'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='url(%23b)'/><path d='M30 20 L70 20 C74 20 76 24 74 27 L66 60 C65 63 62 65 59 65 L38 65 L28 82 L28 25 C28 22 29 20 30 20 Z' fill='white'/><polygon points='42,32 74,38 52,54 48,68 44,56 32,50' fill='%230284c7'/></svg>">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -20,6 +23,20 @@
         extend: {
           fontFamily: {
             sans: ['"Noto Sans JP"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+          },
+          colors: {
+            ocean: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              200: '#99f6e4',
+              300: '#5eead4',
+              400: '#2dd4bf',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a',
+            }
           }
         }
       }
@@ -28,7 +45,7 @@
   <!-- Google Fonts & Font Awesome -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   
   <style>
@@ -36,21 +53,24 @@
       padding-top: env(safe-area-inset-top);
       padding-bottom: env(safe-area-inset-bottom);
     }
-    @keyframes pulse-red-border {
+    .font-brand {
+      font-family: 'Plus Jakarta Sans', 'Noto Sans JP', sans-serif;
+    }
+    @keyframes pulse-resort-border {
       0%, 100% {
-        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.75);
-        border-color: #ef4444;
+        box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.7);
+        border-color: #0ea5e9;
       }
       50% {
-        box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.25);
-        border-color: #dc2626;
+        box-shadow: 0 0 0 6px rgba(14, 165, 233, 0.2);
+        border-color: #0284c7;
       }
     }
     .current-active-step {
-      animation: pulse-red-border 2s infinite ease-in-out;
+      animation: pulse-resort-border 2s infinite ease-in-out;
       border-width: 2px !important;
-      border-color: #ef4444 !important;
-      background-color: #fff1f2 !important;
+      border-color: #0ea5e9 !important;
+      background-color: #f0f9ff !important;
     }
     button { -webkit-tap-highlight-color: transparent; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -58,24 +78,28 @@
     select { -webkit-appearance: none; appearance: none; }
   </style>
 </head>
-<body class="bg-slate-900 text-slate-800 font-sans min-h-screen antialiased flex flex-col justify-between selection:bg-amber-300">
+<body class="bg-gradient-to-b from-sky-50 via-cyan-50/40 to-slate-100 text-slate-800 font-sans min-h-screen antialiased flex flex-col justify-between selection:bg-cyan-200">
 
-  <!-- 🧭 しおり閲覧時専用ヘッダー -->
-  <header id="appHeader" class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-3 py-2 space-y-2 hidden">
+  <!-- 🧭 しおり閲覧時専用ヘッダー（透明感のあるグラスモーフィズム） -->
+  <header id="appHeader" class="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-sky-100/80 px-3 py-2 space-y-2 shadow-xs hidden">
     <div class="max-w-md mx-auto space-y-2">
       
       <!-- ロゴ ＆ トップ戻る ＆ 新規作成 ＆ AI変更 ＆ 予定追加 -->
       <div class="flex items-center justify-between gap-1.5">
         
         <!-- ブランドロゴ（タップでトップLPへ戻る） -->
-        <div class="flex items-center gap-1.5 shrink-0 cursor-pointer" onclick="goToTopPage()">
-          <span class="w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 text-white flex items-center justify-center text-xs shadow-md font-black">
-            S
-          </span>
+        <div class="flex items-center gap-2 shrink-0 cursor-pointer group" onclick="goToTopPage()">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-cyan-400 via-sky-500 to-blue-600 text-white flex items-center justify-center shadow-md shadow-sky-500/20 group-active:scale-95 transition">
+            <svg class="w-5 h-5" viewBox="0 0 100 100" fill="none">
+              <path d="M28 18 L72 18 C76 18 78 22 76 26 L68 60 C67 63 64 66 60 66 L38 66 L26 84 L26 24 C26 20 27 18 28 18 Z" fill="white" fill-opacity="0.95"/>
+              <path d="M40 30 L74 37 L50 53 L46 67 L41 55 L28 50 Z" fill="#0284c7"/>
+              <circle cx="74" cy="37" r="3.5" fill="#f59e0b"/>
+            </svg>
+          </div>
           <div>
             <div class="flex items-center gap-1">
-              <span class="font-black text-sm text-white tracking-tight">シオリット</span>
-              <span class="text-[9px] bg-blue-500/20 text-blue-300 border border-blue-400/30 px-1 py-0.2 rounded font-bold">Beta</span>
+              <span class="font-brand font-black text-sm text-slate-900 tracking-tight">Shiorit</span>
+              <span class="text-[9px] bg-sky-100 text-sky-700 font-bold px-1.5 py-0.2 rounded-full border border-sky-200">Beta</span>
             </div>
           </div>
         </div>
@@ -83,43 +107,43 @@
         <!-- アクションボタン群 -->
         <div class="flex items-center gap-1 shrink-0">
           <!-- 新規旅行作成ボタン -->
-          <button onclick="openNewTripModal()" class="flex items-center gap-1 px-2 py-1.5 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-bold rounded-xl text-xs shadow transition cursor-pointer" title="新しいしおりを作成">
-            <i class="fa-solid fa-folder-plus text-xs"></i>
+          <button onclick="openNewTripModal()" class="flex items-center gap-1 px-2.5 py-1.5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 active:scale-95 text-white font-bold rounded-xl text-xs shadow-sm transition cursor-pointer" title="新しいしおりを作成">
+            <i class="fa-solid fa-plus text-xs"></i>
             <span class="hidden sm:inline">新しおり</span>
             <span class="sm:hidden">新規</span>
           </button>
 
           <!-- 予定追加ボタン -->
-          <button onclick="openEditModal(null, currentSlide >= 1 && currentSlide <= 3 ? currentSlide : 1)" class="flex items-center gap-1 px-2 py-1.5 bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 font-bold rounded-xl text-xs shadow transition cursor-pointer">
-            <i class="fa-solid fa-plus text-emerald-400"></i>
+          <button onclick="openEditModal(null, currentSlide >= 1 && currentSlide <= 3 ? currentSlide : 1)" class="flex items-center gap-1 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-bold rounded-xl text-xs transition cursor-pointer">
+            <i class="fa-solid fa-calendar-plus text-sky-600"></i>
             <span>予定追加</span>
           </button>
 
           <!-- AIプラン変更ボタン（残り回数バッジ付き・1日5回） -->
-          <button onclick="openAiPromptModal()" class="flex items-center gap-1 px-2 py-1.5 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 active:opacity-90 text-slate-950 font-black rounded-xl text-xs shadow-lg transition cursor-pointer">
-            <i class="fa-solid fa-wand-magic-sparkles text-slate-950"></i>
+          <button onclick="openAiPromptModal()" class="flex items-center gap-1 px-2.5 py-1.5 bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 active:opacity-90 text-amber-950 font-black rounded-xl text-xs shadow-md shadow-amber-500/20 transition cursor-pointer">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-950"></i>
             <span>AI変更</span>
-            <span id="aiHeaderRemainingBadge" class="bg-slate-950/80 text-amber-300 px-1.5 py-0.2 rounded-md text-[10px] font-mono">5/5</span>
+            <span id="aiHeaderRemainingBadge" class="bg-amber-950/20 text-amber-950 px-1.5 py-0.2 rounded-md text-[10px] font-mono">5/5</span>
           </button>
         </div>
 
       </div>
 
       <!-- 旅行タイトルバッジ（LINE共有 / 直接リンクコピー） -->
-      <div class="flex items-center justify-between bg-slate-800/80 px-2.5 py-1.5 rounded-xl border border-slate-700/80 text-xs">
+      <div class="flex items-center justify-between bg-sky-50/80 px-3 py-1.5 rounded-xl border border-sky-200/70 text-xs">
         <div class="flex items-center gap-2 truncate flex-1 cursor-pointer" onclick="setSlide(1)">
-          <span id="currentTripIcon" class="w-5 h-5 rounded-lg text-white flex items-center justify-center text-[10px] bg-blue-600 shrink-0 shadow">
+          <span id="currentTripIcon" class="w-6 h-6 rounded-lg text-white flex items-center justify-center text-xs bg-sky-500 shrink-0 shadow-xs">
             <i class="fa-solid fa-location-dot"></i>
           </span>
           <div class="truncate">
-            <span id="currentTripTitle" class="font-bold text-white text-xs truncate block">読み込み中...</span>
-            <span id="currentTripDates" class="text-[10px] text-slate-400 block truncate">日程</span>
+            <span id="currentTripTitle" class="font-bold text-slate-900 text-xs truncate block">読み込み中...</span>
+            <span id="currentTripDates" class="text-[10px] text-slate-500 block truncate">日程</span>
           </div>
         </div>
 
         <div class="flex items-center gap-1 shrink-0 ml-2">
-          <!-- LINE共有 / 専用URLコピーボタン -->
-          <button onclick="shareTripUrl()" class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold rounded-lg text-xs flex items-center gap-1.5 transition shadow cursor-pointer">
+          <!-- LINE共有ボタン -->
+          <button onclick="shareTripUrl()" class="px-3 py-1 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-bold rounded-lg text-xs flex items-center gap-1.5 transition shadow-xs cursor-pointer">
             <i class="fa-solid fa-share-nodes text-xs"></i>
             <span>共有</span>
           </button>
@@ -128,32 +152,32 @@
 
       <!-- スライド切り替えタブ -->
       <div class="flex items-center justify-between gap-1">
-        <div class="flex items-center gap-1 bg-slate-800/80 p-1 rounded-xl border border-slate-700/80 text-xs flex-1">
-          <button onclick="setSlide(1)" id="tab-1" class="tab-btn flex-1 py-1.5 rounded-lg font-bold text-white bg-blue-600 shadow-sm transition text-center">1日目</button>
-          <button onclick="setSlide(2)" id="tab-2" class="tab-btn flex-1 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition text-center">2日目</button>
-          <button onclick="setSlide(3)" id="tab-3" class="tab-btn flex-1 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition text-center">3日目</button>
-          <button onclick="setSlide(4)" id="tab-4" class="tab-btn flex-1 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition text-center">MAP</button>
-          <button onclick="setSlide(5)" id="tab-5" class="tab-btn flex-1 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition text-center">精算</button>
-          <button onclick="setSlide(0)" id="tab-0" class="tab-btn px-2 py-1.5 rounded-lg font-medium text-slate-400 hover:text-white transition text-center" title="全一覧表示">
+        <div class="flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 text-xs flex-1">
+          <button onclick="setSlide(1)" id="tab-1" class="tab-btn flex-1 py-1.5 rounded-lg font-bold text-white bg-sky-500 shadow-sm transition text-center">1日目</button>
+          <button onclick="setSlide(2)" id="tab-2" class="tab-btn flex-1 py-1.5 rounded-lg font-medium text-slate-500 hover:text-slate-900 transition text-center">2日目</button>
+          <button onclick="setSlide(3)" id="tab-3" class="tab-btn flex-1 py-1.5 rounded-lg font-medium text-slate-500 hover:text-slate-900 transition text-center">3日目</button>
+          <button onclick="setSlide(4)" id="tab-4" class="tab-btn flex-1 py-1.5 rounded-lg font-medium text-slate-500 hover:text-slate-900 transition text-center">MAP</button>
+          <button onclick="setSlide(5)" id="tab-5" class="tab-btn flex-1 py-1.5 rounded-lg font-medium text-slate-500 hover:text-slate-900 transition text-center">精算</button>
+          <button onclick="setSlide(0)" id="tab-0" class="tab-btn px-2.5 py-1.5 rounded-lg font-medium text-slate-500 hover:text-slate-900 transition text-center" title="全一覧表示">
             <i class="fa-solid fa-list-ul"></i>
           </button>
         </div>
       </div>
 
       <!-- 現在ステータスバー -->
-      <div class="flex items-center justify-between text-[11px] bg-slate-800/90 px-3 py-1.5 rounded-xl border border-slate-700 text-slate-300">
+      <div class="flex items-center justify-between text-[11px] bg-white/90 px-3 py-1.5 rounded-xl border border-sky-100 text-slate-600 shadow-xs">
         <div class="flex items-center gap-1.5 truncate max-w-[210px]">
           <span class="relative flex h-2 w-2 shrink-0">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
           </span>
-          <span id="currentStatusText" class="font-medium text-slate-200 truncate">現在時刻を確認中...</span>
+          <span id="currentStatusText" class="font-medium text-slate-700 truncate">現在時刻を確認中...</span>
         </div>
         <div class="flex items-center gap-1.5">
-          <span id="syncBadge" class="inline-flex items-center gap-1 text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-md font-bold">
-            <i class="fa-solid fa-shield-halved"></i> クラウド同期中
+          <span id="syncBadge" class="inline-flex items-center gap-1 text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-md font-bold">
+            <i class="fa-solid fa-cloud-check"></i> 同期中
           </span>
-          <span id="nowTimeDisplay" class="font-mono text-amber-300 font-bold">--:--</span>
+          <span id="nowTimeDisplay" class="font-mono text-sky-700 font-bold">--:--</span>
         </div>
       </div>
 
@@ -161,122 +185,138 @@
   </header>
 
   <!-- トースト通知 -->
-  <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-[110] bg-slate-800 border border-slate-700 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2 text-xs font-bold opacity-0 pointer-events-none transition duration-300">
-    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+  <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-[110] bg-slate-900/90 backdrop-blur-md border border-slate-700 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2 text-xs font-bold opacity-0 pointer-events-none transition duration-300">
+    <i class="fa-solid fa-circle-check text-cyan-400"></i>
     <span id="toastMsg">データを更新しました</span>
   </div>
 
-  <!-- 🌟 トップページ（LP：サービス紹介 ＆ 新規しおり作成導線） -->
+  <!-- 🌟 トップページ（LP：地中海リゾートの爽やかさ ＆ 新規作成導線） -->
   <div id="landingView" class="flex-1 max-w-md w-full mx-auto p-4 sm:p-5 space-y-6">
     
     <!-- LPヘッダー -->
     <div class="flex items-center justify-between pt-2">
-      <div class="flex items-center gap-2">
-        <span class="w-8 h-8 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-sm shadow-md font-black">
-          S
-        </span>
-        <span class="font-black text-lg text-white tracking-tight">シオリット</span>
-        <span class="text-[10px] bg-blue-500/20 text-blue-300 border border-blue-400/30 px-1.5 py-0.5 rounded-md font-bold">Webアプリ</span>
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-cyan-400 via-sky-500 to-blue-600 text-white flex items-center justify-center shadow-md shadow-sky-500/20">
+          <svg class="w-6 h-6" viewBox="0 0 100 100" fill="none">
+            <path d="M28 18 L72 18 C76 18 78 22 76 26 L68 60 C67 63 64 66 60 66 L38 66 L26 84 L26 24 C26 20 27 18 28 18 Z" fill="white" fill-opacity="0.95"/>
+            <path d="M40 30 L74 37 L50 53 L46 67 L41 55 L28 50 Z" fill="#0284c7"/>
+            <circle cx="74" cy="37" r="3.5" fill="#f59e0b"/>
+          </svg>
+        </div>
+        <div>
+          <span class="font-brand font-black text-xl text-slate-900 tracking-tight block leading-none">Shiorit</span>
+          <span class="text-[10px] text-slate-400 font-bold tracking-wide">シオリット</span>
+        </div>
       </div>
+      <span class="text-[10px] bg-sky-100/80 text-sky-800 border border-sky-200 px-2 py-0.5 rounded-full font-bold">Webアプリ</span>
     </div>
 
-    <!-- ヒーローセクション -->
-    <div class="relative bg-gradient-to-br from-indigo-900 via-slate-900 to-blue-950 border border-slate-800 rounded-3xl p-6 text-white space-y-4 shadow-2xl overflow-hidden">
-      <div class="absolute -right-10 -top-10 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl pointer-events-none"></div>
+    <!-- ヒーローセクション（海外リゾートの透き通るブルーグラデーション） -->
+    <div class="relative bg-gradient-to-br from-cyan-500 via-sky-600 to-blue-700 border border-sky-400/30 rounded-3xl p-6 sm:p-7 text-white space-y-4 shadow-xl shadow-sky-500/15 overflow-hidden">
+      <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/15 rounded-full blur-2xl pointer-events-none"></div>
+      <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-cyan-300/20 rounded-full blur-2xl pointer-events-none"></div>
       
-      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-amber-300 text-[11px] font-bold">
-        <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> アプリインストール不要
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-amber-200 text-[11px] font-bold">
+        <i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i> アプリ不要・LINEで送るだけ
       </div>
 
-      <h1 class="text-2xl font-black leading-snug tracking-tight">
+      <h1 class="text-2xl sm:text-3xl font-black leading-snug tracking-tight">
         みんなで作る、<br>
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-sky-300 to-emerald-300">
-          旅行しおり ＆ 割り勘。
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-white to-cyan-100">
+          次世代の旅行しおり ＆ 割り勘。
         </span>
       </h1>
 
-      <p class="text-xs text-slate-300 leading-relaxed">
-        URLをLINEで共有するだけ！スケジュール管理、Googleマップ連携、割り勘最小ルート計算、AIプラン再計算がすべて全員でリアルタイム同期。
+      <p class="text-xs text-sky-100/90 leading-relaxed font-medium">
+        友達にURLを送るだけで全員が1秒で参加！スケジュール管理、Googleマップ連携、割り勘最小ルート計算、AIプラン再計算がすべてリアルタイム同期。
       </p>
 
       <!-- 新規作成CTAボタン -->
       <div class="pt-2">
-        <button onclick="openNewTripModal()" class="w-full py-3.5 bg-gradient-to-r from-indigo-500 via-blue-600 to-indigo-700 hover:opacity-95 active:scale-98 text-white font-black rounded-2xl text-sm shadow-xl flex items-center justify-center gap-2 transition cursor-pointer">
-          <i class="fa-solid fa-plus-circle text-base text-amber-300"></i>
+        <button onclick="openNewTripModal()" class="w-full py-4 bg-white hover:bg-sky-50 active:scale-98 text-sky-700 font-black rounded-2xl text-sm shadow-xl flex items-center justify-center gap-2 transition cursor-pointer">
+          <i class="fa-solid fa-plus-circle text-base text-amber-500"></i>
           <span>新しく旅行しおりを作る（無料）</span>
         </button>
       </div>
     </div>
 
-    <!-- シオリットの4大特徴 -->
+    <!-- シオリットの4大特徴（タビオリに勝つ強み） -->
     <div class="space-y-3">
-      <h2 class="text-xs font-black text-slate-400 uppercase tracking-wider px-1">シオリットの特徴</h2>
+      <h2 class="text-xs font-black text-slate-500 uppercase tracking-wider px-1">シオリットの圧倒的強み</h2>
       
       <div class="grid grid-cols-1 gap-2.5 text-xs">
-        <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-3.5 flex items-start gap-3">
-          <div class="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-sm font-bold shrink-0 mt-0.5">
-            <i class="fa-solid fa-share-nodes"></i>
+        <div class="bg-white/90 backdrop-blur-sm border border-sky-100 rounded-2xl p-4 flex items-start gap-3.5 shadow-xs">
+          <div class="w-9 h-9 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-sm font-bold shrink-0 mt-0.5">
+            <i class="fa-solid fa-bolt"></i>
           </div>
           <div>
-            <h3 class="font-bold text-white text-xs">LINEでURLを送るだけ</h3>
-            <p class="text-[11px] text-slate-400 mt-0.5 leading-relaxed">全員のアプリインストールは不要。リンクを開くだけで誰でもすぐ閲覧・共同編集できます。</p>
+            <h3 class="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+              <span>LINEで送るだけ（会員登録＆DL不要）</span>
+              <span class="text-[9px] bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded font-bold">1秒参加</span>
+            </h3>
+            <p class="text-[11px] text-slate-500 mt-0.5 leading-relaxed">全員のアプリインストールは不要。リンクを開くだけで誰でもすぐ閲覧・共同編集できます。</p>
           </div>
         </div>
 
-        <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-3.5 flex items-start gap-3">
-          <div class="w-8 h-8 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-sm font-bold shrink-0 mt-0.5">
+        <div class="bg-white/90 backdrop-blur-sm border border-sky-100 rounded-2xl p-4 flex items-start gap-3.5 shadow-xs">
+          <div class="w-9 h-9 rounded-xl bg-cyan-100 text-cyan-600 flex items-center justify-center text-sm font-bold shrink-0 mt-0.5">
             <i class="fa-solid fa-calculator"></i>
           </div>
           <div>
-            <h3 class="font-bold text-white text-xs">割り勘＆送金ナビ自動計算</h3>
-            <p class="text-[11px] text-slate-400 mt-0.5 leading-relaxed">立替えた支払いを記録するだけで、「誰が誰にいくら送金すれば良いか」を最小ルートで自動算出。</p>
+            <h3 class="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+              <span>割り勘＆送金ナビ（最小送金ルート自動計算）</span>
+            </h3>
+            <p class="text-[11px] text-slate-500 mt-0.5 leading-relaxed">立替えた支払いを記録するだけで、「誰が誰にいくら送金すれば良いか」を最小回数で自動算出。</p>
           </div>
         </div>
 
-        <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-3.5 flex items-start gap-3">
-          <div class="w-8 h-8 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-sm font-bold shrink-0 mt-0.5">
+        <div class="bg-white/90 backdrop-blur-sm border border-sky-100 rounded-2xl p-4 flex items-start gap-3.5 shadow-xs">
+          <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-sm font-bold shrink-0 mt-0.5">
             <i class="fa-solid fa-wand-magic-sparkles"></i>
           </div>
           <div>
-            <h3 class="font-bold text-white text-xs">AIがプランを瞬時に再構築</h3>
-            <p class="text-[11px] text-slate-400 mt-0.5 leading-relaxed">「雨天プランに変えて」「30分遅らせて」と伝えるだけで、AIが日程と時間を自動で再計算して全員に同期。</p>
+            <h3 class="font-bold text-slate-900 text-xs flex items-center gap-1.5">
+              <span>AIがプランを瞬時に再構築</span>
+              <span class="text-[9px] bg-amber-100 text-amber-800 px-1.5 py-0.2 rounded font-bold">1日5回無料</span>
+            </h3>
+            <p class="text-[11px] text-slate-500 mt-0.5 leading-relaxed">「雨天プランに変えて」「30分遅らせて」と伝えるだけで、AIが日程と時間を自動で再計算して全員に同期。</p>
           </div>
         </div>
 
-        <div class="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-3.5 flex items-start gap-3">
-          <div class="w-8 h-8 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold shrink-0 mt-0.5">
+        <div class="bg-white/90 backdrop-blur-sm border border-sky-100 rounded-2xl p-4 flex items-start gap-3.5 shadow-xs">
+          <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm font-bold shrink-0 mt-0.5">
             <i class="fa-solid fa-map-location-dot"></i>
           </div>
           <div>
-            <h3 class="font-bold text-white text-xs">Googleマップ連携＆現在地ハイライト</h3>
-            <p class="text-[11px] text-slate-400 mt-0.5 leading-relaxed">現在進行中の予定が赤枠で自動ハイライト。タップするだけでGoogleマップがワンタップ起動します。</p>
+            <h3 class="font-bold text-slate-900 text-xs">Googleマップ連携 ＆ 進行中ハイライト</h3>
+            <p class="text-[11px] text-slate-500 mt-0.5 leading-relaxed">現在進行中の予定が自動ハイライト。タップするだけでGoogleマップがワンタップ起動します。</p>
           </div>
         </div>
       </div>
     </div>
 
     <!-- サンプルしおりの体験ボタン -->
-    <div class="bg-slate-800/60 border border-slate-700/60 rounded-3xl p-4 space-y-3">
+    <div class="bg-white/80 border border-sky-100 rounded-3xl p-4 space-y-3 shadow-xs">
       <div class="flex items-center justify-between">
-        <span class="font-bold text-slate-300 text-xs flex items-center gap-1.5">
-          <i class="fa-solid fa-compass text-blue-400"></i> サンプルしおりを体験
+        <span class="font-bold text-slate-700 text-xs flex items-center gap-1.5">
+          <i class="fa-solid fa-compass text-sky-500"></i> サンプルしおりを体験
         </span>
-        <span class="text-[10px] text-slate-500">登録不要</span>
+        <span class="text-[10px] text-slate-400">登録不要</span>
       </div>
       <div class="grid grid-cols-2 gap-2 text-xs">
-        <button onclick="loadSampleTrip('yamaguchi')" class="p-3 bg-slate-800 hover:bg-slate-700 active:scale-98 rounded-2xl border border-slate-700 text-left transition space-y-1">
-          <span class="text-xs font-bold text-white block">🐡 山口 2泊3日</span>
-          <span class="text-[10px] text-slate-400 block">萩・下関・秋吉台・BBQ</span>
+        <button onclick="loadSampleTrip('yamaguchi')" class="p-3 bg-sky-50/60 hover:bg-sky-100/80 active:scale-98 rounded-2xl border border-sky-100 text-left transition space-y-1">
+          <span class="text-xs font-bold text-slate-900 block">🐡 山口 2泊3日</span>
+          <span class="text-[10px] text-slate-500 block">萩・下関・秋吉台・BBQ</span>
         </button>
-        <button onclick="loadSampleTrip('karuizawa')" class="p-3 bg-slate-800 hover:bg-slate-700 active:scale-98 rounded-2xl border border-slate-700 text-left transition space-y-1">
-          <span class="text-xs font-bold text-white block">🌲 軽井沢 2泊3日</span>
-          <span class="text-[10px] text-slate-400 block">ピレネー・コモングラウンズ</span>
+        <button onclick="loadSampleTrip('karuizawa')" class="p-3 bg-emerald-50/60 hover:bg-emerald-100/80 active:scale-98 rounded-2xl border border-emerald-100 text-left transition space-y-1">
+          <span class="text-xs font-bold text-slate-900 block">🌲 軽井沢 2泊3日</span>
+          <span class="text-[10px] text-slate-500 block">ピレネー・コモングラウンズ</span>
         </button>
       </div>
     </div>
 
     <!-- フッター -->
-    <div class="text-center text-[10px] text-slate-500 pb-6 space-y-1">
+    <div class="text-center text-[10px] text-slate-400 pb-6 space-y-1">
       <p>© 2026 シオリット (Shiorit) - All in One Travel Planner</p>
     </div>
 
@@ -286,16 +326,16 @@
   <main id="mainContainer" class="flex-1 max-w-md w-full mx-auto p-3 sm:p-4 space-y-6 hidden"></main>
 
   <!-- 🆕 新規旅行の作成モーダル (z-[70]) -->
-  <div id="newTripModal" class="fixed inset-0 z-[70] bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl border border-slate-100 space-y-4 max-h-[90vh] overflow-y-auto">
+  <div id="newTripModal" class="fixed inset-0 z-[70] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl border border-sky-100 space-y-4 max-h-[90vh] overflow-y-auto">
       <div class="flex items-start justify-between pb-2 border-b border-slate-100">
         <div class="flex items-center gap-2.5">
-          <div class="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg font-bold">
+          <div class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-lg font-bold">
             <i class="fa-solid fa-plus"></i>
           </div>
           <div>
-            <span class="text-[10px] bg-indigo-100 text-indigo-900 px-2 py-0.5 rounded-full font-bold">新しいしおりの発行</span>
-            <h3 class="text-base font-black text-slate-800 mt-0.5">新しい旅行しおりを作成</h3>
+            <span class="text-[10px] bg-sky-100 text-sky-900 px-2 py-0.5 rounded-full font-bold">新しいしおりの発行</span>
+            <h3 class="text-base font-black text-slate-900 mt-0.5">新しい旅行しおりを作成</h3>
           </div>
         </div>
         <button onclick="closeNewTripModal()" class="text-slate-400 hover:text-slate-700 w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100 text-lg">✕</button>
@@ -304,37 +344,37 @@
       <form onsubmit="createNewTrip(event)" class="space-y-3 text-xs">
         <div>
           <label class="font-bold text-slate-700 block mb-1">旅行タイトル <span class="text-rose-500">*</span></label>
-          <input type="text" id="newTripTitle" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="例：北海道 2泊3日 グルメ旅、沖縄女子旅 など">
+          <input type="text" id="newTripTitle" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-sky-500 focus:outline-none" placeholder="例：北海道 2泊3日 グルメ旅、沖縄女子旅 など">
         </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="font-bold text-slate-700 block mb-1">出発日 <span class="text-rose-500">*</span></label>
-            <input type="date" id="newTripStartDate" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-indigo-500">
+            <input type="date" id="newTripStartDate" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-sky-500">
           </div>
           <div>
             <label class="font-bold text-slate-700 block mb-1">最終日 <span class="text-rose-500">*</span></label>
-            <input type="date" id="newTripEndDate" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-indigo-500">
+            <input type="date" id="newTripEndDate" required class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-sky-500">
           </div>
         </div>
 
         <div>
           <label class="font-bold text-slate-700 block mb-1">参加メンバー（カンマまたは改行区切り） <span class="text-rose-500">*</span></label>
-          <input type="text" id="newTripMembers" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-medium focus:ring-2 focus:ring-indigo-500" placeholder="例：りゅーたろー, 岡村, 田中, さとう">
+          <input type="text" id="newTripMembers" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-medium focus:ring-2 focus:ring-sky-500" placeholder="例：りゅーたろー, 岡村, 田中, さとう">
           <p class="text-[10px] text-slate-400 mt-1">※後から追加・削除もいつでも可能です。</p>
         </div>
 
-        <div class="bg-indigo-50/70 border border-indigo-100 rounded-2xl p-3 space-y-1 text-indigo-900">
+        <div class="bg-sky-50 border border-sky-100 rounded-2xl p-3 space-y-1 text-sky-950">
           <div class="font-bold flex items-center gap-1.5 text-xs">
-            <i class="fa-solid fa-wand-magic-sparkles text-indigo-600"></i> 作成後の流れ
+            <i class="fa-solid fa-wand-magic-sparkles text-sky-600"></i> 作成後の流れ
           </div>
-          <p class="text-[11px] leading-relaxed">
+          <p class="text-[11px] leading-relaxed text-slate-600">
             しおりを作成すると専用のURLが自動発行され、直通のスケジュール画面が開きます。右上の「共有」からLINEで送るだけで全員が閲覧＆編集できます！
           </p>
         </div>
 
         <div class="pt-2 flex gap-2">
-          <button type="submit" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 active:scale-98 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-lg transition cursor-pointer">
+          <button type="submit" class="flex-1 py-3 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 active:scale-98 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md transition cursor-pointer">
             <i class="fa-solid fa-cloud-arrow-up"></i>
             <span>この旅行しおりを発行する</span>
           </button>
@@ -345,7 +385,7 @@
   </div>
 
   <!-- 汎用カスタム確認モーダル（最前面 z-[100]） -->
-  <div id="confirmModal" class="fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+  <div id="confirmModal" class="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-xs w-full p-5 shadow-2xl border border-slate-100 space-y-4 text-center">
       <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl mx-auto shadow-inner">
         <i class="fa-regular fa-trash-can"></i>
@@ -366,15 +406,15 @@
   </div>
 
   <!-- スポット詳細モーダル (z-[60]) -->
-  <div id="detailModal" class="fixed inset-0 z-[60] bg-slate-900/75 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+  <div id="detailModal" class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl border border-slate-100 max-h-[88vh] overflow-y-auto space-y-4">
       <div class="flex items-start justify-between pb-3 border-b border-slate-100">
         <div class="flex items-center gap-2.5">
-          <div id="modalIconBox" class="w-10 h-10 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-lg shadow-xs">
+          <div id="modalIconBox" class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-lg shadow-xs">
             <i class="fa-solid fa-location-dot"></i>
           </div>
           <div>
-            <span id="modalCategory" class="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-bold">スポット詳細</span>
+            <span id="modalCategory" class="text-[10px] bg-sky-100 text-sky-800 px-2 py-0.5 rounded-full font-bold">スポット詳細</span>
             <h3 id="modalTitle" class="text-base font-black text-slate-800 mt-0.5">スポット名</h3>
           </div>
         </div>
@@ -384,7 +424,7 @@
       <div class="space-y-3 text-xs text-slate-600">
         <div class="flex items-center justify-between bg-slate-50 px-3 py-2 rounded-xl">
           <div class="flex items-center gap-1.5 text-slate-700 font-bold">
-            <i class="fa-regular fa-clock text-blue-600"></i>
+            <i class="fa-regular fa-clock text-sky-600"></i>
             <span id="modalTime">予定時間</span>
           </div>
           <span id="modalBadge" class="hidden text-[10px] bg-slate-200 text-slate-800 px-2 py-0.5 rounded-md font-bold"></span>
@@ -402,7 +442,7 @@
 
       <div class="pt-2 flex flex-col gap-2">
         <div class="flex gap-2">
-          <a id="modalMapLink" href="https://maps.google.com" target="_blank" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl text-xs text-center flex items-center justify-center gap-1.5 shadow transition">
+          <a id="modalMapLink" href="https://maps.google.com" target="_blank" class="flex-1 py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl text-xs text-center flex items-center justify-center gap-1.5 shadow transition">
             <i class="fa-solid fa-map-pin"></i>
             <span>Googleマップで開く</span>
           </a>
@@ -423,12 +463,12 @@
   </div>
 
   <!-- 手動 予定追加・編集モーダル (z-[60]) -->
-  <div id="editModal" class="fixed inset-0 z-[60] bg-slate-900/80 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+  <div id="editModal" class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto space-y-4">
       
       <div class="flex items-center justify-between pb-2 border-b border-slate-100">
         <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-bold">
+          <div class="w-8 h-8 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-sm font-bold">
             <i id="editModalIcon" class="fa-solid fa-pen-to-square"></i>
           </div>
           <h3 id="editModalHeading" class="text-base font-black text-slate-800">予定を手動で編集</h3>
@@ -441,7 +481,7 @@
 
         <div>
           <label class="font-bold text-slate-700 block mb-1">対象の日程</label>
-          <select id="editDaySelect" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <select id="editDaySelect" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none">
             <option value="1">1日目</option>
             <option value="2">2日目</option>
             <option value="3">3日目</option>
@@ -450,13 +490,13 @@
 
         <div>
           <label class="font-bold text-slate-700 block mb-1">予定・スポット名 <span class="text-rose-500">*</span></label>
-          <input type="text" id="editTitle" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="例：名物ランチ、カフェ散策、温泉など">
+          <input type="text" id="editTitle" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-sky-500 focus:outline-none" placeholder="例：名物ランチ、カフェ散策、温泉など">
         </div>
 
         <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3 space-y-2">
           <div class="flex items-center justify-between">
             <label class="font-bold text-slate-700 flex items-center gap-1">
-              <i class="fa-regular fa-clock text-blue-600"></i> 時間の設定（時・分を選択）
+              <i class="fa-regular fa-clock text-sky-600"></i> 時間の設定（時・分を選択）
             </label>
             <span class="text-[10px] text-slate-400 font-bold">5分刻み</span>
           </div>
@@ -519,7 +559,7 @@
         </div>
 
         <div class="pt-2 flex gap-2">
-          <button type="submit" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 active:scale-98 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-lg transition cursor-pointer">
+          <button type="submit" class="flex-1 py-3 bg-sky-600 hover:bg-sky-700 active:scale-98 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-lg transition cursor-pointer">
             <i class="fa-solid fa-cloud-arrow-up"></i>
             <span>保存して全員に同期する</span>
           </button>
@@ -531,16 +571,16 @@
   </div>
 
   <!-- メンバー別 関連支払い履歴モーダル (z-[60]) -->
-  <div id="memberDetailModal" class="fixed inset-0 z-[60] bg-slate-900/80 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+  <div id="memberDetailModal" class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto space-y-4">
       
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div class="flex items-center gap-2.5">
-          <div class="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg font-bold">
+          <div class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-lg font-bold">
             <i class="fa-solid fa-user"></i>
           </div>
           <div>
-            <span class="text-[10px] bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full font-bold">メンバー収支詳細</span>
+            <span class="text-[10px] bg-sky-100 text-sky-800 px-2 py-0.5 rounded-full font-bold">メンバー収支詳細</span>
             <h3 id="memberDetailName" class="text-base font-black text-slate-800 mt-0.5">メンバー名</h3>
           </div>
         </div>
@@ -565,7 +605,7 @@
       <div class="space-y-3 text-xs">
         <div class="space-y-1.5">
           <span class="font-bold text-slate-800 flex items-center gap-1">
-            <i class="fa-solid fa-arrow-up-from-bracket text-indigo-600"></i> この人が立替えた支払い
+            <i class="fa-solid fa-arrow-up-from-bracket text-sky-600"></i> この人が立替えた支払い
           </span>
           <div id="memberDetailPaidList" class="space-y-1.5"></div>
         </div>
@@ -590,16 +630,16 @@
   </div>
 
   <!-- 支払い詳細モーダル (z-[60]) -->
-  <div id="expenseDetailModal" class="fixed inset-0 z-[60] bg-slate-900/80 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+  <div id="expenseDetailModal" class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl border border-slate-100 max-h-[88vh] overflow-y-auto space-y-4">
       
       <div class="flex items-start justify-between pb-3 border-b border-slate-100">
         <div class="flex items-center gap-2.5">
-          <div class="w-10 h-10 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg shadow-xs">
+          <div class="w-10 h-10 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-lg shadow-xs">
             <i class="fa-solid fa-receipt"></i>
           </div>
           <div>
-            <span class="text-[10px] bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full font-bold">支払い詳細</span>
+            <span class="text-[10px] bg-sky-100 text-sky-800 px-2 py-0.5 rounded-full font-bold">支払い詳細</span>
             <h3 id="expDetailTitle" class="text-base font-black text-slate-800 mt-0.5">用途</h3>
           </div>
         </div>
@@ -610,7 +650,7 @@
         <div class="grid grid-cols-2 gap-2 bg-slate-50 p-3 rounded-2xl border border-slate-200/80">
           <div>
             <span class="text-[10px] text-slate-400 block">支払総額</span>
-            <span id="expDetailAmount" class="font-mono font-black text-base text-indigo-950">¥0</span>
+            <span id="expDetailAmount" class="font-mono font-black text-base text-slate-900">¥0</span>
           </div>
           <div>
             <span class="text-[10px] text-slate-400 block">立替者</span>
@@ -618,9 +658,9 @@
           </div>
         </div>
 
-        <div class="flex items-center justify-between bg-indigo-50/70 border border-indigo-100 px-3.5 py-2.5 rounded-xl">
-          <span class="font-bold text-indigo-950">1人あたりの負担額</span>
-          <span id="expDetailPerPerson" class="font-mono font-black text-sm text-indigo-700">¥0</span>
+        <div class="flex items-center justify-between bg-sky-50 border border-sky-100 px-3.5 py-2.5 rounded-xl">
+          <span class="font-bold text-sky-950">1人あたりの負担額</span>
+          <span id="expDetailPerPerson" class="font-mono font-black text-sm text-sky-700">¥0</span>
         </div>
 
         <div class="space-y-1.5">
@@ -631,7 +671,7 @@
 
       <div class="pt-2 flex flex-col gap-2">
         <div class="flex gap-2">
-          <button id="expDetailEditBtn" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:scale-98 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow transition cursor-pointer">
+          <button id="expDetailEditBtn" class="flex-1 py-2.5 bg-sky-600 hover:bg-sky-700 active:scale-98 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow transition cursor-pointer">
             <i class="fa-solid fa-pen-to-square"></i>
             <span>この支払いを編集する</span>
           </button>
@@ -649,7 +689,7 @@
   </div>
 
   <!-- メンバー追加モーダル (z-[60]) -->
-  <div id="memberModal" class="fixed inset-0 z-[60] bg-slate-900/80 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+  <div id="memberModal" class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-xs w-full p-5 shadow-2xl border border-slate-100 space-y-4">
       <div class="flex items-center justify-between pb-2 border-b border-slate-100">
         <h3 class="text-base font-black text-slate-800">メンバーを追加</h3>
@@ -658,10 +698,10 @@
       <form onsubmit="saveMember(event)" class="space-y-3 text-xs">
         <div>
           <label class="font-bold text-slate-700 block mb-1">名前（ニックネーム）</label>
-          <input type="text" id="newMemberName" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="例：りゅーたろー、岡村">
+          <input type="text" id="newMemberName" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-sky-500 focus:outline-none" placeholder="例：りゅーたろー、岡村">
         </div>
         <div class="pt-2 flex gap-2">
-          <button type="submit" class="flex-1 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs shadow transition">登録する</button>
+          <button type="submit" class="flex-1 py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl text-xs shadow transition">登録する</button>
           <button type="button" onclick="closeMemberModal()" class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl text-xs transition">キャンセル</button>
         </div>
       </form>
@@ -669,12 +709,12 @@
   </div>
 
   <!-- 支払い登録・編集モーダル (z-[60]) -->
-  <div id="expenseModal" class="fixed inset-0 z-[60] bg-slate-900/80 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+  <div id="expenseModal" class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto space-y-4">
       
       <div class="flex items-center justify-between pb-2 border-b border-slate-100">
         <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm font-bold">
+          <div class="w-8 h-8 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-sm font-bold">
             <i class="fa-solid fa-receipt"></i>
           </div>
           <h3 id="expenseModalHeading" class="text-base font-black text-slate-800">立替え・支払いを記録</h3>
@@ -687,17 +727,17 @@
 
         <div>
           <label class="font-bold text-slate-700 block mb-1">支払いの用途 <span class="text-rose-500">*</span></label>
-          <input type="text" id="expenseTitle" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="例：レンタカー代、ランチ、買い出し">
+          <input type="text" id="expenseTitle" required class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-sky-500 focus:outline-none" placeholder="例：レンタカー代、ランチ、買い出し">
         </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="font-bold text-slate-700 block mb-1">支払金額 (円) <span class="text-rose-500">*</span></label>
-            <input type="number" id="expenseAmount" required min="1" step="1" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="例：12000">
+            <input type="number" id="expenseAmount" required min="1" step="1" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold focus:ring-2 focus:ring-sky-500 focus:outline-none" placeholder="例：12000">
           </div>
           <div>
             <label class="font-bold text-slate-700 block mb-1">支払った人 <span class="text-rose-500">*</span></label>
-            <select id="expensePayer" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:outline-none"></select>
+            <select id="expensePayer" class="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-800 focus:ring-2 focus:ring-sky-500 focus:outline-none"></select>
           </div>
         </div>
 
@@ -712,7 +752,7 @@
         </div>
 
         <div class="pt-2 flex gap-2">
-          <button type="submit" class="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 active:scale-98 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-lg transition cursor-pointer">
+          <button type="submit" class="flex-1 py-3 bg-sky-600 hover:bg-sky-700 active:scale-98 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-lg transition cursor-pointer">
             <i class="fa-solid fa-cloud-arrow-up"></i>
             <span>保存して全員に同期する</span>
           </button>
@@ -724,11 +764,11 @@
   </div>
 
   <!-- AIプラン変更 入力モーダル (z-[60]) -->
-  <div id="aiPromptModal" class="fixed inset-0 z-[60] bg-slate-900/80 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+  <div id="aiPromptModal" class="fixed inset-0 z-[60] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl max-w-md w-full p-5 shadow-2xl border border-slate-100 space-y-4">
       <div class="flex items-start justify-between pb-2 border-b border-slate-100">
         <div class="flex items-center gap-2.5">
-          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-slate-950 flex items-center justify-center text-lg shadow-sm">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-400 text-amber-950 flex items-center justify-center text-lg shadow-sm">
             <i class="fa-solid fa-wand-magic-sparkles"></i>
           </div>
           <div>
@@ -762,7 +802,7 @@
       </div>
 
       <div class="pt-2 flex gap-2">
-        <button id="aiSubmitBtn" onclick="submitAiPlanChange()" class="flex-1 py-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 active:scale-98 text-slate-950 font-black rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition">
+        <button id="aiSubmitBtn" onclick="submitAiPlanChange()" class="flex-1 py-3 bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 hover:opacity-95 active:scale-98 text-amber-950 font-black rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg transition">
           <i class="fa-solid fa-sparkles"></i>
           <span>この内容でプランを更新する</span>
         </button>
@@ -772,9 +812,9 @@
   </div>
 
   <!-- AI処理中ローディングオーバーレイ (z-[120]) -->
-  <div id="aiLoadingOverlay" class="fixed inset-0 z-[120] bg-slate-900/80 backdrop-blur-xs flex flex-col items-center justify-center p-4 hidden">
+  <div id="aiLoadingOverlay" class="fixed inset-0 z-[120] bg-slate-900/70 backdrop-blur-xs flex flex-col items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl p-6 max-w-xs w-full text-center space-y-4 shadow-2xl">
-      <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-amber-400 to-orange-500 text-slate-950 flex items-center justify-center text-2xl mx-auto shadow-lg animate-spin">
+      <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-cyan-400 via-sky-500 to-blue-600 text-white flex items-center justify-center text-2xl mx-auto shadow-lg animate-spin">
         <i class="fa-solid fa-wand-magic-sparkles"></i>
       </div>
       <div>
@@ -786,11 +826,11 @@
 
   <!-- ページめくりボタン (しおり表示時のみ) -->
   <div id="slideNavigation" class="no-print sticky bottom-3 z-40 max-w-md mx-auto px-4 flex items-center justify-between pointer-events-none hidden">
-    <button onclick="prevSlide()" id="prevBtn" class="pointer-events-auto w-10 h-10 rounded-full bg-slate-800/90 text-white shadow-xl border border-slate-700 flex items-center justify-center text-sm active:scale-90 transition">
+    <button onclick="prevSlide()" id="prevBtn" class="pointer-events-auto w-10 h-10 rounded-full bg-white/90 backdrop-blur-md text-slate-700 shadow-xl border border-sky-100 flex items-center justify-center text-sm active:scale-90 transition">
       <i class="fa-solid fa-chevron-left"></i>
     </button>
-    <div id="pageIndicator" class="bg-slate-900/95 text-amber-300 text-xs font-bold px-3.5 py-1.5 rounded-full border border-slate-800 shadow">1 / 5</div>
-    <button onclick="nextSlide()" id="nextBtn" class="pointer-events-auto w-10 h-10 rounded-full bg-slate-800/90 text-white shadow-xl border border-slate-700 flex items-center justify-center text-sm active:scale-90 transition">
+    <div id="pageIndicator" class="bg-slate-900/90 backdrop-blur-md text-cyan-300 text-xs font-bold px-3.5 py-1.5 rounded-full border border-slate-800 shadow">1 / 5</div>
+    <button onclick="nextSlide()" id="nextBtn" class="pointer-events-auto w-10 h-10 rounded-full bg-white/90 backdrop-blur-md text-slate-700 shadow-xl border border-sky-100 flex items-center justify-center text-sm active:scale-90 transition">
       <i class="fa-solid fa-chevron-right"></i>
     </button>
   </div>
@@ -803,7 +843,7 @@
     const firebaseApiKey = "AIzaSyBUbfrWbxBIDN-Y4Ooa_8au9EANbUaWjKs";
     const firebaseProjectId = "travel-shiori-e81a2";
 
-    // 1日あたりのAI利用上限（試作段階として1日5回に拡張）
+    // 1日あたりのAI利用上限（試作段階として1日5回）
     const MAX_DAILY_AI_LIMIT = 5;
 
     const defaultTripData = {
@@ -814,20 +854,20 @@
         endDate: "2026-10-04T23:59:59",
         dayDates: { 1: "2026-10-02", 2: "2026-10-03", 3: "2026-10-04" },
         icon: "fa-solid fa-map-location-dot",
-        iconBg: "bg-blue-600",
-        btnColor: "bg-blue-600",
+        iconBg: "bg-sky-500",
+        btnColor: "bg-sky-500",
         members: ["りゅーたろー", "岡村", "メンバーA", "メンバーB"],
         expenses: [
           { id: "exp_1", title: "レンタカー代（3日間）", amount: 24000, payer: "りゅーたろー", participants: ["りゅーたろー", "岡村", "メンバーA", "メンバーB"], date: "10/02" },
           { id: "exp_2", title: "瓦そばランチ", amount: 6800, payer: "岡村", participants: ["りゅーたろー", "岡村", "メンバーA", "メンバーB"], date: "10/02" }
         ],
         steps: [
-          { id: "y1", day: 1, title: "羽田空港 発 ➔ 宇部着", category: "フライト", time: "08:00〜09:45", startTime: "2026-10-02T08:00:00", endTime: "2026-10-02T09:45:00", icon: "fa-solid fa-plane-departure", iconBg: "bg-blue-100 text-blue-600", badge: "JAL291 (23K)", desc: "JAL 291便（座席23K）。到着後レンタカー手続き。", tips: "羽田には7:15頃までに集合！", mapQuery: "山口宇部空港" },
-          { id: "y2", day: 1, title: "萩市へドライブ移動", category: "ドライブ", time: "10:30〜12:00", startTime: "2026-10-02T10:30:00", endTime: "2026-10-02T12:00:00", icon: "fa-solid fa-car", iconBg: "bg-sky-100 text-sky-600", badge: "約90分", desc: "小郡萩道路経由で約90分の爽快ドライブ！", tips: "道の駅「萩往還」での休憩もおすすめ。", mapQuery: "萩市" },
+          { id: "y1", day: 1, title: "羽田空港 発 ➔ 宇部着", category: "フライト", time: "08:00〜09:45", startTime: "2026-10-02T08:00:00", endTime: "2026-10-02T09:45:00", icon: "fa-solid fa-plane-departure", iconBg: "bg-sky-100 text-sky-600", badge: "JAL291 (23K)", desc: "JAL 291便（座席23K）。到着後レンタカー手続き。", tips: "羽田には7:15頃までに集合！", mapQuery: "山口宇部空港" },
+          { id: "y2", day: 1, title: "萩市へドライブ移動", category: "ドライブ", time: "10:30〜12:00", startTime: "2026-10-02T10:30:00", endTime: "2026-10-02T12:00:00", icon: "fa-solid fa-car", iconBg: "bg-cyan-100 text-cyan-600", badge: "約90分", desc: "小郡萩道路経由で約90分の爽快ドライブ！", tips: "道の駅「萩往還」での休憩もおすすめ。", mapQuery: "萩市" },
           { id: "y3", day: 1, title: "萩名物「瓦そば」ランチ", category: "ご当地グルメ", time: "12:00〜13:30", startTime: "2026-10-02T12:00:00", endTime: "2026-10-02T13:30:00", icon: "fa-solid fa-utensils", iconBg: "bg-amber-100 text-amber-700", badge: "名物", desc: "熱々の瓦で焼いた茶そば、牛肉、錦糸卵の香ばしい名物！", tips: "レモンともみじおろしをつゆに溶かして味変！", mapQuery: "萩市 瓦そば" },
           { id: "y4", day: 1, title: "松陰神社 ＆ 城下町散策", category: "歴史観光", time: "13:30〜15:00", startTime: "2026-10-02T13:30:00", endTime: "2026-10-02T15:00:00", icon: "fa-solid fa-landmark", iconBg: "bg-indigo-100 text-indigo-700", badge: "", desc: "松下村塾や白壁と夏みかんが揺れる城下町を散策。", tips: "傘の形に開く「傘みくじ」が名物。", mapQuery: "松陰神社 萩市" },
           { id: "y5", day: 1, title: "城下町 パドルウォーキング", category: "アクティビティ", time: "15:00〜16:30", startTime: "2026-10-02T15:00:00", endTime: "2026-10-02T16:30:00", icon: "fa-solid fa-water", iconBg: "bg-teal-100 text-teal-700", badge: "カヤック", desc: "城下町の水路をカヤックで巡る爽快体験！", tips: "濡れてもよい服装・靴で参加しましょう。", mapQuery: "萩 城下町 カヤック" },
-          { id: "y6", day: 1, title: "海釣り体験", category: "アウトドア", time: "16:30〜18:00", startTime: "2026-10-02T16:30:00", endTime: "2026-10-02T18:00:00", icon: "fa-solid fa-fish-fins", iconBg: "bg-blue-100 text-blue-700", badge: "夕マズメ", desc: "須佐湾や奈古漁港など日本海でフィッシング！", tips: "釣れた魚は夜のBBQで塩焼き＆刺身に！", mapQuery: "萩市 越ヶ浜港 釣り" },
+          { id: "y6", day: 1, title: "海釣り体験", category: "アウトドア", time: "16:30〜18:00", startTime: "2026-10-02T16:30:00", endTime: "2026-10-02T18:00:00", icon: "fa-solid fa-fish-fins", iconBg: "bg-sky-100 text-sky-700", badge: "夕マズメ", desc: "須佐湾や奈古漁港など日本海でフィッシング！", tips: "釣れた魚は夜のBBQで塩焼き＆刺身に！", mapQuery: "萩市 越ヶ浜港 釣り" },
           { id: "y7", day: 1, title: "釣った魚で海鮮BBQ！", category: "ディナー", time: "18:00〜21:00", startTime: "2026-10-02T18:00:00", endTime: "2026-10-02T21:00:00", icon: "fa-solid fa-fire-burner", iconBg: "bg-rose-100 text-rose-600", badge: "宴会", desc: "新鮮な海の幸と山口の地酒「東洋美人」で乾杯！", tips: "波音を聞きながら星空BBQ！", mapQuery: "明神池キャンプ場 萩市" },
           { id: "y8", day: 1, title: "コテージで宿泊", category: "宿泊", time: "21:00〜", startTime: "2026-10-02T21:00:00", endTime: "2026-10-03T07:30:00", icon: "fa-solid fa-house-chimney", iconBg: "bg-indigo-100 text-indigo-700", badge: "波音", desc: "海まで徒歩すぐの好立地コテージ。", tips: "天然記念物の明神池もすぐ近くです。", mapQuery: "明神池キャンプ場 萩市" },
           
@@ -841,7 +881,7 @@
           { id: "y15", day: 3, title: "岡村家で朝食 ＆ のんびり", category: "朝食", time: "08:30〜10:00", startTime: "2026-10-04T08:30:00", endTime: "2026-10-04T10:00:00", icon: "fa-solid fa-mug-saucer", iconBg: "bg-amber-100 text-amber-700", badge: "", desc: "爽やかな朝の空気でコーヒーと朝食。", tips: "BBQの準備を整えます。", mapQuery: "山口市" },
           { id: "y16", day: 3, title: "岡村家 BBQタイム！", category: "BBQランチ", time: "10:00〜12:30", startTime: "2026-10-04T10:00:00", endTime: "2026-10-04T12:30:00", icon: "fa-solid fa-drumstick-bite", iconBg: "bg-emerald-100 text-emerald-700", badge: "BBQ", desc: "みんなでコンロを囲み思い出を振り返るBBQ！", tips: "美味しいお肉とお酒で乾杯！", mapQuery: "山口市" },
           { id: "y17", day: 3, title: "宇部空港へ移動 ＆ お土産", category: "空港移動", time: "13:00〜14:30", startTime: "2026-10-04T13:00:00", endTime: "2026-10-04T14:30:00", icon: "fa-solid fa-car", iconBg: "bg-sky-100 text-sky-700", badge: "車60分", desc: "レンタカー返却とお土産（外郎・獺祭など）を購入。", tips: "保安検査場は出発20分前厳守！", mapQuery: "山口宇部空港" },
-          { id: "y18", day: 3, title: "宇部空港 発 ➔ 16:45 羽田着", category: "フライト", time: "15:10〜16:45", startTime: "2026-10-04T15:10:00", endTime: "2026-10-04T16:45:00", icon: "fa-solid fa-plane-arrival", iconBg: "bg-blue-100 text-blue-700", badge: "JAL 294", desc: "JAL 294便（座席23K）。羽田到着後、解散！", tips: "夕方着なので翌日も安心です。", mapQuery: "羽田空港" }
+          { id: "y18", day: 3, title: "宇部空港 発 ➔ 16:45 羽田着", category: "フライト", time: "15:10〜16:45", startTime: "2026-10-04T15:10:00", endTime: "2026-10-04T16:45:00", icon: "fa-solid fa-plane-arrival", iconBg: "bg-sky-100 text-sky-700", badge: "JAL 294", desc: "JAL 294便（座席23K）。羽田到着後、解散！", tips: "夕方着なので翌日も安心です。", mapQuery: "羽田空港" }
         ]
       },
       karuizawa: {
@@ -851,8 +891,8 @@
         endDate: "2026-08-23T23:59:59",
         dayDates: { 1: "2026-08-21", 2: "2026-08-22", 3: "2026-08-23" },
         icon: "fa-solid fa-tree",
-        iconBg: "bg-emerald-700",
-        btnColor: "bg-emerald-700",
+        iconBg: "bg-emerald-600",
+        btnColor: "bg-emerald-600",
         members: ["りゅーたろー", "妻"],
         expenses: [
           { id: "k_exp_1", title: "ピレネー ランチ", amount: 11000, payer: "りゅーたろー", participants: ["りゅーたろー", "妻"], date: "08/21" }
@@ -871,10 +911,10 @@
           { id: "k10", day: 2, title: "アンシェントホテル浅間 IN", category: "宿泊・温泉", time: "15:00〜18:00", startTime: "2026-08-22T15:00:00", endTime: "2026-08-22T18:00:00", icon: "fa-solid fa-mountain-sun", iconBg: "bg-indigo-100 text-indigo-700", badge: "タクシー精算", desc: "浅間山麓の隠れ家ホテル。タクシー領収書提示でホテル精算！", tips: "貸切風呂はチェックイン時に予約。", mapQuery: "アンシェントホテル浅間 軽井沢" },
           { id: "k11", day: 2, title: "夕食（アンシェント館内ディナー）", category: "ディナー", time: "18:00〜22:00", startTime: "2026-08-22T18:00:00", endTime: "2026-08-22T22:00:00", icon: "fa-solid fa-wine-glass", iconBg: "bg-indigo-100 text-indigo-800", badge: "貸切風呂", desc: "信州味覚ディナー。お風呂：6:00〜10:00 / 16:00〜24:00。", tips: "静寂の森の中で心身を癒やします。", mapQuery: "アンシェントホテル浅間 軽井沢" },
 
-          { id: "k12", day: 3, title: "アンシェントホテル館内で朝食", category: "カフェ・朝食", time: "08:00〜10:00", startTime: "2026-08-23T08:00:00", endTime: "2026-08-23T10:00:00", icon: "fa-solid fa-egg", iconBg: "bg-blue-100 text-blue-800", badge: "", desc: "小鳥のさえずりと共に味わう健康朝食。", tips: "チェックアウトは11:00。", mapQuery: "アンシェントホテル浅間 軽井沢" },
-          { id: "k13", day: 3, title: "チェックアウト ➔ タクシーで駅へ", category: "移動・ドライブ", time: "11:00〜12:00", startTime: "2026-08-23T11:00:00", endTime: "2026-08-23T13:00:00", icon: "fa-solid fa-taxi", iconBg: "bg-blue-100 text-blue-700", badge: "約20分", desc: "白糸ハイランドウェイ経由で軽井沢駅へ（約20〜25分）。", tips: "事前にフロントへ配車依頼。", mapQuery: "JR 軽井沢駅" },
+          { id: "k12", day: 3, title: "アンシェントホテル館内で朝食", category: "カフェ・朝食", time: "08:00〜10:00", startTime: "2026-08-23T08:00:00", endTime: "2026-08-23T10:00:00", icon: "fa-solid fa-egg", iconBg: "bg-sky-100 text-sky-800", badge: "", desc: "小鳥のさえずりと共に味わう健康朝食。", tips: "チェックアウトは11:00。", mapQuery: "アンシェントホテル浅間 軽井沢" },
+          { id: "k13", day: 3, title: "チェックアウト ➔ タクシーで駅へ", category: "移動・ドライブ", time: "11:00〜12:00", startTime: "2026-08-23T11:00:00", endTime: "2026-08-23T13:00:00", icon: "fa-solid fa-taxi", iconBg: "bg-sky-100 text-sky-700", badge: "約20分", desc: "白糸ハイランドウェイ経由で軽井沢駅へ（約20〜25分）。", tips: "事前にフロントへ配車依頼。", mapQuery: "JR 軽井沢駅" },
           { id: "k14", day: 3, title: "軽井沢駅周辺でランチ", category: "ランチ", time: "13:00〜14:20", startTime: "2026-08-23T13:00:00", endTime: "2026-08-23T14:35:00", icon: "fa-solid fa-utensils", iconBg: "bg-amber-100 text-amber-800", badge: "お土産", desc: "信州そばやカフェ。お土産を買って新幹線へ。", tips: "14:20には改札口へ。", mapQuery: "軽井沢駅 信州そば" },
-          { id: "k15", day: 3, title: "軽井沢駅 発 ➔ 15:40 東京駅 着", category: "新幹線", time: "14:35〜15:40", startTime: "2026-08-23T14:35:00", endTime: "2026-08-23T15:40:00", icon: "fa-solid fa-train-subway", iconBg: "bg-blue-100 text-blue-700", badge: "新幹線", desc: "14:35発の新幹線で15:40東京着。お疲れ様でした！", tips: "夕方前到着で快適です。", mapQuery: "東京駅" }
+          { id: "k15", day: 3, title: "軽井沢駅 発 ➔ 15:40 東京駅 着", category: "新幹線", time: "14:35〜15:40", startTime: "2026-08-23T14:35:00", endTime: "2026-08-23T15:40:00", icon: "fa-solid fa-train-subway", iconBg: "bg-sky-100 text-sky-700", badge: "新幹線", desc: "14:35発の新幹線で15:40東京着。お疲れ様でした！", tips: "夕方前到着で快適です。", mapQuery: "東京駅" }
         ]
       }
     };
@@ -921,9 +961,9 @@
       if (headerBadge) {
         headerBadge.innerText = `${remaining}/${MAX_DAILY_AI_LIMIT}`;
         if (remaining === 0) {
-          headerBadge.className = 'bg-rose-950 text-rose-300 border border-rose-500/40 px-1.5 py-0.2 rounded-md text-[10px] font-mono';
+          headerBadge.className = 'bg-rose-100 text-rose-800 border border-rose-200 px-1.5 py-0.2 rounded-md text-[10px] font-mono';
         } else {
-          headerBadge.className = 'bg-slate-950/80 text-amber-300 px-1.5 py-0.2 rounded-md text-[10px] font-mono';
+          headerBadge.className = 'bg-amber-950/20 text-amber-950 px-1.5 py-0.2 rounded-md text-[10px] font-mono';
         }
       }
 
@@ -1004,14 +1044,14 @@
         return;
       }
 
-      // ユニークな旅行ID（例: t_9x2a41）
+      // ユニークな旅行ID
       const newTripId = 't_' + Math.random().toString(36).substring(2, 8);
 
       const sD = new Date(startDate);
       const eD = new Date(endDate);
       const datesFormatted = `${startDate.replace(/-/g, '.')} - ${endDate.replace(/-/g, '.')}`;
 
-      // 日付マップ作成
+      // 日付マップ
       const dayDates = {};
       let cur = new Date(sD);
       let dayIndex = 1;
@@ -1028,8 +1068,8 @@
         endDate: `${endDate}T23:59:59`,
         dayDates: dayDates,
         icon: "fa-solid fa-map-location-dot",
-        iconBg: "bg-indigo-600",
-        btnColor: "bg-indigo-600",
+        iconBg: "bg-sky-500",
+        btnColor: "bg-sky-500",
         members: members,
         expenses: [],
         steps: [
@@ -1042,7 +1082,7 @@
             startTime: `${startDate}T09:00:00`,
             endTime: `${startDate}T10:00:00`,
             icon: "fa-solid fa-location-dot",
-            iconBg: "bg-blue-100 text-blue-600",
+            iconBg: "bg-sky-100 text-sky-600",
             badge: "集合",
             desc: "駅または空港に集合して旅行スタート！",
             tips: "持ち物・チケットを再確認！",
@@ -1056,7 +1096,6 @@
 
       closeNewTripModal();
 
-      // URLパラメータを更新して新規旅行画面へ直接遷移
       const newUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}?trip=${newTripId}`;
       window.history.pushState({ path: newUrl }, '', newUrl);
 
@@ -1069,7 +1108,6 @@
     window.shareTripUrl = function() {
       if (!currentTripKey) return;
       
-      // 直接スケジュール画面に遷移するURLを作成
       const baseUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
       const directTripUrl = `${baseUrl}?trip=${currentTripKey}`;
       const trip = liveTripData[currentTripKey];
@@ -1149,8 +1187,8 @@
                   endDate: doc.fields.endDate?.stringValue || new Date().toISOString(),
                   dayDates: doc.fields.dayDatesJson ? JSON.parse(doc.fields.dayDatesJson.stringValue) : { 1: "2026-10-02", 2: "2026-10-03", 3: "2026-10-04" },
                   icon: "fa-solid fa-map-location-dot",
-                  iconBg: "bg-indigo-600",
-                  btnColor: "bg-indigo-600",
+                  iconBg: "bg-sky-500",
+                  btnColor: "bg-sky-500",
                   members: [],
                   expenses: [],
                   steps: []
@@ -1255,8 +1293,8 @@
             endDate: new Date().toISOString(),
             dayDates: { 1: "2026-10-02", 2: "2026-10-03", 3: "2026-10-04" },
             icon: "fa-solid fa-map-location-dot",
-            iconBg: "bg-indigo-600",
-            btnColor: "bg-indigo-600",
+            iconBg: "bg-sky-500",
+            btnColor: "bg-sky-500",
             members: ["メンバー1", "メンバー2"],
             expenses: [],
             steps: []
@@ -1269,8 +1307,8 @@
         document.getElementById('appPageTitle').innerText = `${trip.title} | シオリット`;
 
         const iconSpan = document.getElementById('currentTripIcon');
-        iconSpan.className = `w-5 h-5 rounded-lg text-white flex items-center justify-center text-[10px] ${trip.iconBg || 'bg-indigo-600'} shrink-0 shadow`;
-        iconSpan.innerHTML = `<i class="${trip.icon || 'fa-solid fa-map-location-dot'}"></i>`;
+        iconSpan.className = `w-6 h-6 rounded-lg text-white flex items-center justify-center text-xs ${trip.iconBg || 'bg-sky-500'} shrink-0 shadow-xs`;
+        iconSpan.innerHTML = `<i class="${trip.icon || 'fa-solid fa-location-dot'}"></i>`;
 
         renderMainCards();
         setSlide(1, false);
@@ -1372,15 +1410,15 @@
           return `<div class="p-4 text-center text-slate-400 text-xs bg-slate-50 rounded-2xl border border-dashed border-slate-200">予定がありません。「予定追加」から登録できます</div>`;
         }
         return steps.map(s => `
-          <div data-step-id="${s.id}" data-start="${s.startTime}" data-end="${s.endTime}" onclick="openModal('${s.id}')" class="schedule-step cursor-pointer p-2.5 rounded-2xl bg-slate-50 border border-slate-200/80 active:bg-blue-50/60 transition relative">
+          <div data-step-id="${s.id}" data-start="${s.startTime}" data-end="${s.endTime}" onclick="openModal('${s.id}')" class="schedule-step cursor-pointer p-3 rounded-2xl bg-white border border-sky-100/90 shadow-xs hover:border-sky-300 active:bg-sky-50/60 transition relative">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
-                <span class="font-mono font-bold ${(trip.btnColor || 'bg-blue-600').replace('bg-', 'text-')} text-xs">${s.time.split('〜')[0] || s.time}</span>
-                <span class="font-bold text-slate-800 text-xs">${s.title}</span>
+                <span class="font-mono font-bold text-sky-600 text-xs">${s.time.split('〜')[0] || s.time}</span>
+                <span class="font-bold text-slate-900 text-xs">${s.title}</span>
               </div>
-              ${s.badge ? `<span class="text-[10px] bg-slate-200/80 text-slate-800 px-1.5 py-0.5 rounded font-bold">${s.badge}</span>` : ''}
+              ${s.badge ? `<span class="text-[10px] bg-sky-50 text-sky-700 border border-sky-200 px-1.5 py-0.5 rounded-md font-bold">${s.badge}</span>` : ''}
             </div>
-            ${s.desc ? `<p class="text-[10px] text-slate-500 mt-0.5 ml-11 line-clamp-1">${s.desc}</p>` : ''}
+            ${s.desc ? `<p class="text-[11px] text-slate-500 mt-1 ml-11 line-clamp-1">${s.desc}</p>` : ''}
           </div>
         `).join('');
       };
@@ -1389,30 +1427,30 @@
       const members = trip.members || [];
       const expenses = trip.expenses || [];
 
-      // MAPタブの描画ロジック（山口/軽井沢なら専用SVGマップ、新規旅行ならスポット一覧＆Googleマップ連携カード）
+      // MAPタブの描画
       let mapTabContentHtml = '';
       if (currentTripKey === 'yamaguchi') {
         mapTabContentHtml = `
-          <div class="relative bg-slate-50 border border-slate-200 rounded-2xl p-2 overflow-hidden shadow-inner">
+          <div class="relative bg-sky-50/60 border border-sky-200/80 rounded-2xl p-2 overflow-hidden shadow-inner">
             <svg viewBox="0 0 400 280" class="w-full h-auto drop-shadow-sm">
               <rect width="400" height="280" fill="#f0f9ff" rx="12"/>
-              <text x="20" y="28" fill="#93c5fd" font-size="11" font-weight="bold">【 日本海 】</text>
-              <text x="280" y="260" fill="#93c5fd" font-size="11" font-weight="bold">【 瀬戸内海 】</text>
-              <path d="M 60,180 C 40,160 30,120 70,80 C 100,60 140,50 180,60 C 220,50 260,70 300,90 C 350,110 380,140 370,170 C 340,190 320,220 280,220 C 240,210 200,230 160,230 C 120,240 80,210 60,180 Z" fill="#dcfce7" stroke="#86efac" stroke-width="3" />
-              <path d="M 190,220 Q 150,160 170,85" fill="none" stroke="#2563eb" stroke-width="4" stroke-dasharray="6,4" />
-              <path d="M 170,85 Q 90,120 55,185 Q 110,170 160,145 Q 185,150 220,155" fill="none" stroke="#ea580c" stroke-width="4" stroke-dasharray="6,4" />
-              <path d="M 220,155 Q 210,190 190,220" fill="none" stroke="#16a34a" stroke-width="4" stroke-dasharray="6,4" />
-              <g transform="translate(170, 85)" class="cursor-pointer" onclick="openModal('y4')"><circle r="7" fill="#2563eb" stroke="#fff" stroke-width="2"/><text x="0" y="-10" text-anchor="middle" font-size="11" font-weight="900" fill="#1e3a8a">萩市 (コテージ)</text></g>
-              <g transform="translate(55, 185)" class="cursor-pointer" onclick="openModal('y9')"><circle r="6" fill="#ea580c" stroke="#fff" stroke-width="2"/><text x="-5" y="-9" text-anchor="middle" font-size="10" font-weight="900" fill="#9a3412">下関 (唐戸市場)</text></g>
-              <g transform="translate(155, 140)" class="cursor-pointer" onclick="openModal('y12')"><circle r="6" fill="#ea580c" stroke="#fff" stroke-width="2"/><text x="0" y="-9" text-anchor="middle" font-size="10" font-weight="900" fill="#9a3412">美祢市</text></g>
-              <g transform="translate(225, 155)" class="cursor-pointer" onclick="openModal('y14')"><circle r="7" fill="#9333ea" stroke="#fff" stroke-width="2"/><text x="5" y="-10" text-anchor="start" font-size="10" font-weight="900" fill="#581c87">山口市 / 湯田温泉</text></g>
-              <g transform="translate(190, 220)"><circle r="8" fill="#0284c7" stroke="#fff" stroke-width="2"/><text x="0" y="18" text-anchor="middle" font-size="10" font-weight="900" fill="#0369a1">山口宇部空港</text></g>
+              <text x="20" y="28" fill="#7dd3fc" font-size="11" font-weight="bold">【 日本海 】</text>
+              <text x="280" y="260" fill="#7dd3fc" font-size="11" font-weight="bold">【 瀬戸内海 】</text>
+              <path d="M 60,180 C 40,160 30,120 70,80 C 100,60 140,50 180,60 C 220,50 260,70 300,90 C 350,110 380,140 370,170 C 340,190 320,220 280,220 C 240,210 200,230 160,230 C 120,240 80,210 60,180 Z" fill="#ccfbf1" stroke="#5eead4" stroke-width="3" />
+              <path d="M 190,220 Q 150,160 170,85" fill="none" stroke="#0284c7" stroke-width="4" stroke-dasharray="6,4" />
+              <path d="M 170,85 Q 90,120 55,185 Q 110,170 160,145 Q 185,150 220,155" fill="none" stroke="#f97316" stroke-width="4" stroke-dasharray="6,4" />
+              <path d="M 220,155 Q 210,190 190,220" fill="none" stroke="#10b981" stroke-width="4" stroke-dasharray="6,4" />
+              <g transform="translate(170, 85)" class="cursor-pointer" onclick="openModal('y4')"><circle r="7" fill="#0284c7" stroke="#fff" stroke-width="2"/><text x="0" y="-10" text-anchor="middle" font-size="11" font-weight="900" fill="#0369a1">萩市 (コテージ)</text></g>
+              <g transform="translate(55, 185)" class="cursor-pointer" onclick="openModal('y9')"><circle r="6" fill="#f97316" stroke="#fff" stroke-width="2"/><text x="-5" y="-9" text-anchor="middle" font-size="10" font-weight="900" fill="#9a3412">下関 (唐戸市場)</text></g>
+              <g transform="translate(155, 140)" class="cursor-pointer" onclick="openModal('y12')"><circle r="6" fill="#f97316" stroke="#fff" stroke-width="2"/><text x="0" y="-9" text-anchor="middle" font-size="10" font-weight="900" fill="#9a3412">美祢市</text></g>
+              <g transform="translate(225, 155)" class="cursor-pointer" onclick="openModal('y14')"><circle r="7" fill="#8b5cf6" stroke="#fff" stroke-width="2"/><text x="5" y="-10" text-anchor="start" font-size="10" font-weight="900" fill="#5b21b6">山口市 / 湯田温泉</text></g>
+              <g transform="translate(190, 220)"><circle r="8" fill="#06b6d4" stroke="#fff" stroke-width="2"/><text x="0" y="18" text-anchor="middle" font-size="10" font-weight="900" fill="#0891b2">山口宇部空港</text></g>
             </svg>
           </div>
         `;
       } else if (currentTripKey === 'karuizawa') {
         mapTabContentHtml = `
-          <div class="relative bg-emerald-950/5 border border-emerald-900/10 rounded-2xl p-2 overflow-hidden shadow-inner">
+          <div class="relative bg-emerald-50/60 border border-emerald-200/80 rounded-2xl p-2 overflow-hidden shadow-inner">
             <svg viewBox="0 0 380 340" class="w-full h-auto drop-shadow-sm">
               <rect width="380" height="340" fill="#f4f9f4" rx="14"/>
               <text x="15" y="24" fill="#047857" font-size="10" font-weight="900">N ↑ 北（浅間山方面）</text>
@@ -1422,27 +1460,26 @@
               <path d="M 30,230 Q 150,235 350,225" fill="none" stroke="#cbd5e1" stroke-width="5"/>
               <path d="M 245,245 L 245,170" fill="none" stroke="#059669" stroke-width="3.5"/>
               <path d="M 245,170 L 130,225 Q 150,140 200,60" fill="none" stroke="#ea580c" stroke-width="3.5" stroke-dasharray="6,4"/>
-              <path d="M 200,60 Q 230,150 245,245" fill="none" stroke="#2563eb" stroke-width="3.5" stroke-dasharray="6,4"/>
+              <path d="M 200,60 Q 230,150 245,245" fill="none" stroke="#0284c7" stroke-width="3.5" stroke-dasharray="6,4"/>
               <g transform="translate(200, 60)" class="cursor-pointer" onclick="openModal('k10')"><circle r="9" fill="#ea580c" stroke="#fff" stroke-width="2.5"/><text x="14" y="-2" font-size="11" font-weight="900" fill="#9a3412">アンシェントホテル浅間</text></g>
               <g transform="translate(130, 225)" class="cursor-pointer" onclick="openModal('k9')"><circle r="8" fill="#d97706" stroke="#fff" stroke-width="2"/><text x="-12" y="-12" text-anchor="middle" font-size="10" font-weight="900" fill="#78350f">コモングラウンズ</text></g>
               <g transform="translate(245, 170)" class="cursor-pointer" onclick="openModal('k6')"><circle r="8" fill="#059669" stroke="#fff" stroke-width="2"/><text x="14" y="-3" font-size="10.5" font-weight="900" fill="#065f46">ルグラン旧軽井沢</text></g>
-              <g transform="translate(245, 245)" class="cursor-pointer" onclick="openModal('k2')"><circle r="9" fill="#2563eb" stroke="#fff" stroke-width="2.5"/><text x="15" y="-1" font-size="11" font-weight="900" fill="#1e3a8a">軽井沢駅</text></g>
+              <g transform="translate(245, 245)" class="cursor-pointer" onclick="openModal('k2')"><circle r="9" fill="#0284c7" stroke="#fff" stroke-width="2.5"/><text x="15" y="-1" font-size="11" font-weight="900" fill="#0369a1">軽井沢駅</text></g>
             </svg>
           </div>
         `;
       } else {
-        // 新規作成された旅行の汎用MAP（登録スポット一覧＆一発Googleマップナビ）
         mapTabContentHtml = `
           <div class="space-y-3 text-xs">
-            <div class="bg-gradient-to-br from-indigo-50 to-blue-50 border border-indigo-100 rounded-2xl p-4 text-center space-y-2.5">
-              <div class="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-base mx-auto shadow">
+            <div class="bg-gradient-to-br from-cyan-50 to-sky-50 border border-sky-100 rounded-2xl p-4 text-center space-y-2.5">
+              <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-500 to-sky-600 text-white flex items-center justify-center text-base mx-auto shadow-md">
                 <i class="fa-solid fa-map-location-dot"></i>
               </div>
               <div>
-                <h3 class="font-bold text-slate-800 text-sm">「${trip.title}」のルートマップ</h3>
+                <h3 class="font-bold text-slate-900 text-sm">「${trip.title}」のルートマップ</h3>
                 <p class="text-[11px] text-slate-500 mt-0.5">登録されたスポットの位置関係を確認できます</p>
               </div>
-              <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(trip.title)}" target="_blank" class="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs shadow transition">
+              <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(trip.title)}" target="_blank" class="inline-flex items-center gap-1.5 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl text-xs shadow-sm transition">
                 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                 <span>Googleマップで全体を検索</span>
               </a>
@@ -1450,25 +1487,25 @@
 
             <div class="space-y-1.5">
               <span class="font-bold text-slate-700 flex items-center gap-1">
-                <i class="fa-solid fa-location-dot text-indigo-600"></i> 登録スポット一覧（タップでマップ起動）
+                <i class="fa-solid fa-location-dot text-sky-600"></i> 登録スポット一覧（タップでマップ起動）
               </span>
               <div class="space-y-1.5 max-h-60 overflow-y-auto pr-0.5">
                 ${allSteps.length === 0 ? `
-                  <div class="p-3 text-center text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                  <div class="p-3 text-center text-slate-400 bg-white rounded-xl border border-dashed border-slate-200">
                     登録スポットがありません
                   </div>
                 ` : allSteps.map(s => `
-                  <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.mapQuery || s.title)}" target="_blank" class="p-2.5 bg-slate-50 hover:bg-indigo-50/70 active:scale-98 transition rounded-xl border border-slate-200 flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                      <span class="w-5 h-5 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-[10px] font-bold shrink-0">
+                  <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.mapQuery || s.title)}" target="_blank" class="p-3 bg-white hover:bg-sky-50/70 active:scale-98 transition rounded-xl border border-sky-100 flex items-center justify-between shadow-xs">
+                    <div class="flex items-center gap-2.5 truncate">
+                      <span class="w-6 h-6 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center text-xs font-bold shrink-0">
                         ${s.day}
                       </span>
                       <div class="truncate">
-                        <span class="font-bold text-slate-800 text-xs block truncate">${s.title}</span>
+                        <span class="font-bold text-slate-900 text-xs block truncate">${s.title}</span>
                         <span class="text-[10px] text-slate-400 block">${s.time}</span>
                       </div>
                     </div>
-                    <span class="text-[10px] text-indigo-600 font-bold flex items-center gap-1 shrink-0 bg-white px-2 py-1 rounded-lg border border-slate-200 shadow-xs">
+                    <span class="text-[10px] text-sky-600 font-bold flex items-center gap-1 shrink-0 bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-200">
                       <i class="fa-solid fa-map-pin"></i> MAP
                     </span>
                   </a>
@@ -1481,53 +1518,53 @@
 
       container.innerHTML = `
         <!-- 1日目 -->
-        <article id="card-1" class="pamphlet-card bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-100 flex flex-col transition">
-          <div class="bg-gradient-to-r from-sky-600 via-blue-700 to-indigo-800 text-white p-5 relative overflow-hidden">
+        <article id="card-1" class="pamphlet-card bg-white rounded-3xl overflow-hidden shadow-xl border border-sky-100 flex flex-col transition">
+          <div class="bg-gradient-to-r from-cyan-500 via-sky-600 to-blue-600 text-white p-5 relative overflow-hidden">
             <div class="flex items-center justify-between gap-2">
-              <span class="px-2.5 py-0.5 rounded-full bg-white/20 border border-white/30 text-white text-[10px] font-bold">1日目 / ${trip.dayDates ? trip.dayDates[1] || 'DAY 1' : '1日目'}</span>
-              <span class="text-[11px] font-black tracking-widest text-amber-300">1 / 5 PAGE</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white text-[10px] font-bold">1日目 / ${trip.dayDates ? trip.dayDates[1] || 'DAY 1' : '1日目'}</span>
+              <span class="text-[11px] font-black tracking-widest text-amber-200">1 / 5 PAGE</span>
             </div>
-            <div class="mt-2.5 flex items-center gap-3">
-              <div class="w-10 h-10 rounded-2xl bg-white text-blue-700 font-black text-xl flex items-center justify-center shadow">1</div>
+            <div class="mt-3 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-white text-sky-600 font-black text-xl flex items-center justify-center shadow">1</div>
               <h2 class="text-base sm:text-lg font-black leading-tight">${trip.title}<br><span class="text-xs font-normal opacity-90">1日目 スケジュール</span></h2>
             </div>
           </div>
           <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
             <div class="space-y-2 text-xs">
               <div class="flex items-center justify-between font-bold text-slate-800 pb-1 border-b border-slate-100">
-                <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock ${(trip.btnColor || 'bg-blue-600').replace('bg-', 'text-')}"></i> 1日目 スケジュール</span>
-                <span class="text-[10px] text-slate-500 font-normal"><i class="fa-solid fa-hand-pointer mr-0.5"></i> タップで詳細・編集</span>
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock text-sky-600"></i> 1日目 スケジュール</span>
+                <span class="text-[10px] text-slate-400 font-normal"><i class="fa-solid fa-hand-pointer mr-0.5"></i> タップで詳細・編集</span>
               </div>
-              <div class="space-y-1.5">${renderStepsHtml(day1Steps)}</div>
+              <div class="space-y-2">${renderStepsHtml(day1Steps)}</div>
             </div>
-            <button onclick="openEditModal(null, 1)" class="w-full mt-2 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
-              <i class="fa-solid fa-plus text-blue-600"></i>
+            <button onclick="openEditModal(null, 1)" class="w-full mt-2 py-2.5 bg-sky-50 hover:bg-sky-100 text-sky-700 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition border border-sky-200/60">
+              <i class="fa-solid fa-plus text-sky-600"></i>
               <span>1日目に新しい予定を追加</span>
             </button>
           </div>
         </article>
 
         <!-- 2日目 -->
-        <article id="card-2" class="pamphlet-card bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-100 flex flex-col transition">
-          <div class="bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 text-white p-5 relative overflow-hidden">
+        <article id="card-2" class="pamphlet-card bg-white rounded-3xl overflow-hidden shadow-xl border border-sky-100 flex flex-col transition">
+          <div class="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white p-5 relative overflow-hidden">
             <div class="flex items-center justify-between gap-2">
-              <span class="px-2.5 py-0.5 rounded-full bg-white/20 border border-white/30 text-white text-[10px] font-bold">2日目 / ${trip.dayDates ? trip.dayDates[2] || 'DAY 2' : '2日目'}</span>
-              <span class="text-[11px] font-black tracking-widest text-amber-300">2 / 5 PAGE</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white text-[10px] font-bold">2日目 / ${trip.dayDates ? trip.dayDates[2] || 'DAY 2' : '2日目'}</span>
+              <span class="text-[11px] font-black tracking-widest text-amber-200">2 / 5 PAGE</span>
             </div>
-            <div class="mt-2.5 flex items-center gap-3">
-              <div class="w-10 h-10 rounded-2xl bg-white text-orange-600 font-black text-xl flex items-center justify-center shadow">2</div>
+            <div class="mt-3 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-white text-orange-500 font-black text-xl flex items-center justify-center shadow">2</div>
               <h2 class="text-base sm:text-lg font-black leading-tight">${trip.title}<br><span class="text-xs font-normal opacity-90">2日目 スケジュール</span></h2>
             </div>
           </div>
           <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
             <div class="space-y-2 text-xs">
               <div class="flex items-center justify-between font-bold text-slate-800 pb-1 border-b border-slate-100">
-                <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock text-orange-600"></i> 2日目 スケジュール</span>
-                <span class="text-[10px] text-slate-500 font-normal"><i class="fa-solid fa-hand-pointer mr-0.5"></i> タップで詳細・編集</span>
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock text-orange-500"></i> 2日目 スケジュール</span>
+                <span class="text-[10px] text-slate-400 font-normal"><i class="fa-solid fa-hand-pointer mr-0.5"></i> タップで詳細・編集</span>
               </div>
-              <div class="space-y-1.5">${renderStepsHtml(day2Steps)}</div>
+              <div class="space-y-2">${renderStepsHtml(day2Steps)}</div>
             </div>
-            <button onclick="openEditModal(null, 2)" class="w-full mt-2 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+            <button onclick="openEditModal(null, 2)" class="w-full mt-2 py-2.5 bg-orange-50 hover:bg-orange-100 text-orange-700 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition border border-orange-200/60">
               <i class="fa-solid fa-plus text-orange-600"></i>
               <span>2日目に新しい予定を追加</span>
             </button>
@@ -1535,14 +1572,14 @@
         </article>
 
         <!-- 3日目 -->
-        <article id="card-3" class="pamphlet-card bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-100 flex flex-col transition">
-          <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-700 text-white p-5 relative overflow-hidden">
+        <article id="card-3" class="pamphlet-card bg-white rounded-3xl overflow-hidden shadow-xl border border-sky-100 flex flex-col transition">
+          <div class="bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 text-white p-5 relative overflow-hidden">
             <div class="flex items-center justify-between gap-2">
-              <span class="px-2.5 py-0.5 rounded-full bg-white/20 border border-white/30 text-white text-[10px] font-bold">3日目 / ${trip.dayDates ? trip.dayDates[3] || 'DAY 3' : '3日目'}</span>
-              <span class="text-[11px] font-black tracking-widest text-amber-300">3 / 5 PAGE</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white text-[10px] font-bold">3日目 / ${trip.dayDates ? trip.dayDates[3] || 'DAY 3' : '3日目'}</span>
+              <span class="text-[11px] font-black tracking-widest text-amber-200">3 / 5 PAGE</span>
             </div>
-            <div class="mt-2.5 flex items-center gap-3">
-              <div class="w-10 h-10 rounded-2xl bg-white text-emerald-700 font-black text-xl flex items-center justify-center shadow">3</div>
+            <div class="mt-3 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-white text-emerald-600 font-black text-xl flex items-center justify-center shadow">3</div>
               <h2 class="text-base sm:text-lg font-black leading-tight">${trip.title}<br><span class="text-xs font-normal opacity-90">3日目 スケジュール</span></h2>
             </div>
           </div>
@@ -1550,11 +1587,11 @@
             <div class="space-y-2 text-xs">
               <div class="flex items-center justify-between font-bold text-slate-800 pb-1 border-b border-slate-100">
                 <span class="flex items-center gap-1.5"><i class="fa-solid fa-clock text-emerald-600"></i> 3日目 スケジュール</span>
-                <span class="text-[10px] text-slate-500 font-normal"><i class="fa-solid fa-hand-pointer mr-0.5"></i> タップで詳細・編集</span>
+                <span class="text-[10px] text-slate-400 font-normal"><i class="fa-solid fa-hand-pointer mr-0.5"></i> タップで詳細・編集</span>
               </div>
-              <div class="space-y-1.5">${renderStepsHtml(day3Steps)}</div>
+              <div class="space-y-2">${renderStepsHtml(day3Steps)}</div>
             </div>
-            <button onclick="openEditModal(null, 3)" class="w-full mt-2 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
+            <button onclick="openEditModal(null, 3)" class="w-full mt-2 py-2.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition border border-emerald-200/60">
               <i class="fa-solid fa-plus text-emerald-600"></i>
               <span>3日目に新しい予定を追加</span>
             </button>
@@ -1562,17 +1599,17 @@
         </article>
 
         <!-- 4枚目 MAP -->
-        <article id="card-4" class="pamphlet-card bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-100 flex flex-col transition">
-          <div class="bg-gradient-to-r from-purple-700 via-indigo-700 to-blue-800 text-white p-5 relative overflow-hidden">
+        <article id="card-4" class="pamphlet-card bg-white rounded-3xl overflow-hidden shadow-xl border border-sky-100 flex flex-col transition">
+          <div class="bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-600 text-white p-5 relative overflow-hidden">
             <div class="flex items-center justify-between gap-2">
-              <span class="px-2.5 py-0.5 rounded-full bg-white/20 border border-white/30 text-purple-100 text-[10px] font-bold">MAP & ACCESS</span>
-              <span class="text-[11px] font-black tracking-widest text-amber-300">4 / 5 PAGE</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white text-[10px] font-bold">MAP & ACCESS</span>
+              <span class="text-[11px] font-black tracking-widest text-amber-200">4 / 5 PAGE</span>
             </div>
-            <div class="mt-2.5 flex items-center gap-3">
-              <div class="w-10 h-10 rounded-2xl bg-white text-purple-700 font-black text-xl flex items-center justify-center shadow">4</div>
+            <div class="mt-3 flex items-center gap-3">
+              <div class="w-10 h-10 rounded-2xl bg-white text-sky-600 font-black text-xl flex items-center justify-center shadow">4</div>
               <div>
                 <h2 class="text-base sm:text-lg font-black leading-tight">${trip.title} MAP</h2>
-                <p class="text-xs text-purple-200 font-normal">位置関係とルートをチェック</p>
+                <p class="text-xs text-sky-100 font-normal">位置関係とルートをチェック</p>
               </div>
             </div>
           </div>
@@ -1581,39 +1618,39 @@
             ${mapTabContentHtml}
 
             <!-- サンプル切り替え / トップ戻る導線 -->
-            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3 space-y-2">
+            <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 space-y-2">
               <div class="flex items-center justify-between">
                 <span class="font-bold text-slate-700 text-xs">📌 他のしおりを見る</span>
-                <button onclick="goToTopPage()" class="text-indigo-600 hover:text-indigo-800 text-xs font-bold flex items-center gap-1">
+                <button onclick="goToTopPage()" class="text-sky-600 hover:text-sky-800 text-xs font-bold flex items-center gap-1">
                   <i class="fa-solid fa-house text-[10px]"></i> トップへ戻る
                 </button>
               </div>
               <div class="flex gap-2 text-xs">
-                <button onclick="loadSampleTrip('yamaguchi')" class="flex-1 py-2 bg-white border border-slate-200 hover:bg-slate-100 rounded-xl font-bold text-slate-700 text-center transition">🐡 山口旅行</button>
-                <button onclick="loadSampleTrip('karuizawa')" class="flex-1 py-2 bg-white border border-slate-200 hover:bg-slate-100 rounded-xl font-bold text-slate-700 text-center transition">🌲 軽井沢旅行</button>
+                <button onclick="loadSampleTrip('yamaguchi')" class="flex-1 py-2 bg-white border border-slate-200 hover:bg-slate-100 rounded-xl font-bold text-slate-700 text-center transition shadow-xs">🐡 山口旅行</button>
+                <button onclick="loadSampleTrip('karuizawa')" class="flex-1 py-2 bg-white border border-slate-200 hover:bg-slate-100 rounded-xl font-bold text-slate-700 text-center transition shadow-xs">🌲 軽井沢旅行</button>
               </div>
             </div>
           </div>
         </article>
 
         <!-- 5枚目 割り勘精算 -->
-        <article id="card-5" class="pamphlet-card bg-white rounded-3xl overflow-hidden shadow-2xl border border-slate-100 flex flex-col transition">
-          <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-5 relative overflow-hidden">
+        <article id="card-5" class="pamphlet-card bg-white rounded-3xl overflow-hidden shadow-xl border border-sky-100 flex flex-col transition">
+          <div class="bg-gradient-to-r from-slate-900 via-sky-950 to-slate-900 text-white p-5 relative overflow-hidden">
             <div class="flex items-center justify-between gap-2">
-              <span class="px-2.5 py-0.5 rounded-full bg-white/20 border border-white/30 text-white text-[10px] font-bold">精算 ＆ 割り勘</span>
-              <span class="text-[11px] font-black tracking-widest text-amber-300">5 / 5 PAGE</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white text-[10px] font-bold">精算 ＆ 割り勘</span>
+              <span class="text-[11px] font-black tracking-widest text-cyan-300">5 / 5 PAGE</span>
             </div>
-            <div class="mt-2.5 flex items-center justify-between">
+            <div class="mt-3 flex items-center justify-between">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-2xl bg-indigo-600 text-white font-black text-xl flex items-center justify-center shadow">
+                <div class="w-10 h-10 rounded-2xl bg-cyan-500 text-white font-black text-xl flex items-center justify-center shadow">
                   <i class="fa-solid fa-calculator text-sm"></i>
                 </div>
                 <div>
                   <h2 class="text-base sm:text-lg font-black leading-tight">割り勘精算</h2>
-                  <p class="text-xs text-indigo-200 font-normal">合計：¥${settlement.totalExpense.toLocaleString()}</p>
+                  <p class="text-xs text-cyan-200 font-normal">合計：¥${settlement.totalExpense.toLocaleString()}</p>
                 </div>
               </div>
-              <button onclick="openExpenseModal()" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold rounded-xl text-xs flex items-center gap-1 shadow transition">
+              <button onclick="openExpenseModal()" class="px-3 py-1.5 bg-cyan-500 hover:bg-cyan-600 active:scale-95 text-white font-bold rounded-xl text-xs flex items-center gap-1 shadow transition">
                 <i class="fa-solid fa-plus"></i>
                 <span>支払いを記録</span>
               </button>
@@ -1623,29 +1660,29 @@
           <div class="p-4 space-y-4 flex-1 flex flex-col justify-between">
             
             <!-- 送金ナビ（最小送金ルート） -->
-            <div class="bg-indigo-50/80 border border-indigo-200/80 rounded-2xl p-3.5 space-y-2">
+            <div class="bg-sky-50 border border-sky-200 rounded-2xl p-3.5 space-y-2">
               <div class="flex items-center justify-between">
-                <span class="font-black text-indigo-950 text-xs flex items-center gap-1.5">
-                  <i class="fa-solid fa-arrow-right-arrow-left text-indigo-600"></i> 送金ナビ（最終精算）
+                <span class="font-black text-sky-950 text-xs flex items-center gap-1.5">
+                  <i class="fa-solid fa-arrow-right-arrow-left text-sky-600"></i> 送金ナビ（最終精算）
                 </span>
-                <span class="text-[10px] text-indigo-700 font-bold">最小送金ルート</span>
+                <span class="text-[10px] text-sky-700 font-bold">最小送金ルート</span>
               </div>
 
               ${settlement.transfers.length === 0 ? `
-                <div class="p-3 bg-white rounded-xl text-center text-slate-500 text-xs font-bold border border-indigo-100">
+                <div class="p-3 bg-white rounded-xl text-center text-slate-500 text-xs font-bold border border-sky-100">
                   現在、送金の必要な差額はありません（精算完了）
                 </div>
               ` : `
                 <div class="space-y-1.5">
                   ${settlement.transfers.map(t => `
-                    <div class="p-2.5 bg-white rounded-xl border border-indigo-100 flex items-center justify-between shadow-xs">
+                    <div class="p-2.5 bg-white rounded-xl border border-sky-100 flex items-center justify-between shadow-xs">
                       <div class="flex items-center gap-2 text-xs font-bold text-slate-800">
                         <span class="text-rose-600">${t.from}</span>
                         <i class="fa-solid fa-arrow-right text-slate-400 text-[10px]"></i>
                         <span class="text-emerald-700">${t.to}</span>
                       </div>
                       <div class="flex items-center gap-1.5">
-                        <span class="font-mono font-black text-sm text-indigo-950">¥${t.amount.toLocaleString()}</span>
+                        <span class="font-mono font-black text-sm text-slate-900">¥${t.amount.toLocaleString()}</span>
                         <button onclick="copyAmount(${t.amount})" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded text-[10px] font-bold">コピー</button>
                       </div>
                     </div>
@@ -1659,21 +1696,21 @@
               <div class="flex items-center justify-between">
                 <div>
                   <span class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
-                    <i class="fa-solid fa-users text-slate-600"></i> 参加メンバー（${members.length}人）
+                    <i class="fa-solid fa-users text-slate-500"></i> 参加メンバー（${members.length}人）
                   </span>
                   <span class="text-[10px] text-slate-400 block font-normal">タップでその人の関連支払いを表示</span>
                 </div>
-                <button onclick="openMemberModal()" class="text-indigo-600 hover:text-indigo-800 text-xs font-bold flex items-center gap-1">
+                <button onclick="openMemberModal()" class="text-sky-600 hover:text-sky-800 text-xs font-bold flex items-center gap-1">
                   <i class="fa-solid fa-user-plus"></i> メンバー追加
                 </button>
               </div>
 
               <div class="grid grid-cols-2 gap-1.5">
                 ${settlement.balances.map(b => `
-                  <div onclick="openMemberDetailModal('${b.member}')" class="cursor-pointer p-2.5 bg-slate-50 hover:bg-indigo-50/60 active:scale-98 transition rounded-xl border border-slate-200 flex flex-col justify-between">
+                  <div onclick="openMemberDetailModal('${b.member}')" class="cursor-pointer p-2.5 bg-slate-50 hover:bg-sky-50 active:scale-98 transition rounded-xl border border-slate-200/80 flex flex-col justify-between">
                     <div class="flex items-center justify-between">
                       <span class="font-bold text-slate-800 text-xs truncate flex items-center gap-1">
-                        <i class="fa-solid fa-user text-[10px] text-indigo-500"></i> ${b.member}
+                        <i class="fa-solid fa-user text-[10px] text-sky-500"></i> ${b.member}
                       </span>
                       <i class="fa-solid fa-chevron-right text-[9px] text-slate-400"></i>
                     </div>
@@ -1697,7 +1734,7 @@
               <div class="flex items-center justify-between">
                 <div>
                   <span class="font-bold text-slate-800 text-xs flex items-center gap-1.5">
-                    <i class="fa-solid fa-receipt text-slate-600"></i> 支払い履歴
+                    <i class="fa-solid fa-receipt text-slate-500"></i> 支払い履歴
                   </span>
                   <span class="text-[10px] text-slate-400 block font-normal">タップで詳細・編集・削除</span>
                 </div>
@@ -1709,11 +1746,11 @@
               ` : `
                 <div class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
                   ${expenses.map(exp => `
-                    <div onclick="openExpenseDetailModal('${exp.id}')" class="cursor-pointer p-2.5 bg-slate-50 hover:bg-indigo-50/60 active:scale-98 transition border border-slate-200 rounded-xl flex items-center justify-between">
+                    <div onclick="openExpenseDetailModal('${exp.id}')" class="cursor-pointer p-2.5 bg-slate-50 hover:bg-sky-50 active:scale-98 transition border border-slate-200/80 rounded-xl flex items-center justify-between">
                       <div class="space-y-0.5">
                         <div class="flex items-center gap-1.5">
                           <span class="font-bold text-slate-800 text-xs">${exp.title}</span>
-                          <span class="text-[10px] text-indigo-700 bg-indigo-50 px-1.5 py-0.2 rounded font-bold">${exp.payer}</span>
+                          <span class="text-[10px] text-sky-700 bg-sky-100 px-1.5 py-0.2 rounded font-bold">${exp.payer}</span>
                         </div>
                         <div class="text-[10px] text-slate-500">
                           対象: ${(exp.participants || []).length === members.length ? '全員' : (exp.participants || []).join(', ')} (${(exp.participants || []).length}人)
@@ -1757,13 +1794,13 @@
         paidListDiv.innerHTML = `<div class="p-2.5 bg-slate-50 rounded-xl text-center text-slate-400 text-[11px]">立替えた支払いはありません</div>`;
       } else {
         paidListDiv.innerHTML = paidByThisUser.map(exp => `
-          <div onclick="openExpenseDetailModal('${exp.id}')" class="cursor-pointer p-2.5 bg-white border border-slate-200 rounded-xl flex items-center justify-between active:bg-indigo-50">
+          <div onclick="openExpenseDetailModal('${exp.id}')" class="cursor-pointer p-2.5 bg-white border border-slate-200 rounded-xl flex items-center justify-between active:bg-sky-50">
             <div>
               <span class="font-bold text-slate-800 text-xs block">${exp.title}</span>
               <span class="text-[10px] text-slate-400">対象: ${(exp.participants || []).join(', ')}</span>
             </div>
             <div class="flex items-center gap-1.5">
-              <span class="font-mono font-bold text-xs text-indigo-900">¥${(parseInt(exp.amount, 10) || 0).toLocaleString()}</span>
+              <span class="font-mono font-bold text-xs text-sky-900">¥${(parseInt(exp.amount, 10) || 0).toLocaleString()}</span>
               <i class="fa-solid fa-chevron-right text-[9px] text-slate-300"></i>
             </div>
           </div>
@@ -1778,7 +1815,7 @@
         shareListDiv.innerHTML = sharedWithThisUser.map(exp => {
           const splitAmount = Math.round(parseInt(exp.amount, 10) / (exp.participants || []).length);
           return `
-            <div onclick="openExpenseDetailModal('${exp.id}')" class="cursor-pointer p-2.5 bg-white border border-slate-200 rounded-xl flex items-center justify-between active:bg-indigo-50">
+            <div onclick="openExpenseDetailModal('${exp.id}')" class="cursor-pointer p-2.5 bg-white border border-slate-200 rounded-xl flex items-center justify-between active:bg-sky-50">
               <div>
                 <span class="font-bold text-slate-800 text-xs block">${exp.title}</span>
                 <span class="text-[10px] text-slate-500">支払者: ${exp.payer} (総額: ¥${(parseInt(exp.amount, 10) || 0).toLocaleString()})</span>
@@ -1821,7 +1858,7 @@
 
       const partContainer = document.getElementById('expDetailParticipants');
       partContainer.innerHTML = (exp.participants || []).map(p => `
-        <span class="px-2.5 py-1 bg-indigo-50 border border-indigo-100 text-indigo-900 rounded-lg font-bold text-xs">
+        <span class="px-2.5 py-1 bg-sky-50 border border-sky-100 text-sky-900 rounded-lg font-bold text-xs">
           ${p}
         </span>
       `).join('');
@@ -1919,7 +1956,7 @@
         const partList = document.getElementById('expenseParticipantsList');
         partList.innerHTML = members.map(m => `
           <label class="flex items-center gap-2 p-2 bg-white rounded-xl border border-slate-200 cursor-pointer text-xs font-bold text-slate-700">
-            <input type="checkbox" value="${m}" ${(exp.participants || []).includes(m) ? 'checked' : ''} class="participant-checkbox w-4 h-4 text-indigo-600 rounded focus:ring-0">
+            <input type="checkbox" value="${m}" ${(exp.participants || []).includes(m) ? 'checked' : ''} class="participant-checkbox w-4 h-4 text-sky-600 rounded focus:ring-0">
             <span class="truncate">${m}</span>
           </label>
         `).join('');
@@ -1933,7 +1970,7 @@
         const partList = document.getElementById('expenseParticipantsList');
         partList.innerHTML = members.map(m => `
           <label class="flex items-center gap-2 p-2 bg-white rounded-xl border border-slate-200 cursor-pointer text-xs font-bold text-slate-700">
-            <input type="checkbox" value="${m}" checked class="participant-checkbox w-4 h-4 text-indigo-600 rounded focus:ring-0">
+            <input type="checkbox" value="${m}" checked class="participant-checkbox w-4 h-4 text-sky-600 rounded focus:ring-0">
             <span class="truncate">${m}</span>
           </label>
         `).join('');
@@ -2120,13 +2157,13 @@
       }
 
       let icon = 'fa-solid fa-location-dot';
-      let iconBg = 'bg-blue-100 text-blue-600';
+      let iconBg = 'bg-sky-100 text-sky-600';
       if (category.includes('グルメ') || category.includes('ランチ') || category.includes('ディナー')) {
         icon = 'fa-solid fa-utensils'; iconBg = 'bg-amber-100 text-amber-700';
       } else if (category.includes('カフェ') || category.includes('朝食')) {
         icon = 'fa-solid fa-mug-saucer'; iconBg = 'bg-amber-100 text-amber-700';
       } else if (category.includes('ドライブ') || category.includes('移動') || category.includes('車')) {
-        icon = 'fa-solid fa-car'; iconBg = 'bg-sky-100 text-sky-600';
+        icon = 'fa-solid fa-car'; iconBg = 'bg-cyan-100 text-cyan-600';
       } else if (category.includes('宿泊') || category.includes('温泉')) {
         icon = 'fa-solid fa-hotel'; iconBg = 'bg-indigo-100 text-indigo-700';
       } else if (category.includes('アクティビティ')) {
@@ -2215,7 +2252,7 @@
       document.getElementById('modalMapLink').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.mapQuery || data.title)}`;
       
       const iconBox = document.getElementById('modalIconBox');
-      iconBox.className = `w-10 h-10 rounded-2xl flex items-center justify-center text-lg shadow-xs ${data.iconBg || 'bg-blue-100 text-blue-600'}`;
+      iconBox.className = `w-10 h-10 rounded-2xl flex items-center justify-center text-lg shadow-xs ${data.iconBg || 'bg-sky-100 text-sky-600'}`;
       iconBox.innerHTML = `<i class="${data.icon || 'fa-solid fa-location-dot'}"></i>`;
 
       document.getElementById('modalEditBtn').onclick = () => openEditModal(data.id, data.day);
@@ -2363,8 +2400,8 @@ ${promptText}
       const trip = liveTripData[currentTripKey] || {};
 
       document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('bg-blue-600', 'bg-emerald-700', 'bg-indigo-600', 'bg-slate-700', 'text-white');
-        btn.classList.add('text-slate-400');
+        btn.classList.remove('bg-sky-500', 'bg-emerald-600', 'bg-slate-900', 'bg-slate-700', 'text-white');
+        btn.classList.add('text-slate-500');
       });
 
       const cards = [
@@ -2383,7 +2420,7 @@ ${promptText}
         const t0 = document.getElementById('tab-0');
         if (t0) {
           t0.classList.add('bg-slate-700', 'text-white');
-          t0.classList.remove('text-slate-400');
+          t0.classList.remove('text-slate-500');
         }
         if (indicator) indicator.innerText = '一覧表示';
         if (prevBtn) prevBtn.classList.add('opacity-30', 'pointer-events-none');
@@ -2405,11 +2442,11 @@ ${promptText}
         const activeTab = document.getElementById(`tab-${currentSlide}`);
         if (activeTab) {
           if (currentSlide === 5) {
-            activeTab.classList.add('bg-indigo-600', 'text-white');
+            activeTab.classList.add('bg-slate-900', 'text-white');
           } else {
-            activeTab.classList.add(trip.btnColor || 'bg-blue-600', 'text-white');
+            activeTab.classList.add(trip.btnColor || 'bg-sky-500', 'text-white');
           }
-          activeTab.classList.remove('text-slate-400');
+          activeTab.classList.remove('text-slate-500');
         }
         if (indicator) indicator.innerText = `${currentSlide} / 5`;
       }
@@ -2455,7 +2492,7 @@ ${promptText}
           step.classList.add('current-active-step');
           if (!step.querySelector('.now-badge')) {
             const badge = document.createElement('div');
-            badge.className = 'now-badge mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-red-600 text-white font-bold text-[10px] animate-pulse';
+            badge.className = 'now-badge mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-sky-600 text-white font-bold text-[10px] animate-pulse';
             badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-white"></span> 進行中 (NOW)';
             step.appendChild(badge);
           }
