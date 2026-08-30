@@ -11,7 +11,7 @@
   <meta name="apple-mobile-web-app-title" content="Shiorit">
   <meta name="theme-color" content="#EAF7FB">
 
-  <!-- iPhoneホーム画面追加用アイコン（青背景グラデーション＋Shiorit文字） -->
+  <!-- iPhoneホーム画面追加用アイコン -->
   <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><defs><linearGradient id='bg' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%2338bdf8'/><stop offset='100%' stop-color='%230284c7'/></linearGradient></defs><rect width='512' height='512' rx='112' fill='url(%23bg)'/><text x='50%' y='46%' font-family='-apple-system, BlinkMacSystemFont, sans-serif' font-weight='900' font-size='88' fill='%23ffffff' text-anchor='middle'>Shiorit</text><text x='50%' y='64%' font-family='-apple-system, BlinkMacSystemFont, sans-serif' font-weight='700' font-size='32' fill='%23e0f2fe' text-anchor='middle'>シオリット</text></svg>">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='%230284c7'/><text x='50%' y='55%' font-family='sans-serif' font-weight='900' font-size='90' fill='%23ffffff' text-anchor='middle'>Shiorit</text></svg>">
 
@@ -268,7 +268,7 @@
   <!-- メインコンテンツ -->
   <main id="mainContainer" class="flex-1 max-w-md w-full mx-auto p-3.5 sm:p-4 space-y-6"></main>
 
-  <!-- 作成直後の「URL紛失防止・強力コピー保存ポップアップ」モーダル -->
+  <!-- ★【新機能1】作成直後の「URL紛失防止・強力コピー保存ポップアップ」モーダル -->
   <div id="createdUrlModal" class="fixed inset-0 z-[110] bg-shiorit-dark/70 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="glass-card bg-white rounded-3xl max-w-md w-full p-6 shadow-resort border border-shiorit-secondary space-y-4 text-center">
       <div class="w-16 h-16 rounded-3xl bg-shiorit-primary/20 text-shiorit-primary flex items-center justify-center text-2xl mx-auto shadow-resort border border-shiorit-secondary">
@@ -1125,6 +1125,7 @@
       window.location.search = `?trip=${currentTripKey}`;
     };
 
+    // ★【完全修復】新規作成用のAIプランニング関数（チャット用コードを分離し正確にJSONパース）
     async function generateInitialPlanWithAi(title, totalDays, dayDates, members, userPrompt) {
       const systemPrompt = `あなたはプロの旅行ツアープランナーです。指定された旅行タイトル、日数（全${totalDays}日間）、ユーザーの希望条件に基づいて、美しく実用的な旅行しおりのタイムラインJSONを作成してください。
 
@@ -1152,6 +1153,171 @@ ${userPrompt}
           responseMimeType: "application/json",
           temperature: 0.7
         }
+      };
+
+      try {
+        const res = await fetch(cloudflareWorkerEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) {
+          const errText = await res.text();
+          throw new Error(`サーバー応答 (${res.status}): ${errText.slice(0, 100)}`);
+        }
+
+        const result = await res.json();
+        const textResp = result.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (!textResp) throw new Error("AIからの応答が空でした");
+
+        const cleanJsonStr = textResp.replace(/```json/gi, '').replace(/```/gi, '').trim();
+        const jsonMatch = cleanJsonStr.match(/\{[\s\S]*\}/);
+        const targetStr = jsonMatch ? jsonMatch[0] : cleanJsonStr;
+        const parsed = JSON.parse(targetStr);
+
+        if (parsed.steps && Array.isArray(parsed.steps) && parsed.steps.length > 0) {
+          return parsed.steps.map((s, idx) => ({
+            id: s.id || `ai_step_${Date.now()}_${idx}`,
+            day: Math.min(Math.max(1, parseInt(s.day, 10) || 1), totalDays),
+            title: s.title || "スポット",
+            category: s.category || "観光",
+            time: s.time || "10:00〜12:00",
+            startTime: s.startTime || `${dayDates[s.day || 1]}T10:00:00`,
+            endTime: s.endTime || `${dayDates[s.day || 1]}T12:00:00`,
+            icon: s.icon || getCategoryIcon(s.category),
+            iconBg: s.iconBg || "bg-shiorit-light text-shiorit-primary",
+            badge: s.badge || "",
+            desc: s.desc || "",
+            tips: s.tips || "",
+            mapQuery: s.mapQuery || s.title || title
+          }));
+        }
+      } catch(err) {
+        console.error("AI Generation Failed:", err);
+        showToast(`AIプラン生成に失敗: ${err.message}`);
+      }
+      return null;
+    }
+
+    async function syncFromCloud() {
+      if (!currentTripKey) return;
+      try {
+        const url = `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/travel_plans/${currentTripKey}?key=${firebaseApiKey}`;
+        const res = await fetch(url);
+        if (res.ok) {
+          const doc = await res.json();
+          if (doc.fields) {
+            const rawHash = (doc.fields.stepsJson?.stringValue || '') + (doc.fields.membersJson?.stringValue || '') + (doc.fields.expensesJson?.stringValue || '');
+            if (rawHash && rawHash !== lastCloudSyncHash) {
+              lastCloudSyncHash = rawHash;
+              if (doc.fields.stepsJson) {
+                const steps = JSON.parse(doc.fields.stepsJson.stringValue);
+                if (steps && Array.isArray(steps)) liveTripData[currentTripKey].steps = steps;
+              }
+              if (doc.fields.membersJson) {
+                const members = JSON.parse(doc.fields.membersJson.stringValue);
+                if (members && Array.isArray(members)) liveTripData[currentTripKey].members = members;
+              }
+              if (doc.fields.expensesJson) {
+                const expenses = JSON.parse(doc.fields.expensesJson.stringValue);
+                if (expenses && Array.isArray(expenses)) liveTripData[currentTripKey].expenses = expenses;
+              }
+              renderTabBar();
+              renderMainCards();
+              updateCurrentStep();
+            }
+          }
+        }
+      } catch (err) {}
+    }
+
+    async function saveToCloud() {
+      if (!currentTripKey) return;
+      try {
+        const trip = liveTripData[currentTripKey];
+        if (!trip) return;
+        const rawHash = JSON.stringify(trip.steps) + JSON.stringify(trip.members || []) + JSON.stringify(trip.expenses || []);
+        lastCloudSyncHash = rawHash;
+
+        const url = `https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/travel_plans/${currentTripKey}?key=${firebaseApiKey}`;
+        const body = {
+          fields: {
+            stepsJson: { stringValue: JSON.stringify(trip.steps || []) },
+            membersJson: { stringValue: JSON.stringify(trip.members || []) },
+            expensesJson: { stringValue: JSON.stringify(trip.expenses || []) }
+          }
+        };
+        await fetch(url, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+      } catch (err) {}
+    }
+
+    // ★【完全修復】対話型AIコンシェルジュ（チャット形式での相談・提案反映）
+    window.openAiChatModal = function() {
+      document.getElementById('aiChatModal').classList.remove('hidden');
+      const container = document.getElementById('aiChatLogContainer');
+      container.scrollTop = container.scrollHeight;
+    };
+    window.closeAiChatModal = function() { document.getElementById('aiChatModal').classList.add('hidden'); };
+
+    window.sendQuickAiChat = function(text) {
+      document.getElementById('aiChatInput').value = text;
+      sendUserAiMessage();
+    };
+
+    window.sendUserAiMessage = async function() {
+      const input = document.getElementById('aiChatInput');
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      const container = document.getElementById('aiChatLogContainer');
+      
+      container.innerHTML += `
+        <div class="flex items-start justify-end gap-2.5">
+          <div class="bg-shiorit-primary text-white p-3 rounded-2xl rounded-tr-xs text-xs leading-relaxed max-w-[85%] font-medium">
+            ${escapeHtml(msg)}
+          </div>
+          <div class="w-7 h-7 rounded-full bg-slate-800 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+            <i class="fa-solid fa-user"></i>
+          </div>
+        </div>
+      `;
+      input.value = '';
+      container.scrollTop = container.scrollHeight;
+
+      const loadingId = 'ai_loading_' + Date.now();
+      container.innerHTML += `
+        <div id="${loadingId}" class="flex items-start gap-2.5">
+          <div class="w-7 h-7 rounded-full bg-gradient-to-br from-amber-400 to-orange-400 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+            <i class="fa-solid fa-robot"></i>
+          </div>
+          <div class="bg-shiorit-light/80 border border-shiorit-secondary/60 p-3 rounded-2xl text-shiorit-gray text-xs italic flex items-center gap-2">
+            <i class="fa-solid fa-spinner animate-spin text-shiorit-primary"></i> 提案を考えています...
+          </div>
+        </div>
+      `;
+      container.scrollTop = container.scrollHeight;
+
+      const currentTrip = liveTripData[currentTripKey];
+      const systemPrompt = `あなたは優秀な旅行AIコンシェルジュです。ユーザーからの相談（「${msg}」）に対して、親身にアドバイスしつつ、もしスケジュールの変更や追加・削除が必要な場合は、必ず以下のJSONブロックを返答の中に含めてください。
+変更不要な場合はJSONなしでテキストだけの返答で構いません。
+
+【変更用JSONのフォーマット（必ず通常のテキストまたはJSONブロックとして含めること）】
+{
+  "replyText": "ユーザーへの親身な提案メッセージ",
+  "suggestedSteps": [
+    // 既存の予定を含む更新後の全 steps 配列
+  ]
+}`;
+
+      const userQuery = `【旅行先】: ${currentTrip.title}\n【現在のスケジュール】:\n${JSON.stringify(currentTrip.steps, null, 2)}\n\n【相談内容】: ${msg}`;
+
+      const payload = {
+        contents: [{ parts: [{ text: `${systemPrompt}\n\n${userQuery}` }] }],
+        generationConfig: { temperature: 0.7 }
       };
 
       try {
@@ -1765,7 +1931,6 @@ ${userPrompt}
         document.getElementById('editDesc').value = step.desc || '';
         document.getElementById('editTips').value = step.tips || '';
 
-        // 既存の開始時間・終了時間をピッカーに反映
         if (step.startTime) {
           const sDate = new Date(step.startTime);
           if (!isNaN(sDate.getTime())) {
