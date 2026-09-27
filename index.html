@@ -94,7 +94,6 @@
 
   <!-- トップページ（LP） -->
   <div id="landingPage" class="hidden flex-1 flex flex-col justify-between">
-    <!-- LP ヘッダー -->
     <header class="glass-header px-4 py-3 sticky top-0 z-30 flex items-center justify-between">
       <div class="flex items-center gap-2.5">
         <div class="w-8 h-8 rounded-xl bg-shiorit-primary/15 flex items-center justify-center text-shiorit-primary font-bold shadow-xs">
@@ -110,10 +109,7 @@
       </button>
     </header>
 
-    <!-- LP メインビジュアル ＆ アクション -->
     <div class="max-w-md w-full mx-auto p-4 sm:p-6 space-y-6 my-auto">
-      
-      <!-- メインキャッチコピーカード -->
       <div class="glass-card rounded-3xl p-6 text-center space-y-4 shadow-resort relative overflow-hidden">
         <div class="absolute -right-8 -top-8 w-32 h-32 bg-shiorit-secondary/40 rounded-full blur-2xl pointer-events-none"></div>
         <div class="absolute -left-8 -bottom-8 w-32 h-32 bg-shiorit-primary/20 rounded-full blur-2xl pointer-events-none"></div>
@@ -143,10 +139,8 @@
         </button>
       </div>
 
-      <!-- シオリットの強みカード一覧 -->
       <div class="space-y-3 pt-2">
         <h2 class="text-xs font-black tracking-widest text-shiorit-primary uppercase text-center">シオリットの圧倒的強み</h2>
-        
         <div class="space-y-2.5 text-xs">
           <div class="glass-card p-4 rounded-2xl space-y-1 shadow-xs flex gap-3.5 items-start">
             <div class="w-9 h-9 rounded-xl bg-shiorit-primary/20 text-shiorit-dark flex items-center justify-center shrink-0 font-black text-sm">
@@ -173,8 +167,8 @@
               <i class="fa-solid fa-wand-magic-sparkles"></i>
             </div>
             <div>
-              <h3 class="font-bold text-shiorit-dark">本物のAIがプランを高度に再構築</h3>
-              <p class="text-[11px] text-shiorit-gray leading-relaxed">「ランチ候補を教えて」と送るだけで3つの選択肢を比較提示。選ぶだけでタイムラインにスマート反映。</p>
+              <h3 class="font-bold text-shiorit-dark">本物のAIが3候補比較 ＆ 元に戻す機能</h3>
+              <p class="text-[11px] text-shiorit-gray leading-relaxed">「ランチ候補を教えて」と送ると3つの候補を比較提示。変更後もワンタップまたはAIチャットでいつでも元に戻せます。</p>
             </div>
           </div>
 
@@ -189,10 +183,8 @@
           </div>
         </div>
       </div>
-
     </div>
 
-    <!-- フッター -->
     <footer class="py-6 text-center text-[10px] text-shiorit-gray border-t border-shiorit-secondary/40 flex items-center justify-center gap-2">
       <span>&copy; Shiorit (シオリット) All Rights Reserved.</span>
       <span class="text-shiorit-primary font-mono font-bold">v1.0.0</span>
@@ -216,6 +208,12 @@
         </div>
 
         <div class="flex items-center gap-1.5 shrink-0">
+          <!-- ★【アプローチ①】変更直後に出現する「元に戻す（アンドゥ）」ボタン -->
+          <button id="headerUndoBtn" onclick="undoLastChange()" class="hidden flex items-center gap-1 px-2.5 py-1.5 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-bold rounded-xl text-xs shadow-xs transition cursor-pointer" title="直前の予定に戻す">
+            <i class="fa-solid fa-rotate-left text-[11px]"></i>
+            <span>戻す</span>
+          </button>
+
           <button onclick="shareTripUrl()" class="flex items-center gap-1 px-2.5 py-1.5 bg-white hover:bg-shiorit-light active:scale-95 text-shiorit-dark border border-shiorit-secondary font-bold rounded-xl text-xs shadow-xs transition cursor-pointer" title="LINEで共有">
             <i class="fa-solid fa-share-nodes text-shiorit-primary"></i>
             <span>共有</span>
@@ -258,16 +256,21 @@
     </div>
   </header>
 
-  <!-- トースト通知 -->
-  <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-[110] glass-card border border-shiorit-secondary text-shiorit-dark px-5 py-3 rounded-2xl shadow-resort flex items-center gap-2 text-xs font-bold opacity-0 pointer-events-none transition duration-300">
-    <i class="fa-solid fa-circle-check text-shiorit-primary"></i>
-    <span id="toastMsg">データを更新しました</span>
+  <!-- トースト通知（★アンドゥボタン対応） -->
+  <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-[110] glass-card border border-shiorit-secondary text-shiorit-dark px-4 py-2.5 rounded-2xl shadow-resort flex items-center gap-3 text-xs font-bold opacity-0 pointer-events-none transition duration-300">
+    <div class="flex items-center gap-1.5">
+      <i class="fa-solid fa-circle-check text-shiorit-primary"></i>
+      <span id="toastMsg">データを更新しました</span>
+    </div>
+    <button id="toastUndoBtn" onclick="undoLastChange()" class="hidden px-2.5 py-1 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-bold rounded-lg text-[10px] shadow-xs transition">
+      元に戻す
+    </button>
   </div>
 
   <!-- メインコンテンツ -->
   <main id="mainContainer" class="flex-1 max-w-md w-full mx-auto p-3.5 sm:p-4 space-y-6"></main>
 
-  <!-- URL紛失防止・強力コピー保存ポップアップモーダル -->
+  <!-- URL紛失防止ポップアップ -->
   <div id="createdUrlModal" class="fixed inset-0 z-[110] bg-shiorit-dark/70 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="glass-card bg-white rounded-3xl max-w-md w-full p-6 shadow-resort border border-shiorit-secondary space-y-4 text-center">
       <div class="w-16 h-16 rounded-3xl bg-shiorit-primary/20 text-shiorit-primary flex items-center justify-center text-2xl mx-auto shadow-resort border border-shiorit-secondary">
@@ -339,7 +342,6 @@
           <input type="text" id="newTripMembers" required class="w-full p-3 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark font-bold focus:ring-2 focus:ring-shiorit-primary focus:outline-none" value="たろう, はなこ">
         </div>
 
-        <!-- AI希望条件入力 -->
         <div class="bg-gradient-to-br from-amber-50/80 to-orange-50/80 border border-amber-200/80 rounded-2xl p-3.5 space-y-2.5">
           <div class="flex items-center justify-between">
             <span class="font-black text-amber-950 text-xs flex items-center gap-1.5">
@@ -348,7 +350,6 @@
             <span class="text-[10px] bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-full">おすすめ</span>
           </div>
 
-          <!-- 現地での主な移動手段（4択） -->
           <div>
             <label class="text-[11px] font-bold text-amber-900 block mb-1">現地での主な移動手段</label>
             <div class="grid grid-cols-2 gap-1.5">
@@ -748,7 +749,7 @@
     </div>
   </div>
 
-  <!-- AIコンシェルジュ（チャット形式での相談・提案反映モーダル：全員リアルタイム同期対応） -->
+  <!-- AIコンシェルジュモーダル（★全員リアルタイム同期 ＆ 過去提案カード復元対応） -->
   <div id="aiChatModal" class="fixed inset-0 z-[60] bg-shiorit-dark/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 hidden">
     <div class="glass-card bg-white rounded-3xl max-w-lg w-full p-4 sm:p-5 shadow-resort border border-shiorit-secondary flex flex-col h-[85vh] max-h-[700px] space-y-3">
       
@@ -773,20 +774,19 @@
         </div>
       </div>
 
-      <div id="aiChatLogContainer" class="flex-1 overflow-y-auto space-y-3 pr-1 text-xs no-scrollbar">
-        <!-- 会話ログはrenderAiChatHistory()で動的描画 -->
-      </div>
+      <div id="aiChatLogContainer" class="flex-1 overflow-y-auto space-y-3 pr-1 text-xs no-scrollbar"></div>
 
       <div class="shrink-0 space-y-1 pt-1">
         <div class="flex flex-wrap gap-1.5">
           <button onclick="sendQuickAiChat('2日目のランチにおすすめのお店を3つ提案して')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 rounded-xl text-[10px] font-bold transition">🍽️ ランチの店を3つ提案して</button>
           <button onclick="sendQuickAiChat('午後に立ち寄れる素敵なカフェを3つ教えて')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 rounded-xl text-[10px] font-bold transition">☕ カフェを3つ教えて</button>
-          <button onclick="sendQuickAiChat('全体的なスケジュールを30分遅らせて')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 rounded-xl text-[10px] font-bold transition">⏱️ 全体30分遅らせて</button>
+          <!-- ★【アプローチ②】チャットから元に戻すクイックボタン -->
+          <button onclick="sendQuickAiChat('やっぱりさっきのスケジュールに戻して')" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-900 rounded-xl text-[10px] font-bold transition">↩️ さっきの予定に戻して</button>
         </div>
       </div>
 
       <div class="shrink-0 pt-2 border-t border-shiorit-secondary/40 flex items-center gap-2">
-        <input type="text" id="aiChatInput" onkeydown="if(event.key==='Enter') sendUserAiMessage()" class="flex-1 p-3 bg-shiorit-light/60 border border-shiorit-secondary rounded-2xl text-xs text-shiorit-dark placeholder-shiorit-gray focus:outline-none focus:ring-2 focus:ring-shiorit-primary focus:bg-white" placeholder="AIに相談（例: おすすめの店を3つ教えて、〇番を反映して）">
+        <input type="text" id="aiChatInput" onkeydown="if(event.key==='Enter') sendUserAiMessage()" class="flex-1 p-3 bg-shiorit-light/60 border border-shiorit-secondary rounded-2xl text-xs text-shiorit-dark placeholder-shiorit-gray focus:outline-none focus:ring-2 focus:ring-shiorit-primary focus:bg-white" placeholder="AIに相談（例: おすすめ3つ教えて、さっきの予定に戻して）">
         <button onclick="sendUserAiMessage()" class="w-11 h-11 rounded-2xl bg-gradient-to-r from-shiorit-primary to-teal-400 text-white flex items-center justify-center shadow-resort hover:opacity-90 active:scale-95 transition shrink-0 cursor-pointer">
           <i class="fa-solid fa-paper-plane text-xs"></i>
         </button>
@@ -880,6 +880,9 @@
     let newlyCreatedTripUrl = "";
     let userManuallyEditedEndTime = false;
     const selectedThemes = new Set(['ご当地絶品グルメ中心']);
+
+    // ★【アプローチ①用】直前のスケジュールを一時保持するアンドゥバッファ
+    let previousStepsBackup = null;
 
     window.selectTransportOption = function(btn, value) {
       document.getElementById('aiSelectedTransport').value = value;
@@ -1123,7 +1126,6 @@
       window.location.search = `?trip=${currentTripKey}`;
     };
 
-    // ★【要件4】新規作成時の厳格な時間配分プロンプト
     async function generateInitialPlanWithAi(title, totalDays, dayDates, members, userPrompt) {
       const systemPrompt = `あなたはプロの旅行ツアープランナーです。指定された旅行タイトル、日数（全${totalDays}日間）、ユーザーの希望条件（移動手段、テーマ、行きたい場所や時間指定）に基づいて、美しく実用的な旅行しおりのタイムラインJSONを作成してください。
 
@@ -1195,7 +1197,6 @@ ${userPrompt}
       return null;
     }
 
-    // ★【要件1】クラウド同期（チャット履歴の同期含む ＆ 空データ上書き防止ガード）
     async function syncFromCloud() {
       if (!currentTripKey) return;
       try {
@@ -1247,14 +1248,12 @@ ${userPrompt}
       } catch (err) {}
     }
 
-    // ★ クラウド保存（チャット履歴も保存 ＆ 空データ上書き防止）
     async function saveToCloud() {
       if (!currentTripKey) return;
       try {
         const trip = liveTripData[currentTripKey];
         if (!trip) return;
 
-        // ★ 空データの誤送信防止ガード
         if (!trip.steps || trip.steps.length === 0) {
           if (defaultTripData[currentTripKey]) {
             trip.steps = JSON.parse(JSON.stringify(defaultTripData[currentTripKey].steps));
@@ -1284,7 +1283,6 @@ ${userPrompt}
       } catch (err) {}
     }
 
-    // ★【要件1 & 要件2 & 要件3】AIコンシェルジュ（チャット履歴描画・全員同期）
     function renderAiChatHistory() {
       const container = document.getElementById('aiChatLogContainer');
       if (!container || !currentTripKey) return;
@@ -1296,7 +1294,7 @@ ${userPrompt}
         history.push({
           id: "msg_init",
           sender: "ai",
-          text: "こんにちは！シオリットAIコンシェルジュです🌴\n「ランチにおすすめのお店を3つ提案して」「マリーアントワネット展を追加して」など、何でも気軽に相談してください！"
+          text: "こんにちは！シオリットAIコンシェルジュです🌴\n「ランチにおすすめのお店を3つ提案して」「さっきの予定に戻して」など、何でも気軽に相談してください！"
         });
       }
 
@@ -1367,7 +1365,7 @@ ${userPrompt}
       sendUserAiMessage();
     };
 
-    // ★【要件2 & 要件3】AIメッセージ送信（3候補提示 ＆ 曖昧イベント推測）
+    // ★【アプローチ②対応】AIチャット送信（さっきの予定に戻す指示を認識＆復元）
     window.sendUserAiMessage = async function() {
       const input = document.getElementById('aiChatInput');
       const msg = input.value.trim();
@@ -1376,7 +1374,6 @@ ${userPrompt}
       const trip = liveTripData[currentTripKey];
       trip.chatHistory = trip.chatHistory || [];
 
-      // ユーザー発言を履歴に追加
       trip.chatHistory.push({
         id: "user_" + Date.now(),
         sender: "user",
@@ -1385,7 +1382,6 @@ ${userPrompt}
       input.value = '';
       renderAiChatHistory();
 
-      // ローディング表示
       const container = document.getElementById('aiChatLogContainer');
       const loadingId = 'ai_loading_' + Date.now();
       container.innerHTML += `
@@ -1400,24 +1396,31 @@ ${userPrompt}
       `;
       container.scrollTop = container.scrollHeight;
 
-      // ★ 二段階プロンプト（提案・候補クエリ vs 確定・変更クエリ）
+      // 会話ログから直前の提案候補（元に戻す用）を抽出
+      const previousSuggestions = trip.chatHistory
+        .filter(m => m.sender === 'ai' && m.suggestedSteps && m.suggestedSteps.length > 0)
+        .map(m => m.suggestedSteps);
+
       const systemPrompt = `あなたは旅行しおりアプリ「シオリット」の優秀なAIコンシェルジュです。
 旅行先: 『${trip.title}』
 現在の日程・ステップ: ${JSON.stringify(trip.steps || [])}
+過去に提案されたスケジュール履歴: ${JSON.stringify(previousSuggestions)}
 
 【重要動作ルール】
-1. 【お店・スポットの相談の場合】:
-   ユーザーが「おすすめ教えて」「お店提案して」「カフェある？」など相談・提案を求めている場合は、いきなり1つに決め打たず、必ず【2〜3件の魅力的な候補（店名、ジャンル、特徴・おすすめポイント）】を比較しやすいように箇条書きで親切に返答してください。この段階では「suggestedSteps」は含めず、nullまたは空配列にしてください。
-2. 【特定のスポット追加・変更の確定指示の場合】:
-   ユーザーが「〇番のお店にして」「〇〇を追加して」「〇分遅らせて」と確定した指示を出した場合は、既存のスケジュールを綺麗に調整した新しい全ステップ配列を「suggestedSteps」に含めてください。
-3. 【あいまいな企画展・イベント名の場合】:
-   「マリーアントワネット展」などのイベント名単体で入力された場合、エラーにせず、旅行先エリア（例: 横浜周辺）にある主要美術館や展示会場（例: 横浜美術館等）での開催を推定し、Googleマップで検索できる正式名称をmapQueryにセットしてスケジュール化してください。
+1. 【元に戻す指示の場合（例: 「さっきの予定に戻して」「元に戻して」「変更前がいい」など）】:
+   ユーザーが予定を戻したい旨を伝えた場合、過去のスケジュール履歴または直前の状態を特定し、元の予定リストを「suggestedSteps」にセットして「変更前のスケジュールを再提示いたしました！下のボタンから反映できます。」と親切に案内してください。
+2. 【お店・スポットの相談の場合】:
+   「おすすめ教えて」「お店提案して」「カフェある？」など相談の場合は、1つに決め打たず、必ず【2〜3件の魅力的な候補（店名、ジャンル、特徴）】を箇条書きで比較提示してください。この時は「suggestedSteps」は含めずnullにしてください。
+3. 【特定のスポット追加・変更の確定指示の場合】:
+   「〇番のお店にして」「〇〇を追加して」と確定した場合は、既存のスケジュールを綺麗に調整した新しい全ステップ配列を「suggestedSteps」に含めてください。
+4. 【あいまいな企画展・イベント名の場合】:
+   「マリーアントワネット展」などのイベント名単体でも、旅行先エリアにある主要会場を推定して正式名称をmapQueryにセットしてスケジュール化してください。
 
 【出力JSONフォーマット（必ずこのJSONオブジェクトのみを返却すること）】
 {
-  "replyText": "ユーザーへの親身な回答メッセージ（3候補の紹介や提案詳細）",
+  "replyText": "ユーザーへの親身な回答メッセージ",
   "suggestedSteps": [
-    // スケジュール変更・反映が必要な場合のみ、更新後の全 steps 配列を入れる。単なる相談・3候補提示の段階では null にする
+    // スケジュール変更・反映・元に戻す処理が必要な場合のみ全 steps 配列を入れる。単なる相談・3候補提示の段階では null
   ]
 }`;
 
@@ -1477,11 +1480,16 @@ ${userPrompt}
       }
     };
 
+    // ★【アプローチ①実装】反映直前に前状態を退避 ＆ アンドゥ機能
     window.applyAiSuggestedStepsByIndex = async function(historyIndex) {
       const trip = liveTripData[currentTripKey];
       const targetMsg = trip.chatHistory[historyIndex];
       if (!targetMsg || !targetMsg.suggestedSteps) return;
 
+      // 1. 直前のスケジュール状態をバックアップ（アプローチ①）
+      previousStepsBackup = JSON.parse(JSON.stringify(trip.steps));
+
+      // 2. 新しいスケジュールを適用
       trip.steps = targetMsg.suggestedSteps.map((s, idx) => ({
         id: s.id || `step_${Date.now()}_${idx}`,
         day: Math.min(Math.max(1, parseInt(s.day, 10) || 1), totalTripDays),
@@ -1502,7 +1510,29 @@ ${userPrompt}
       renderMainCards();
       updateCurrentStep();
       await saveToCloud();
-      showToast('✨ 提案されたスケジュールをしおりに反映しました！');
+
+      // ヘッダーとトーストの「元に戻す」ボタンを有効化
+      document.getElementById('headerUndoBtn').classList.remove('hidden');
+      showToast('✨ スケジュールを反映しました！', true);
+    };
+
+    // ★【アプローチ①】ワンタップで直前の予定に復元する実行関数
+    window.undoLastChange = async function() {
+      if (!previousStepsBackup || !currentTripKey) return;
+      const trip = liveTripData[currentTripKey];
+
+      // バックアップを復元
+      trip.steps = JSON.parse(JSON.stringify(previousStepsBackup));
+      previousStepsBackup = null;
+
+      // ボタンを隠す
+      document.getElementById('headerUndoBtn').classList.add('hidden');
+      document.getElementById('toastUndoBtn').classList.add('hidden');
+
+      renderMainCards();
+      updateCurrentStep();
+      await saveToCloud();
+      showToast('↩️ 変更前のスケジュールに復元しました！', false);
     };
 
     function escapeHtml(text) {
@@ -2227,15 +2257,20 @@ ${userPrompt}
       }
     }
 
-    function showToast(msg) {
+    // ★ トースト通知（showUndoBtn: true で元に戻すボタン表示）
+    function showToast(msg, showUndoBtn = false) {
       const toast = document.getElementById('toast');
       document.getElementById('toastMsg').innerText = msg;
+      const undoBtn = document.getElementById('toastUndoBtn');
+      if (showUndoBtn) undoBtn.classList.remove('hidden');
+      else undoBtn.classList.add('hidden');
+
       toast.classList.remove('opacity-0', 'pointer-events-none');
       toast.classList.add('opacity-100');
       setTimeout(() => {
         toast.classList.remove('opacity-100');
         toast.classList.add('opacity-0', 'pointer-events-none');
-      }, 2500);
+      }, 4000);
     }
 
     window.shareTripUrl = function() {
@@ -2252,7 +2287,7 @@ ${userPrompt}
       showToast('LINE共有用リンクをコピーしました！');
     };
 
-    // ★【データ復元 ＆ 消失防止ガード付き checkUrlParams】
+    // ★ データ消失防止ガード付き checkUrlParams
     async function checkUrlParams() {
       const urlParams = new URLSearchParams(window.location.search);
       let tripParam = urlParams.get('trip')?.toLowerCase();
@@ -2263,12 +2298,10 @@ ${userPrompt}
       }
 
       if (tripParam) {
-        // 1. デフォルトテンプレートがある場合はまず確実にベースとしてセット（消失防止）
         if (defaultTripData[tripParam]) {
           liveTripData[tripParam] = JSON.parse(JSON.stringify(defaultTripData[tripParam]));
         }
 
-        // 2. クラウドからフェッチして上書きマージ
         try {
           const cloudRes = await fetch(`https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/travel_plans/${tripParam}?key=${firebaseApiKey}`);
           if (cloudRes.ok) {
@@ -2289,7 +2322,6 @@ ${userPrompt}
                   chatHistory
                 };
               } else {
-                // クラウドに有効なデータがある場合のみマージ（空の場合は既存テンプレートを保護）
                 if (steps.length > 0) liveTripData[tripParam].steps = steps;
                 if (members.length > 0) liveTripData[tripParam].members = members;
                 if (expenses.length > 0) liveTripData[tripParam].expenses = expenses;
@@ -2332,7 +2364,6 @@ ${userPrompt}
           setSlide(1, false);
           updateCurrentStep();
 
-          // 万が一クラウドが空だった場合に備えて、復元した完全データを再書き込み
           await saveToCloud();
           return;
         }
