@@ -260,7 +260,7 @@
   <!-- URL紛失防止ポップアップ -->
   <div id="createdUrlModal" class="fixed inset-0 z-[110] bg-shiorit-dark/70 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="glass-card bg-white rounded-3xl max-w-md w-full p-6 shadow-resort border border-shiorit-secondary space-y-4 text-center">
-      <div class="w-16 h-16 rounded-3xl bg-shiorit-primary/20 text-shiorit-primary flex items-center justify-center text-2xl mx-auto shadow-resort border border-shiorit-secondary">
+      <div class="w-16 h-16 rounded-2xl bg-shiorit-primary/20 text-shiorit-primary flex items-center justify-center text-2xl mx-auto shadow-resort border border-shiorit-secondary">
         <i class="fa-solid fa-link"></i>
       </div>
       <div class="space-y-1">
@@ -736,7 +736,7 @@
     </div>
   </div>
 
-  <!-- AIコンシェルジュモーダル（安定版・文脈維持対応） -->
+  <!-- AIコンシェルジュモーダル（全履歴・文脈遡り対応） -->
   <div id="aiChatModal" class="fixed inset-0 z-[60] bg-shiorit-dark/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 hidden">
     <div class="glass-card bg-white rounded-3xl max-w-lg w-full p-4 sm:p-5 shadow-resort border border-shiorit-secondary flex flex-col h-[85vh] max-h-[700px] space-y-3">
       <div class="flex items-center justify-between pb-3 border-b border-shiorit-secondary/40 shrink-0">
@@ -1346,7 +1346,7 @@
       sendUserAiMessage();
     };
 
-    // ★ 以前100%動いていた安定通信仕様（エラーゼロ構成）
+    // ★【全会話履歴・文脈自動遡り版】余計なtoolsを使わず安全に文脈を完全維持
     window.sendUserAiMessage = async function() {
       const input = document.getElementById('aiChatInput');
       const msg = input.value.trim();
@@ -1371,7 +1371,7 @@
             <i class="fa-solid fa-robot"></i>
           </div>
           <div class="bg-shiorit-light/80 border border-shiorit-secondary/60 p-3 rounded-2xl text-shiorit-gray text-xs italic flex items-center gap-2">
-            <i class="fa-solid fa-spinner animate-spin text-shiorit-primary"></i> 提案・回答を考えています...
+            <i class="fa-solid fa-spinner animate-spin text-shiorit-primary"></i> 文脈を理解して提案を考えています...
           </div>
         </div>
       `;
@@ -1381,30 +1381,42 @@
         .filter(m => m.sender === 'ai' && m.suggestedSteps && m.suggestedSteps.length > 0)
         .map(m => m.suggestedSteps);
 
-      const systemPrompt = `あなたは旅行しおりアプリ「シオリット」の優秀なAIコンシェルジュです。
+      // ★ 全会話履歴を最初からすべて連結してAIに渡す
+      const allConversationLogs = trip.chatHistory.slice(0, -1).map((h, idx) => {
+        const roleName = h.sender === 'user' ? 'ユーザー' : 'AI';
+        return `[ログ${idx + 1}] ${roleName}: ${h.text}`;
+      }).join('\n');
+
+      const systemPrompt = `あなたは旅行しおりアプリ「シオリット」の専属AIコンシェルジュです。
+ユーザーと長期的に寄り添い、自然で気の利いた対話を行ってください。
+
+【旅行情報】
 旅行先: 『${trip.title}』
-現在の日程・ステップ: ${JSON.stringify(trip.steps || [])}
+現在の予定一覧: ${JSON.stringify(trip.steps || [])}
 過去に提案されたスケジュール履歴: ${JSON.stringify(previousSuggestions)}
 
-【重要動作ルール】
-1. 【元に戻す指示の場合（例: 「さっきの予定に戻して」「元に戻して」など）】:
-   過去のスケジュール履歴または直前の状態を特定し、元の予定リストを「suggestedSteps」にセットして「変更前のスケジュールを再提示いたしました！下のボタンから反映できます。」と案内してください。
-2. 【お店・スポットの相談の場合】:
-   「おすすめ教えて」「お店提案して」「カフェある？」などの相談時は、必ず【2〜3件の候補（店名、ジャンル、特徴）】を箇条書きで比較提示してください。この時は「suggestedSteps」は含めずnullにしてください。
-3. 【特定のスポット追加・変更の確定指示の場合】:
-   「〇番のお店にして」「〇〇を追加して」と確定した場合は、既存のスケジュールを綺麗に調整した新しい全ステップ配列を「suggestedSteps」に含めてください。
-4. 【あいまいな企画展・イベント名の場合】:
-   「マリーアントワネット展」などのイベント名単体でも、旅行先エリアにある主要会場を推定して正式名称をmapQueryにセットしてスケジュール化してください。
+【これまでの全会話履歴（最初から直前まで）】
+${allConversationLogs || '（過去の履歴なし）'}
 
-【出力JSONフォーマット】
+【最重要：文脈遡り＆トピック理解ルール】
+1. 【文脈の深層追跡（最重要）】:
+   ユーザーの最新メッセージが「予算は二人で8万円以内」「場所は京都駅周辺が良い」「やっぱり洋食がいい」のように、条件や要望の一部だけを指定している場合、**上記の会話履歴を必要なだけ過去に遡り、直前までユーザーが何（ホテル・旅館などの宿泊先なのか、ランチなのか、ディナーなのか、移動手段なのか）について話していたかを必ず特定してください**。
+   特定した話題の前提（例: 宿泊先の検討）をそのまま引き継ぎ、話題を勝手に変更（ディナー等にすり替え）してはいけません。
+2. 【3候補提示】:
+   おすすめやスポットの相談時は、必ず2〜3件の魅力的な候補（店名/施設名、ジャンル、特徴、おすすめ理由）を箇条書きで親切に紹介してください。この段階では「suggestedSteps」は含めずnullにしてください。
+3. 【しおりへの反映】:
+   ユーザーが「〇番のお店にして」「〇〇を追加して」「この予定を反映して」と確定指示を出した時のみ、既存のスケジュールを綺麗に調整した新しい全ステップ配列を「suggestedSteps」に含めてください。
+4. 【元に戻す】:
+   「さっきの予定に戻して」「変更前がいい」と指示された場合は、過去の履歴から元のスケジュールを特定し、「suggestedSteps」にセットしてください。
+
+【出力JSONフォーマット（必ずこのJSONオブジェクトのみを返却すること）】
 {
   "replyText": "ユーザーへの親身な回答メッセージ",
   "suggestedSteps": null または [全steps配列]
 }`;
 
-      // 余計な tools を一切含まない安全なリクエスト
       const payload = {
-        contents: [{ parts: [{ text: `${systemPrompt}\n\nユーザーのメッセージ: ${msg}` }] }],
+        contents: [{ parts: [{ text: `${systemPrompt}\n\nユーザーの最新メッセージ: ${msg}` }] }],
         generationConfig: { 
           responseMimeType: "application/json",
           temperature: 0.7 
