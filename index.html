@@ -138,7 +138,7 @@
 
     <footer class="py-6 text-center text-[10px] text-shiorit-gray border-t border-shiorit-secondary/40 flex items-center justify-center gap-2">
       <span>&copy; Shiorit (シオリット) All Rights Reserved.</span>
-      <span class="text-shiorit-primary font-mono font-bold">v1.4.0</span>
+      <span class="text-shiorit-primary font-mono font-bold">v1.5.0</span>
     </footer>
   </div>
 
@@ -284,7 +284,7 @@
     </div>
   </div>
 
-  <!-- 便利リンク追加・編集モーダル（その他のリンク） -->
+  <!-- 便利リンク追加・編集モーダル -->
   <div id="quickLinkModal" class="fixed inset-0 z-[80] bg-shiorit-dark/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="glass-card bg-white rounded-3xl max-w-sm w-full p-5 shadow-resort border border-shiorit-secondary space-y-4">
       <div class="flex items-center justify-between pb-2 border-b border-shiorit-secondary/40">
@@ -350,7 +350,6 @@
         </div>
       </div>
 
-      <!-- ★ マップ ＆ Web/食べログボタン -->
       <div class="pt-2 flex flex-col gap-2">
         <div class="flex flex-col sm:flex-row gap-2">
           <a id="modalMapLink" href="https://maps.google.com" target="_blank" class="flex-1 py-2.5 bg-shiorit-primary hover:opacity-90 text-white font-bold rounded-xl text-xs text-center flex items-center justify-center gap-1.5 shadow-resort transition">
@@ -377,7 +376,7 @@
     </div>
   </div>
 
-  <!-- 手動 予定追加・編集モーダル（Web/食べログURL欄を追加） -->
+  <!-- 手動 予定追加・編集モーダル -->
   <div id="editModal" class="fixed inset-0 z-[60] bg-shiorit-dark/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div class="glass-card bg-white rounded-3xl max-w-md w-full p-5 shadow-resort border border-shiorit-secondary max-h-[90vh] overflow-y-auto space-y-4">
       <div class="flex items-center justify-between pb-2 border-b border-shiorit-secondary/40">
@@ -432,7 +431,6 @@
           </div>
         </div>
 
-        <!-- ★ Webサイト・食べログ等のURL入力欄 -->
         <div>
           <label class="font-bold text-shiorit-dark flex items-center justify-between mb-1">
             <span class="flex items-center gap-1"><i class="fa-solid fa-link text-sky-500"></i> Webサイト / 食べログ等のURL（任意）</span>
@@ -751,34 +749,40 @@
     const firebaseApiKey = "AIzaSyBUbfrWbxBIDN-Y4Ooa_8au9EANbUaWjKs";
     const firebaseProjectId = "travel-shiori-e81a2";
 
+    // テンプレート復旧データ
     const defaultTripData = {
       yamaguchi: {
         title: "山口 2泊3日 旅のしおり",
         dates: "2026.10.02 (金) - 10.04 (日)",
-        startDate: "2026-10-02T00:00:00",
-        endDate: "2026-10-04T23:59:59",
+        totalDays: 3,
         dayDates: { 1: "2026-10-02", 2: "2026-10-03", 3: "2026-10-04" },
         members: ["りゅーたろー", "岡村", "メンバーA", "メンバーB"],
         quickLinks: [
           { id: "ql_1", title: "JR新幹線・特急予約（スマートEX）", url: "https://smart-ex.jp/", memo: "新幹線予約確認・座席変更" }
         ],
-        expenses: [],
+        expenses: [
+          { id: "exp_1", title: "レンタカー代（3日間）", amount: 24000, payer: "りゅーたろー", participants: ["りゅーたろー", "岡村", "メンバーA", "メンバーB"], date: "10/02" }
+        ],
         chatHistory: [
           { id: "init_y", sender: "ai", text: "山口旅行のしおりへようこそ！ご当地グルメやおすすめ観光地など、何でも相談してくださいね🌴" }
         ],
-        steps: []
+        steps: [
+          { id: "y1", day: 1, title: "羽田空港 発 ➔ 宇部着", category: "移動・ドライブ", time: "08:00〜09:45", startTime: "2026-10-02T08:00:00", endTime: "2026-10-02T09:45:00", icon: "fa-solid fa-plane-departure", iconBg: "bg-shiorit-light text-shiorit-primary", badge: "JAL291", desc: "JAL 291便。到着後レンタカー手続き。", tips: "羽田には7:15頃までに集合！", mapQuery: "山口宇部空港", webUrl: "https://www.jal.co.jp/" },
+          { id: "y2", day: 1, title: "萩市へドライブ移動", category: "移動・ドライブ", time: "10:30〜12:00", startTime: "2026-10-02T10:30:00", endTime: "2026-10-02T12:00:00", icon: "fa-solid fa-car", iconBg: "bg-shiorit-light text-shiorit-primary", badge: "約90分", desc: "小郡萩道路経由で約90分のドライブ！", tips: "道の駅「萩往還」での休憩もおすすめ。", mapQuery: "萩市", webUrl: "" }
+        ]
       },
       karuizawa: {
         title: "軽井沢 2泊3日 旅のしおり",
         dates: "2026.08.21 (金) - 08.23 (日)",
-        startDate: "2026-08-21T00:00:00",
-        endDate: "2026-08-23T23:59:59",
+        totalDays: 3,
         dayDates: { 1: "2026-08-21", 2: "2026-08-22", 3: "2026-08-23" },
         members: ["りゅーたろー", "妻"],
         quickLinks: [],
         expenses: [],
         chatHistory: [],
-        steps: []
+        steps: [
+          { id: "k1", day: 1, title: "東京駅発 ➔ 11:02 軽井沢着", category: "移動・ドライブ", time: "09:44〜11:02", startTime: "2026-08-21T09:44:00", endTime: "2026-08-21T11:02:00", icon: "fa-solid fa-train", iconBg: "bg-shiorit-light text-shiorit-primary", badge: "新幹線", desc: "北陸新幹線で約1時間18分で軽井沢へ。", tips: "車内でモーニングカフェ。", mapQuery: "JR 軽井沢駅", webUrl: "" }
+        ]
       }
     };
 
@@ -991,6 +995,7 @@
       return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(queryOrUrl)}`;
     }
 
+    // タイトル・日数・日程の編集モーダル
     window.openTripTitleEditModal = function() {
       const trip = liveTripData[currentTripKey];
       if (!trip) return;
@@ -1149,7 +1154,7 @@
               }
               if (doc.fields.stepsJson) {
                 const steps = JSON.parse(doc.fields.stepsJson.stringValue);
-                if (steps && Array.isArray(steps) && steps.length > 0) {
+                if (steps && Array.isArray(steps)) {
                   liveTripData[currentTripKey].steps = steps;
                   const maxStepDay = steps.reduce((m, s) => Math.max(m, s.day || 1), totalTripDays);
                   if (maxStepDay > totalTripDays) {
@@ -1160,7 +1165,7 @@
               }
               if (doc.fields.membersJson) {
                 const members = JSON.parse(doc.fields.membersJson.stringValue);
-                if (members && Array.isArray(members) && members.length > 0) {
+                if (members && Array.isArray(members)) {
                   liveTripData[currentTripKey].members = members;
                 }
               }
@@ -1205,7 +1210,7 @@
 
         const rawHash = (trip.title || '') +
                         (trip.dates || '') +
-                        JSON.stringify(trip.steps) + 
+                        JSON.stringify(trip.steps || []) + 
                         JSON.stringify(trip.members || []) + 
                         JSON.stringify(trip.quickLinks || []) +
                         JSON.stringify(trip.expenses || []) +
@@ -1537,7 +1542,7 @@ ${allConversationLogs || '（過去の履歴なし）'}
 
     function escapeHtml(text) {
       if (!text) return '';
-      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+      return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
 
     function calculateSettlement() {
@@ -1648,13 +1653,13 @@ ${allConversationLogs || '（過去の履歴なし）'}
               <div class="flex items-center gap-2">
                 <span class="font-mono font-bold text-shiorit-primary text-xs">${s.time.split('〜')[0] || s.time}</span>
                 <span class="font-bold text-shiorit-dark text-xs flex items-center gap-1">
-                  ${s.title}
+                  ${escapeHtml(s.title)}
                   ${s.webUrl ? '<i class="fa-solid fa-link text-[9px] text-sky-500"></i>' : ''}
                 </span>
               </div>
-              ${s.badge ? `<span class="text-[10px] bg-white border border-shiorit-secondary text-shiorit-dark px-1.5 py-0.5 rounded font-bold">${s.badge}</span>` : ''}
+              ${s.badge ? `<span class="text-[10px] bg-white border border-shiorit-secondary text-shiorit-dark px-1.5 py-0.5 rounded font-bold">${escapeHtml(s.badge)}</span>` : ''}
             </div>
-            ${s.desc ? `<p class="text-[10px] text-shiorit-gray mt-0.5 ml-11 line-clamp-1">${s.desc}</p>` : ''}
+            ${s.desc ? `<p class="text-[10px] text-shiorit-gray mt-0.5 ml-11 line-clamp-1">${escapeHtml(s.desc)}</p>` : ''}
           </div>
         `).join('');
       };
@@ -1685,7 +1690,7 @@ ${allConversationLogs || '（過去の履歴なし）'}
               <div class="mt-2.5 flex items-center justify-between">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 rounded-2xl bg-white text-shiorit-primary font-black text-xl flex items-center justify-center shadow">${day}</div>
-                  <h2 class="text-base sm:text-lg font-black leading-tight text-white">${day === 1 ? trip.title : `${day}日目のスケジュール`}</h2>
+                  <h2 class="text-base sm:text-lg font-black leading-tight text-white">${day === 1 ? escapeHtml(trip.title) : `${day}日目のスケジュール`}</h2>
                 </div>
                 <button onclick="openTripTitleEditModal()" class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center text-xs transition" title="タイトル・日数を編集">
                   <i class="fa-solid fa-pen"></i>
@@ -1716,8 +1721,6 @@ ${allConversationLogs || '（過去の履歴なし）'}
       const members = trip.members || [];
       const expenses = trip.expenses || [];
       const quickLinks = trip.quickLinks || [];
-
-      // スケジュールからWeb URLが登録されているステップを自動抽出
       const scheduleLinks = (trip.steps || []).filter(s => s.webUrl && s.webUrl.trim() !== '');
 
       // MAPページ
@@ -1743,11 +1746,11 @@ ${allConversationLogs || '（過去の履歴なし）'}
                 <a href="${getMapUrl(s.mapQuery || s.title)}" target="_blank" class="block p-3 bg-white hover:bg-shiorit-light/50 rounded-2xl border border-shiorit-secondary/70 shadow-xs transition">
                   <div class="flex items-center justify-between">
                     <span class="font-bold text-shiorit-dark text-xs flex items-center gap-1.5">
-                      <i class="fa-solid fa-map-pin text-shiorit-primary"></i> ${s.title}
+                      <i class="fa-solid fa-map-pin text-shiorit-primary"></i> ${escapeHtml(s.title)}
                     </span>
                     <span class="text-[10px] bg-shiorit-primary/15 text-shiorit-dark px-2 py-0.5 rounded font-bold">MAP ➔</span>
                   </div>
-                  <span class="text-[10px] text-shiorit-gray mt-0.5 block">${s.day}日目 ${s.time} / 検索: ${s.mapQuery || s.title}</span>
+                  <span class="text-[10px] text-shiorit-gray mt-0.5 block">${s.day}日目 ${s.time} / 検索: ${escapeHtml(s.mapQuery || s.title)}</span>
                 </a>
               `).join('')}
             </div>
@@ -1798,9 +1801,9 @@ ${allConversationLogs || '（過去の履歴なし）'}
                   ${settlement.transfers.map(t => `
                     <div class="p-2.5 bg-white rounded-xl border border-shiorit-secondary/60 flex items-center justify-between shadow-xs">
                       <div class="flex items-center gap-2 text-xs font-bold text-shiorit-dark">
-                        <span class="text-rose-500">${t.from}</span>
+                        <span class="text-rose-500">${escapeHtml(t.from)}</span>
                         <i class="fa-solid fa-arrow-right text-shiorit-gray text-[10px]"></i>
-                        <span class="text-teal-600">${t.to}</span>
+                        <span class="text-teal-600">${escapeHtml(t.to)}</span>
                       </div>
                       <div class="flex items-center gap-1.5">
                         <span class="font-mono font-black text-sm text-shiorit-dark">¥${t.amount.toLocaleString()}</span>
@@ -1824,10 +1827,10 @@ ${allConversationLogs || '（過去の履歴なし）'}
 
               <div class="grid grid-cols-2 gap-1.5">
                 ${settlement.balances.map(b => `
-                  <div onclick="openMemberDetailModal('${b.member}')" class="cursor-pointer p-2.5 bg-white hover:bg-shiorit-light/70 active:scale-98 transition rounded-xl border border-shiorit-secondary/60 flex flex-col justify-between shadow-xs">
+                  <div onclick="openMemberDetailModal('${escapeHtml(b.member)}')" class="cursor-pointer p-2.5 bg-white hover:bg-shiorit-light/70 active:scale-98 transition rounded-xl border border-shiorit-secondary/60 flex flex-col justify-between shadow-xs">
                     <div class="flex items-center justify-between">
                       <span class="font-bold text-shiorit-dark text-xs truncate flex items-center gap-1">
-                        <i class="fa-solid fa-user text-[10px] text-shiorit-primary"></i> ${b.member}
+                        <i class="fa-solid fa-user text-[10px] text-shiorit-primary"></i> ${escapeHtml(b.member)}
                       </span>
                       <i class="fa-solid fa-chevron-right text-[9px] text-shiorit-gray"></i>
                     </div>
@@ -1858,8 +1861,8 @@ ${allConversationLogs || '（過去の履歴なし）'}
                     <div onclick="openExpenseDetailModal('${exp.id}')" class="cursor-pointer p-2.5 bg-white hover:bg-shiorit-light/60 active:scale-98 transition border border-shiorit-secondary/60 rounded-xl flex items-center justify-between shadow-xs">
                       <div class="space-y-0.5">
                         <div class="flex items-center gap-1.5">
-                          <span class="font-bold text-shiorit-dark text-xs">${exp.title}</span>
-                          <span class="text-[10px] text-shiorit-dark bg-shiorit-primary/15 px-1.5 py-0.2 rounded font-bold">${exp.payer}</span>
+                          <span class="font-bold text-shiorit-dark text-xs">${escapeHtml(exp.title)}</span>
+                          <span class="text-[10px] text-shiorit-dark bg-shiorit-primary/15 px-1.5 py-0.2 rounded font-bold">${escapeHtml(exp.payer)}</span>
                         </div>
                       </div>
                       <div class="flex items-center gap-1.5">
@@ -1875,7 +1878,7 @@ ${allConversationLogs || '（過去の履歴なし）'}
         </article>
       `;
 
-      // ★【強化】便利リンク集ページ（スケジュール連動 ＋ その他リンクのハイブリッド）
+      // 便利リンク集ページ
       cardsHtml += `
         <article id="card-${linkPageNum}" class="pamphlet-card glass-card rounded-3xl overflow-hidden shadow-resort border border-shiorit-secondary flex flex-col transition">
           <div class="bg-gradient-to-r from-sky-400 via-teal-400 to-emerald-400 text-white p-5 relative overflow-hidden">
@@ -1901,7 +1904,6 @@ ${allConversationLogs || '（過去の履歴なし）'}
           </div>
 
           <div class="p-4 space-y-4 flex-1 flex flex-col justify-between overflow-y-auto">
-            <!-- 1. スケジュール連動リンク -->
             <div class="space-y-2">
               <div class="flex items-center justify-between pb-1 border-b border-shiorit-secondary/40">
                 <span class="font-bold text-shiorit-dark text-xs flex items-center gap-1.5">
@@ -1934,7 +1936,6 @@ ${allConversationLogs || '（過去の履歴なし）'}
               `}
             </div>
 
-            <!-- 2. その他の便利リンク -->
             <div class="space-y-2 pt-2 border-t border-shiorit-secondary/40">
               <div class="flex items-center justify-between pb-1 border-b border-shiorit-secondary/40">
                 <span class="font-bold text-shiorit-dark text-xs flex items-center gap-1.5">
@@ -2001,12 +2002,12 @@ ${allConversationLogs || '（過去の履歴なし）'}
       const paidByThisUser = expenses.filter(exp => exp.payer === memberName);
       document.getElementById('memberDetailPaidList').innerHTML = paidByThisUser.length === 0 ? 
         `<div class="p-2.5 bg-shiorit-light/50 rounded-xl text-center text-shiorit-gray text-[11px]">立替えた支払いはありません</div>` :
-        paidByThisUser.map(exp => `<div onclick="openExpenseDetailModal('${exp.id}')" class="cursor-pointer p-2.5 bg-white border border-shiorit-secondary/60 rounded-xl flex items-center justify-between"><span>${exp.title}</span><strong class="text-shiorit-dark">¥${exp.amount.toLocaleString()}</strong></div>`).join('');
+        paidByThisUser.map(exp => `<div onclick="openExpenseDetailModal('${exp.id}')" class="cursor-pointer p-2.5 bg-white border border-shiorit-secondary/60 rounded-xl flex items-center justify-between"><span>${escapeHtml(exp.title)}</span><strong class="text-shiorit-dark">¥${exp.amount.toLocaleString()}</strong></div>`).join('');
 
       const sharedWithThisUser = expenses.filter(exp => (exp.participants || []).includes(memberName));
       document.getElementById('memberDetailShareList').innerHTML = sharedWithThisUser.length === 0 ?
         `<div class="p-2.5 bg-shiorit-light/50 rounded-xl text-center text-shiorit-gray text-[11px]">対象となっている支払いはありません</div>` :
-        sharedWithThisUser.map(exp => `<div onclick="openExpenseDetailModal('${exp.id}')" class="cursor-pointer p-2.5 bg-white border border-shiorit-secondary/60 rounded-xl flex items-center justify-between"><span>${exp.title}</span><strong class="text-rose-500">¥${Math.round(exp.amount / exp.participants.length).toLocaleString()}</strong></div>`).join('');
+        sharedWithThisUser.map(exp => `<div onclick="openExpenseDetailModal('${exp.id}')" class="cursor-pointer p-2.5 bg-white border border-shiorit-secondary/60 rounded-xl flex items-center justify-between"><span>${escapeHtml(exp.title)}</span><strong class="text-rose-500">¥${Math.round(exp.amount / exp.participants.length).toLocaleString()}</strong></div>`).join('');
 
       document.getElementById('memberDetailDeleteBtn').onclick = () => deleteMember(memberName);
       document.getElementById('memberDetailModal').classList.remove('hidden');
@@ -2025,7 +2026,7 @@ ${allConversationLogs || '（過去の履歴なし）'}
       document.getElementById('expDetailPerPerson').innerText = `¥${Math.round(exp.amount / (exp.participants || [1]).length).toLocaleString()} /人`;
       document.getElementById('expDetailCount').innerText = (exp.participants || []).length;
 
-      document.getElementById('expDetailParticipants').innerHTML = (exp.participants || []).map(p => `<span class="px-2.5 py-1 bg-shiorit-light text-shiorit-dark border border-shiorit-secondary rounded-lg font-bold text-xs">${p}</span>`).join('');
+      document.getElementById('expDetailParticipants').innerHTML = (exp.participants || []).map(p => `<span class="px-2.5 py-1 bg-shiorit-light text-shiorit-dark border border-shiorit-secondary rounded-lg font-bold text-xs">${escapeHtml(p)}</span>`).join('');
       document.getElementById('expDetailEditBtn').onclick = () => { closeExpenseDetailModal(); openExpenseModal(exp.id); };
       document.getElementById('expDetailDeleteBtn').onclick = () => deleteExpense(exp.id);
       document.getElementById('expenseDetailModal').classList.remove('hidden');
@@ -2068,7 +2069,7 @@ ${allConversationLogs || '（過去の履歴なし）'}
       const trip = liveTripData[currentTripKey];
       const members = trip.members || [];
       const payerSelect = document.getElementById('expensePayer');
-      payerSelect.innerHTML = members.map(m => `<option value="${m}">${m}</option>`).join('');
+      payerSelect.innerHTML = members.map(m => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join('');
 
       const partList = document.getElementById('expenseParticipantsList');
       if (editId) {
@@ -2081,8 +2082,8 @@ ${allConversationLogs || '（過去の履歴なし）'}
         payerSelect.value = exp.payer;
         partList.innerHTML = members.map(m => `
           <label class="flex items-center gap-2 p-2 bg-white rounded-xl border border-shiorit-secondary cursor-pointer text-xs font-bold text-shiorit-dark">
-            <input type="checkbox" value="${m}" ${(exp.participants || []).includes(m) ? 'checked' : ''} class="participant-checkbox w-4 h-4 text-shiorit-primary rounded">
-            <span>${m}</span>
+            <input type="checkbox" value="${escapeHtml(m)}" ${(exp.participants || []).includes(m) ? 'checked' : ''} class="participant-checkbox w-4 h-4 text-shiorit-primary rounded">
+            <span>${escapeHtml(m)}</span>
           </label>
         `).join('');
       } else {
@@ -2092,8 +2093,8 @@ ${allConversationLogs || '（過去の履歴なし）'}
         document.getElementById('expenseAmount').value = '';
         partList.innerHTML = members.map(m => `
           <label class="flex items-center gap-2 p-2 bg-white rounded-xl border border-shiorit-secondary cursor-pointer text-xs font-bold text-shiorit-dark">
-            <input type="checkbox" value="${m}" checked class="participant-checkbox w-4 h-4 text-shiorit-primary rounded">
-            <span>${m}</span>
+            <input type="checkbox" value="${escapeHtml(m)}" checked class="participant-checkbox w-4 h-4 text-shiorit-primary rounded">
+            <span>${escapeHtml(m)}</span>
           </label>
         `).join('');
       }
@@ -2147,7 +2148,6 @@ ${allConversationLogs || '（過去の履歴なし）'}
       showToast(`¥${amt.toLocaleString()} をコピーしました`);
     };
 
-    // 予定編集モーダル
     window.openEditModal = function(stepId = null, targetDay = 1) {
       initTimePickers();
       userManuallyEditedEndTime = false;
@@ -2326,7 +2326,6 @@ ${allConversationLogs || '（過去の履歴なし）'}
       });
     };
 
-    // スポット詳細モーダルを開く（Web URLボタンの表示制御）
     window.openModal = function(stepId) {
       const trip = liveTripData[currentTripKey];
       const data = trip.steps.find(s => s.id === stepId);
@@ -2347,7 +2346,6 @@ ${allConversationLogs || '（過去の履歴なし）'}
 
       document.getElementById('modalMapLink').href = getMapUrl(data.mapQuery || data.title);
 
-      // Web/食べログボタン
       const webBtn = document.getElementById('modalWebLink');
       if (data.webUrl) {
         webBtn.href = data.webUrl;
@@ -2446,7 +2444,7 @@ ${allConversationLogs || '（過去の履歴なし）'}
           const stepId = step.getAttribute('data-step-id');
           const data = (trip.steps || []).find(s => s.id === stepId);
           const name = data ? data.title : '現在の予定';
-          statusEl.innerHTML = `進行中: <span class="text-shiorit-primary font-bold">${name}</span>`;
+          statusEl.innerHTML = `進行中: <span class="text-shiorit-primary font-bold">${escapeHtml(name)}</span>`;
         } else {
           step.classList.remove('current-active-step');
         }
@@ -2490,7 +2488,7 @@ ${allConversationLogs || '（過去の履歴なし）'}
       const title = trip?.title || "旅のしおり";
       const dates = trip?.dates ? `\n📅 日程: ${trip.dates}` : "";
 
-      const text = `✈️ 【${title}】${dates}\n\nしおりの確認・共同編集はこちらから👇\n${shareUrl}`;
+      const text = `✈️️ 【${title}】${dates}\n\nしおりの確認・共同編集はこちらから👇\n${shareUrl}`;
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(() => {
@@ -2513,112 +2511,127 @@ ${allConversationLogs || '（過去の履歴なし）'}
       showToast('LINE用共有メッセージをコピーしました！');
     }
 
+    // ★【例外停止ガード付き】安全なURL読み込み＆同期処理
     async function checkUrlParams() {
-      const urlParams = new URLSearchParams(window.location.search);
-      let tripParam = urlParams.get('trip')?.toLowerCase();
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        let tripParam = urlParams.get('trip')?.toLowerCase();
 
-      if (!tripParam && window.location.search.includes('trip=')) {
-        const match = window.location.search.match(/trip=([^&]+)/);
-        if (match) tripParam = match[1].toLowerCase();
-      }
-
-      if (tripParam) {
-        if (defaultTripData[tripParam]) {
-          liveTripData[tripParam] = JSON.parse(JSON.stringify(defaultTripData[tripParam]));
+        if (!tripParam && window.location.search.includes('trip=')) {
+          const match = window.location.search.match(/trip=([^&]+)/);
+          if (match) tripParam = match[1].toLowerCase();
         }
 
-        const localSaved = localStorage.getItem('shiorit_saved_' + tripParam);
-        if (localSaved) {
+        if (tripParam) {
+          if (defaultTripData[tripParam]) {
+            liveTripData[tripParam] = JSON.parse(JSON.stringify(defaultTripData[tripParam]));
+          }
+
+          const localSaved = localStorage.getItem('shiorit_saved_' + tripParam);
+          if (localSaved) {
+            try {
+              const parsed = JSON.parse(localSaved);
+              if (parsed && typeof parsed === 'object') {
+                liveTripData[tripParam] = parsed;
+              }
+            } catch(e) {}
+          }
+
           try {
-            const parsed = JSON.parse(localSaved);
-            if (parsed && parsed.steps && parsed.steps.length > 0) {
-              liveTripData[tripParam] = parsed;
-            }
-          } catch(e) {}
-        }
+            const cloudRes = await fetch(`https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/travel_plans/${tripParam}?key=${firebaseApiKey}`);
+            if (cloudRes.ok) {
+              const doc = await cloudRes.json();
+              if (doc.fields) {
+                const title = doc.fields.title?.stringValue || null;
+                const dates = doc.fields.dates?.stringValue || null;
+                const totalDaysFromCloud = doc.fields.totalDays?.integerValue ? parseInt(doc.fields.totalDays.integerValue, 10) : null;
+                const steps = doc.fields.stepsJson?.stringValue ? JSON.parse(doc.fields.stepsJson.stringValue) : [];
+                const members = doc.fields.membersJson?.stringValue ? JSON.parse(doc.fields.membersJson.stringValue) : [];
+                const quickLinks = doc.fields.quickLinksJson?.stringValue ? JSON.parse(doc.fields.quickLinksJson.stringValue) : [];
+                const expenses = doc.fields.expensesJson?.stringValue ? JSON.parse(doc.fields.expensesJson.stringValue) : [];
+                const chatHistory = doc.fields.chatHistoryJson?.stringValue ? JSON.parse(doc.fields.chatHistoryJson.stringValue) : [];
 
-        try {
-          const cloudRes = await fetch(`https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/travel_plans/${tripParam}?key=${firebaseApiKey}`);
-          if (cloudRes.ok) {
-            const doc = await cloudRes.json();
-            if (doc.fields) {
-              const title = doc.fields.title?.stringValue || null;
-              const dates = doc.fields.dates?.stringValue || null;
-              const totalDaysFromCloud = doc.fields.totalDays?.integerValue ? parseInt(doc.fields.totalDays.integerValue, 10) : null;
-              const steps = doc.fields.stepsJson?.stringValue ? JSON.parse(doc.fields.stepsJson.stringValue) : [];
-              const members = doc.fields.membersJson?.stringValue ? JSON.parse(doc.fields.membersJson.stringValue) : [];
-              const quickLinks = doc.fields.quickLinksJson?.stringValue ? JSON.parse(doc.fields.quickLinksJson.stringValue) : [];
-              const expenses = doc.fields.expensesJson?.stringValue ? JSON.parse(doc.fields.expensesJson.stringValue) : [];
-              const chatHistory = doc.fields.chatHistoryJson?.stringValue ? JSON.parse(doc.fields.chatHistoryJson.stringValue) : [];
-
-              if (!liveTripData[tripParam]) {
-                liveTripData[tripParam] = {
-                  title: title || "神戸・有馬温泉 2泊3日 旅のしおり",
-                  dates: dates || "2026.09.28 (月) - 09.30 (水)",
-                  totalDays: totalDaysFromCloud || 3,
-                  members: members.length > 0 ? members : ["りゅーたろー", "妻"],
-                  quickLinks,
-                  expenses,
-                  steps,
-                  chatHistory
-                };
-              } else {
-                if (title && title !== "共有された旅行のしおり") liveTripData[tripParam].title = title;
-                if (dates && dates !== "共同編集プラン") liveTripData[tripParam].dates = dates;
-                if (totalDaysFromCloud) liveTripData[tripParam].totalDays = totalDaysFromCloud;
-                if (steps.length > 0) liveTripData[tripParam].steps = steps;
-                if (members.length > 0) liveTripData[tripParam].members = members;
-                if (quickLinks.length > 0) liveTripData[tripParam].quickLinks = quickLinks;
-                if (expenses.length > 0) liveTripData[tripParam].expenses = expenses;
-                if (chatHistory.length > 0) liveTripData[tripParam].chatHistory = chatHistory;
+                if (!liveTripData[tripParam]) {
+                  liveTripData[tripParam] = {
+                    title: title || "神戸・有馬温泉 2泊3日 旅のしおり",
+                    dates: dates || "2026.09.28 (月) - 09.30 (水)",
+                    totalDays: totalDaysFromCloud || 3,
+                    members: members.length > 0 ? members : ["りゅーたろー", "妻"],
+                    quickLinks,
+                    expenses,
+                    steps,
+                    chatHistory
+                  };
+                } else {
+                  if (title && title !== "共有された旅行のしおり") liveTripData[tripParam].title = title;
+                  if (dates && dates !== "共同編集プラン") liveTripData[tripParam].dates = dates;
+                  if (totalDaysFromCloud) liveTripData[tripParam].totalDays = totalDaysFromCloud;
+                  if (steps.length > 0) liveTripData[tripParam].steps = steps;
+                  if (members.length > 0) liveTripData[tripParam].members = members;
+                  if (quickLinks.length > 0) liveTripData[tripParam].quickLinks = quickLinks;
+                  if (expenses.length > 0) liveTripData[tripParam].expenses = expenses;
+                  if (chatHistory.length > 0) liveTripData[tripParam].chatHistory = chatHistory;
+                }
               }
             }
+          } catch(err) {
+            console.warn("クラウドデータ取得スキップ:", err);
           }
-        } catch(err) {
-          console.warn("クラウドデータ取得スキップ:", err);
+
+          if (liveTripData[tripParam]) {
+            currentTripKey = tripParam;
+            const trip = liveTripData[tripParam];
+
+            trip.steps = trip.steps || [];
+            trip.members = trip.members || ["りゅーたろー", "妻"];
+            trip.quickLinks = trip.quickLinks || [];
+            trip.expenses = trip.expenses || [];
+            trip.chatHistory = trip.chatHistory || [];
+
+            if (!trip.title || trip.title === "共有された旅行のしおり") {
+              trip.title = "神戸・有馬温泉 2泊3日 旅のしおり";
+              trip.dates = "2026.09.28 (月) - 09.30 (水)";
+            }
+
+            const maxStepDay = trip.steps.reduce((m, s) => Math.max(m, s.day || 1), 1);
+            totalTripDays = Math.max(trip.totalDays || 3, maxStepDay);
+            trip.totalDays = totalTripDays;
+
+            if (!trip.dayDates || typeof trip.dayDates !== 'object') {
+              trip.dayDates = {};
+              const todayStr = new Date().toISOString().slice(0, 10);
+              for (let i = 1; i <= totalTripDays; i++) trip.dayDates[i] = todayStr;
+            }
+
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('appHeader').classList.remove('hidden');
+            document.getElementById('pageNavContainer').classList.remove('hidden');
+
+            document.getElementById('activeTripTitle').innerHTML = `<span>${escapeHtml(trip.title)}</span><i class="fa-solid fa-pen text-[9px] text-shiorit-gray group-hover:text-shiorit-primary"></i>`;
+            document.getElementById('activeTripDates').innerText = trip.dates || '';
+            document.getElementById('appPageTitle').innerText = `${trip.title} - シオリット`;
+
+            renderTabBar();
+            renderMainCards();
+            setSlide(1, false);
+            updateCurrentStep();
+
+            await saveToCloud();
+            return;
+          }
         }
 
-        if (liveTripData[tripParam]) {
-          currentTripKey = tripParam;
-          const trip = liveTripData[tripParam];
+        // LPトップページ
+        document.getElementById('landingPage').classList.remove('hidden');
+        document.getElementById('appHeader').classList.add('hidden');
+        document.getElementById('pageNavContainer').classList.add('hidden');
+        document.getElementById('mainContainer').innerHTML = '';
 
-          if (!trip.title || trip.title === "共有された旅行のしおり") {
-            trip.title = "神戸・有馬温泉 2泊3日 旅のしおり";
-            trip.dates = "2026.09.28 (月) - 09.30 (水)";
-          }
-
-          const maxStepDay = (trip.steps || []).reduce((m, s) => Math.max(m, s.day || 1), 1);
-          totalTripDays = Math.max(trip.totalDays || 3, maxStepDay);
-          trip.totalDays = totalTripDays;
-
-          if (!trip.dayDates) {
-            trip.dayDates = {};
-            const todayStr = new Date().toISOString().slice(0, 10);
-            for (let i = 1; i <= totalTripDays; i++) trip.dayDates[i] = todayStr;
-          }
-
-          document.getElementById('landingPage').classList.add('hidden');
-          document.getElementById('appHeader').classList.remove('hidden');
-          document.getElementById('pageNavContainer').classList.remove('hidden');
-
-          document.getElementById('activeTripTitle').innerHTML = `<span>${escapeHtml(trip.title)}</span><i class="fa-solid fa-pen text-[9px] text-shiorit-gray group-hover:text-shiorit-primary"></i>`;
-          document.getElementById('activeTripDates').innerText = trip.dates || '';
-          document.getElementById('appPageTitle').innerText = `${trip.title} - シオリット`;
-
-          renderTabBar();
-          renderMainCards();
-          setSlide(1, false);
-          updateCurrentStep();
-
-          await saveToCloud();
-          return;
-        }
+      } catch (fatalErr) {
+        console.error("重大な初期化エラーをキャッチし保護しました:", fatalErr);
+        // 万が一エラーが起きてもLPトップを表示して白画面を防止
+        document.getElementById('landingPage')?.classList.remove('hidden');
       }
-
-      document.getElementById('landingPage').classList.remove('hidden');
-      document.getElementById('appHeader').classList.add('hidden');
-      document.getElementById('pageNavContainer').classList.add('hidden');
-      document.getElementById('mainContainer').innerHTML = '';
     }
 
     window.addEventListener('hashchange', checkUrlParams);
