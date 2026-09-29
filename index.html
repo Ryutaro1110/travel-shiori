@@ -13,6 +13,7 @@
   <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><defs><linearGradient id='bg' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%2338bdf8'/><stop offset='100%' stop-color='%230284c7'/></linearGradient></defs><rect width='512' height='512' rx='112' fill='url(%23bg)'/><text x='50%' y='46%' font-family='-apple-system, BlinkMacSystemFont, sans-serif' font-weight='900' font-size='88' fill='%23ffffff' text-anchor='middle'>Shiorit</text><text x='50%' y='64%' font-family='-apple-system, BlinkMacSystemFont, sans-serif' font-weight='700' font-size='32' fill='%23e0f2fe' text-anchor='middle'>シオリット</text></svg>">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='url(%23bg)'/><text x='50%' y='55%' font-family='sans-serif' font-weight='900' font-size='90' fill='%23ffffff' text-anchor='middle'>Shiorit</text></svg>">
 
+  <!-- ★ アイコン確実表示のためのFontAwesome最優先読み込み -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -87,18 +88,12 @@
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     select { -webkit-appearance: none; appearance: none; }
     i { display: inline-block; }
-    .date-input-fix {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 8px 4px;
-      font-size: 11px;
-    }
   </style>
 </head>
 <body class="antialiased flex flex-col justify-between selection:bg-shiorit-secondary selection:text-shiorit-dark">
 
-  <!-- トップページ（LP・新規しおり作成画面：初期は非表示） -->
-  <div id="landingPage" class="hidden flex-1 flex flex-col justify-between">
+  <!-- トップページ（LP・新規しおり作成画面） -->
+  <div id="landingPage" class="flex-1 flex flex-col justify-between">
     <header class="glass-header px-4 py-3 sticky top-0 z-30 flex items-center justify-between">
       <div class="flex items-center gap-2.5">
         <div class="w-8 h-8 rounded-xl bg-shiorit-primary/15 flex items-center justify-center text-shiorit-primary font-bold shadow-xs">
@@ -143,11 +138,56 @@
           <span>新しく旅行しおりを作る（無料）</span>
         </button>
       </div>
+
+      <div class="space-y-3 pt-2">
+        <h2 class="text-xs font-black tracking-widest text-shiorit-primary uppercase text-center">シオリットの圧倒的強み</h2>
+        <div class="space-y-2.5 text-xs">
+          <div class="glass-card p-4 rounded-2xl space-y-1 shadow-xs flex gap-3.5 items-start">
+            <div class="w-9 h-9 rounded-xl bg-shiorit-primary/20 text-shiorit-dark flex items-center justify-center shrink-0 font-black text-sm">
+              <i class="fa-solid fa-location-dot text-shiorit-primary"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-shiorit-dark">LINEで送るだけ（会員登録＆DL不要）</h3>
+              <p class="text-[11px] text-shiorit-gray leading-relaxed">全員のアプリDL・会員登録は一切不要。URLをLINEで開くだけで即座に全員が共同編集できます。</p>
+            </div>
+          </div>
+
+          <div class="glass-card p-4 rounded-2xl space-y-1 shadow-xs flex gap-3.5 items-start">
+            <div class="w-9 h-9 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center shrink-0 font-black text-sm">
+              <i class="fa-solid fa-link"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-shiorit-dark">便利リンク集（時刻表・食べログURL）</h3>
+              <p class="text-[11px] text-shiorit-gray leading-relaxed">各予定に登録したお店の公式HPや食べログ、シャトルバス時刻表をワンタップで開けます。</p>
+            </div>
+          </div>
+
+          <div class="glass-card p-4 rounded-2xl space-y-1 shadow-xs flex gap-3.5 items-start">
+            <div class="w-9 h-9 rounded-xl bg-shiorit-primary/20 text-shiorit-dark flex items-center justify-center shrink-0 font-black text-sm">
+              <i class="fa-solid fa-calculator text-shiorit-primary"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-shiorit-dark">割り勘 ＆ 送金ナビ（最小送金ルート）</h3>
+              <p class="text-[11px] text-shiorit-gray leading-relaxed">立替えた支払いを記録するだけで、「誰が誰にいくら送金すれば良いか」を最小回数で自動算出。</p>
+            </div>
+          </div>
+
+          <div class="glass-card p-4 rounded-2xl space-y-1 shadow-xs flex gap-3.5 items-start">
+            <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 font-black text-sm">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-shiorit-dark">本物のAIが3候補比較 ＆ 全会話記憶</h3>
+              <p class="text-[11px] text-shiorit-gray leading-relaxed">過去の会話をずっと記憶して自然に対話。変更後もワンタップまたはAIチャットでいつでも元に戻せます。</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <footer class="py-6 text-center text-[10px] text-shiorit-gray border-t border-shiorit-secondary/40 flex items-center justify-center gap-2">
       <span>&copy; Shiorit (シオリット) All Rights Reserved.</span>
-      <span class="text-shiorit-primary font-mono font-bold">v1.9.3</span>
+      <span class="text-shiorit-primary font-mono font-bold">v1.8.0</span>
     </footer>
   </div>
 
@@ -163,7 +203,7 @@
             <div class="truncate">
               <h1 id="activeTripTitle" class="font-black text-xs text-shiorit-dark truncate leading-tight flex items-center gap-1">
                 <span>旅のしおり</span>
-                <i class="fa-solid fa-pen text-[9px] text-shiorit-gray group-hover:text-shiorit-primary ml-1"></i>
+                <i class="fa-solid fa-pen text-[9px] text-shiorit-gray group-hover:text-shiorit-primary"></i>
               </h1>
               <p id="activeTripDates" class="text-[10px] text-shiorit-gray font-medium">日程</p>
             </div>
@@ -228,35 +268,35 @@
   <main id="mainContainer" class="hidden flex-1 max-w-md w-full mx-auto p-3.5 sm:p-4 space-y-6"></main>
 
   <!-- 新規旅行作成モーダル -->
-  <div id="createTripModal" class="fixed inset-0 z-[70] bg-shiorit-dark/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 hidden">
-    <div class="glass-card bg-white rounded-3xl max-w-md w-full p-4 sm:p-5 shadow-resort border border-shiorit-secondary max-h-[92vh] overflow-y-auto space-y-3.5">
+  <div id="createTripModal" class="fixed inset-0 z-[70] bg-shiorit-dark/50 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="glass-card bg-white/95 rounded-3xl max-w-md w-full p-5 shadow-resort border border-shiorit-secondary max-h-[92vh] overflow-y-auto space-y-4">
       <div class="flex items-center justify-between pb-2 border-b border-shiorit-secondary/40">
         <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-2xl bg-shiorit-primary/20 text-shiorit-dark flex items-center justify-center text-base font-bold">
+          <div class="w-10 h-10 rounded-2xl bg-shiorit-primary/20 text-shiorit-dark flex items-center justify-center text-lg font-bold">
             <i class="fa-solid fa-plane-departure text-shiorit-primary"></i>
           </div>
           <div>
-            <h3 class="text-sm sm:text-base font-black text-shiorit-dark">新しい旅行しおりを作成</h3>
+            <h3 class="text-base font-black text-shiorit-dark">新しい旅行しおりを作成</h3>
             <p class="text-[10px] text-shiorit-gray font-medium">AI自動プラン構築 ＆ 共有URL即時発行</p>
           </div>
         </div>
         <button onclick="closeCreateTripModal()" class="text-shiorit-gray hover:text-shiorit-dark w-8 h-8 flex items-center justify-center rounded-full hover:bg-shiorit-light text-lg">✕</button>
       </div>
 
-      <form id="createTripForm" onsubmit="event.preventDefault();" class="space-y-3 text-xs">
+      <form onsubmit="handleCreateTripSubmit(event)" class="space-y-3.5 text-xs">
         <div>
           <label class="font-bold text-shiorit-dark block mb-1">旅行先・タイトル <span class="text-rose-500">*</span></label>
-          <input type="text" id="newTripTitle" required class="w-full p-2.5 sm:p-3 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl font-bold text-shiorit-dark focus:ring-2 focus:ring-shiorit-primary focus:outline-none" placeholder="例：神戸・有馬温泉 2泊3日 旅のしおり">
+          <input type="text" id="newTripTitle" required class="w-full p-3 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl font-bold text-shiorit-dark focus:ring-2 focus:ring-shiorit-primary focus:outline-none" placeholder="例：神戸・有馬温泉 2泊3日 旅のしおり">
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div style="min-width: 0;">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
             <label class="font-bold text-shiorit-dark block mb-1">開始日 <span class="text-rose-500">*</span></label>
-            <input type="date" id="newTripStartDate" required onchange="updateCalcDaysDisplay()" class="date-input-fix bg-shiorit-light/50 border border-shiorit-secondary rounded-xl font-bold text-shiorit-dark focus:ring-2 focus:ring-shiorit-primary focus:outline-none">
+            <input type="date" id="newTripStartDate" required onchange="updateCalcDaysDisplay()" class="w-full p-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark font-bold focus:ring-2 focus:ring-shiorit-primary focus:outline-none">
           </div>
-          <div style="min-width: 0;">
+          <div>
             <label class="font-bold text-shiorit-dark block mb-1">終了日 <span class="text-rose-500">*</span></label>
-            <input type="date" id="newTripEndDate" required onchange="updateCalcDaysDisplay()" class="date-input-fix bg-shiorit-light/50 border border-shiorit-secondary rounded-xl font-bold text-shiorit-dark focus:ring-2 focus:ring-shiorit-primary focus:outline-none">
+            <input type="date" id="newTripEndDate" required onchange="updateCalcDaysDisplay()" class="w-full p-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark font-bold focus:ring-2 focus:ring-shiorit-primary focus:outline-none">
           </div>
         </div>
 
@@ -267,10 +307,10 @@
 
         <div>
           <label class="font-bold text-shiorit-dark block mb-1">参加メンバー（カンマ区切り） <span class="text-rose-500">*</span></label>
-          <input type="text" id="newTripMembers" required class="w-full p-2.5 sm:p-3 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark font-bold focus:ring-2 focus:ring-shiorit-primary focus:outline-none" value="りゅーたろー, ひなこ">
+          <input type="text" id="newTripMembers" required class="w-full p-3 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark font-bold focus:ring-2 focus:ring-shiorit-primary focus:outline-none" value="りゅーたろー, ひなこ">
         </div>
 
-        <div class="bg-gradient-to-br from-amber-50/90 to-orange-50/90 border border-amber-200/90 rounded-2xl p-3 sm:p-3.5 space-y-2.5">
+        <div class="bg-gradient-to-br from-amber-50/80 to-orange-50/80 border border-amber-200/80 rounded-2xl p-3.5 space-y-2.5">
           <div class="flex items-center justify-between">
             <span class="font-black text-amber-950 text-xs flex items-center gap-1.5">
               <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i> AIプラン生成の希望条件
@@ -281,10 +321,10 @@
           <div>
             <label class="text-[11px] font-bold text-amber-900 block mb-1">現地での主な移動手段</label>
             <div class="grid grid-cols-2 gap-1.5">
-              <button type="button" onclick="selectTransportOption(this, '車・レンタカー')" class="transport-btn py-1.5 px-2 bg-amber-200 border border-amber-400 font-bold rounded-xl text-[11px] text-amber-950 transition text-left flex items-center gap-1.5">🚗 車・レンタカー</button>
-              <button type="button" onclick="selectTransportOption(this, '電車・バス')" class="transport-btn py-1.5 px-2 bg-white border border-amber-200 font-medium rounded-xl text-[11px] text-amber-950 transition text-left flex items-center gap-1.5">🚆 電車・バス</button>
-              <button type="button" onclick="selectTransportOption(this, 'タクシー')" class="transport-btn py-1.5 px-2 bg-white border border-amber-200 font-medium rounded-xl text-[11px] text-amber-950 transition text-left flex items-center gap-1.5">🚕 タクシー</button>
-              <button type="button" onclick="selectTransportOption(this, '徒歩中心')" class="transport-btn py-1.5 px-2 bg-white border border-amber-200 font-medium rounded-xl text-[11px] text-amber-950 transition text-left flex items-center gap-1.5">🚶 徒歩中心</button>
+              <button type="button" onclick="selectTransportOption(this, '車・レンタカー')" class="transport-btn py-2 px-2.5 bg-amber-200 border border-amber-400 font-bold rounded-xl text-[11px] text-amber-950 transition text-left flex items-center gap-1.5">🚗 車・レンタカー</button>
+              <button type="button" onclick="selectTransportOption(this, '電車・バス')" class="transport-btn py-2 px-2.5 bg-white border border-amber-200 font-medium rounded-xl text-[11px] text-amber-950 transition text-left flex items-center gap-1.5">🚆 電車・バス</button>
+              <button type="button" onclick="selectTransportOption(this, 'タクシー')" class="transport-btn py-2 px-2.5 bg-white border border-amber-200 font-medium rounded-xl text-[11px] text-amber-950 transition text-left flex items-center gap-1.5">🚕 タクシー</button>
+              <button type="button" onclick="selectTransportOption(this, '徒歩中心')" class="transport-btn py-2 px-2.5 bg-white border border-amber-200 font-medium rounded-xl text-[11px] text-amber-950 transition text-left flex items-center gap-1.5">🚶 徒歩中心</button>
             </div>
             <input type="hidden" id="aiSelectedTransport" value="車・レンタカー">
           </div>
@@ -301,34 +341,21 @@
 
           <div>
             <label class="text-[11px] font-bold text-amber-900 block mb-1">行きたい場所・希望（書ける範囲でOK）</label>
-            <textarea id="newTripAiPrompt" rows="2" class="w-full p-2 bg-white border border-amber-200 rounded-xl text-xs text-amber-950 placeholder-amber-800/40 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none" placeholder="例：11:30に中華街でランチ、15:00にホテルチェックイン"></textarea>
+            <textarea id="newTripAiPrompt" rows="2" class="w-full p-2.5 bg-white border border-amber-200 rounded-xl text-xs text-amber-950 placeholder-amber-800/40 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-none" placeholder="例：11:30に中華街でランチ、15:00にホテルチェックイン"></textarea>
           </div>
         </div>
 
         <div class="pt-2 flex flex-col gap-2">
-          <button type="button" onclick="executeCreateTrip(true)" class="w-full py-3.5 bg-gradient-to-r from-shiorit-primary via-sky-400 to-teal-400 hover:opacity-95 active:scale-98 text-white font-black rounded-2xl text-xs flex items-center justify-center gap-2 shadow-resort transition cursor-pointer">
+          <button type="submit" name="submitAction" value="ai" class="w-full py-3.5 bg-gradient-to-r from-shiorit-primary via-sky-400 to-teal-400 hover:opacity-95 active:scale-98 text-white font-black rounded-2xl text-xs flex items-center justify-center gap-2 shadow-resort transition cursor-pointer">
             <i class="fa-solid fa-wand-magic-sparkles"></i>
             <span>AIで全日プランを自動作成してスタート</span>
           </button>
           <div class="flex gap-2">
-            <button type="button" onclick="executeCreateTrip(false)" class="flex-1 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-dark font-bold rounded-xl text-xs transition cursor-pointer">白紙で自分で作る</button>
-            <button type="button" onclick="closeCreateTripModal()" class="px-4 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-gray font-medium rounded-xl text-xs transition cursor-pointer">キャンセル</button>
+            <button type="submit" name="submitAction" value="blank" class="flex-1 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-dark font-bold rounded-xl text-xs transition">白紙で自分で作る</button>
+            <button type="button" onclick="closeCreateTripModal()" class="px-4 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-gray font-medium rounded-xl text-xs transition">キャンセル</button>
           </div>
         </div>
       </form>
-    </div>
-  </div>
-
-  <!-- AIプラン生成中ローディング -->
-  <div id="aiLoadingOverlay" class="fixed inset-0 z-[120] bg-shiorit-dark/60 backdrop-blur-xs flex flex-col items-center justify-center p-4 hidden">
-    <div class="glass-card bg-white rounded-3xl p-6 max-w-xs w-full text-center space-y-4 shadow-resort border border-shiorit-secondary">
-      <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-shiorit-primary to-teal-300 text-white flex items-center justify-center text-2xl mx-auto shadow-resort animate-spin">
-        <i class="fa-solid fa-wand-magic-sparkles"></i>
-      </div>
-      <div>
-        <h4 id="aiLoadingTitle" class="font-black text-shiorit-dark text-sm">AIがプランを作成中...</h4>
-        <p id="aiLoadingSub" class="text-[11px] text-shiorit-gray mt-1 leading-relaxed">ご希望条件を反映し、時間を最適化してしおりを構築しています</p>
-      </div>
     </div>
   </div>
 
@@ -433,7 +460,7 @@
     <div class="glass-card bg-white rounded-3xl max-w-sm w-full p-5 shadow-resort border border-shiorit-secondary space-y-4">
       <div class="flex items-center justify-between pb-2 border-b border-shiorit-secondary/40">
         <h3 id="quickLinkModalHeading" class="text-base font-black text-shiorit-dark flex items-center gap-1.5">
-          <i class="fa-solid fa-link text-shiorit-primary mr-1"></i> その他リンクを登録
+          <i class="fa-solid fa-link text-shiorit-primary"></i> その他リンクを登録
         </h3>
         <button onclick="closeQuickLinkModal()" class="text-shiorit-gray hover:text-shiorit-dark w-8 h-8 flex items-center justify-center rounded-full hover:bg-shiorit-light text-lg">✕</button>
       </div>
@@ -864,13 +891,13 @@
     </div>
   </div>
 
-  <!-- ページナビ -->
+  <!-- ページナビ（アイコン表示強化） -->
   <div id="pageNavContainer" class="hidden sticky bottom-3.5 z-40 max-w-md mx-auto px-4 flex items-center justify-between pointer-events-none">
-    <button onclick="prevSlide()" id="prevBtn" class="pointer-events-auto w-11 h-11 rounded-full glass-card border border-shiorit-secondary text-shiorit-dark shadow-resort flex items-center justify-center text-sm active:scale-90 transition cursor-pointer">
+    <button onclick="prevSlide()" id="prevBtn" class="pointer-events-auto w-11 h-11 rounded-full glass-card border border-shiorit-secondary text-shiorit-dark shadow-resort flex items-center justify-center text-sm active:scale-90 transition">
       <i class="fa-solid fa-chevron-left text-shiorit-primary"></i>
     </button>
     <div id="pageIndicator" class="glass-card px-4 py-1.5 rounded-full border border-shiorit-secondary shadow-resort text-shiorit-dark text-xs font-bold">1 / 6</div>
-    <button onclick="nextSlide()" id="nextBtn" class="pointer-events-auto w-11 h-11 rounded-full glass-card border border-shiorit-secondary text-shiorit-dark shadow-resort flex items-center justify-center text-sm active:scale-90 transition cursor-pointer">
+    <button onclick="nextSlide()" id="nextBtn" class="pointer-events-auto w-11 h-11 rounded-full glass-card border border-shiorit-secondary text-shiorit-dark shadow-resort flex items-center justify-center text-sm active:scale-90 transition">
       <i class="fa-solid fa-chevron-right text-shiorit-primary"></i>
     </button>
   </div>
@@ -911,6 +938,7 @@
     let previousStepsBackup = null;
     const selectedThemes = new Set(['ご当地絶品グルメ中心']);
 
+    // 開始時刻を分（整数）に換算するソート用関数
     function getStepMinutes(step) {
       if (!step) return 9999;
       if (step.time) {
@@ -1069,20 +1097,14 @@
       document.getElementById('calcDaysDisplay').innerText = text;
     }
 
-    window.executeCreateTrip = async function(isAi) {
+    window.handleCreateTripSubmit = async function(e) {
+      e.preventDefault();
       const title = document.getElementById('newTripTitle').value.trim();
       const startDate = document.getElementById('newTripStartDate').value;
       const endDate = document.getElementById('newTripEndDate').value;
       const membersStr = document.getElementById('newTripMembers').value.trim();
 
-      if (!title) { alert('旅行先・タイトルを入力してください'); return; }
-      if (!startDate || !endDate) { alert('日程を選択してください'); return; }
-      if (!membersStr) { alert('参加メンバーを入力してください'); return; }
-
-      const transport = document.getElementById('aiSelectedTransport').value;
-      const themes = Array.from(selectedThemes).join('、') || '名物グルメ・観光';
-      const freePrompt = document.getElementById('newTripAiPrompt').value.trim();
-      const structuredPrompt = `【移動手段】: ${transport}\n【旅のテーマ】: ${themes}\n【行きたい場所・希望・時間指定】: ${freePrompt || '特になし（定番スポットで構成）'}`;
+      if (!title || !startDate || !endDate || !membersStr) return;
 
       const members = membersStr.split(',').map(m => m.trim()).filter(Boolean);
       const tripId = 'trip_' + Math.random().toString(36).substring(2, 8);
@@ -1096,49 +1118,20 @@
         members,
         quickLinks: [],
         expenses: [],
-        steps: [],
-        chatHistory: [
-          { id: "init_" + Date.now(), sender: "ai", text: `『${title}』のしおりを作成しました！何でも相談してくださいね🌴` }
-        ]
-      };
-
-      closeCreateTripModal();
-
-      if (isAi) {
-        document.getElementById('aiLoadingTitle').innerText = 'AIが旅行プランを作成中...';
-        document.getElementById('aiLoadingSub').innerText = `${calc.days}日間のスケジュールと時間を最適化しています`;
-        document.getElementById('aiLoadingOverlay').classList.remove('hidden');
-
-        try {
-          const generatedSteps = await generateInitialPlanWithAi(title, calc.days, calc.dayDates, members, structuredPrompt);
-          if (generatedSteps && generatedSteps.length > 0) {
-            newTripObj.steps = generatedSteps;
-          } else {
-            throw new Error("プラン生成に失敗しました");
-          }
-        } catch(err) {
-          console.warn("AIフォールバック:", err);
-          newTripObj.steps = [
-            {
-              id: 's_1', day: 1, title: `${title} スタート`, category: "重要予定",
-              time: "10:00〜11:00", startTime: startDate + "T10:00:00", endTime: startDate + "T11:00:00",
-              icon: "fa-solid fa-flag-checkered", iconBg: "bg-shiorit-light text-shiorit-primary",
-              badge: "集合", desc: "楽しい旅行の始まりです！", tips: "", mapQuery: title, webUrl: ""
-            }
-          ];
-        } finally {
-          document.getElementById('aiLoadingOverlay').classList.add('hidden');
-        }
-      } else {
-        newTripObj.steps = [
+        steps: [
           {
             id: 's_1', day: 1, title: `${title} スタート`, category: "重要予定",
             time: "10:00〜11:00", startTime: startDate + "T10:00:00", endTime: startDate + "T11:00:00",
             icon: "fa-solid fa-flag-checkered", iconBg: "bg-shiorit-light text-shiorit-primary",
             badge: "集合", desc: "楽しい旅行の始まりです！", tips: "", mapQuery: title, webUrl: ""
           }
-        ];
-      }
+        ],
+        chatHistory: [
+          { id: "init_" + Date.now(), sender: "ai", text: `『${title}』のしおりを作成しました！何でも相談してくださいね🌴` }
+        ]
+      };
+
+      closeCreateTripModal();
 
       liveTripData[tripId] = newTripObj;
       localStorage.setItem('shiorit_saved_' + tripId, JSON.stringify(newTripObj));
@@ -1152,64 +1145,6 @@
       document.getElementById('createdTripUrlInput').value = newlyCreatedTripUrl;
       document.getElementById('createdUrlModal').classList.remove('hidden');
     };
-
-    async function generateInitialPlanWithAi(title, totalDays, dayDates, members, userPrompt) {
-      const systemPrompt = `あなたはプロの旅行ツアープランナーです。指定された旅行タイトル、日数（全${totalDays}日間）、ユーザーの希望条件に基づいて、美しく実用的な旅行しおりのタイムラインJSONを作成してください。
-
-【厳格な時間・出力仕様】
-1. 出力は必ず {"steps": [...]} の形式のJSONオブジェクトのみを返してください。
-2. day は 1 〜 ${totalDays} の整数。1日あたり3〜5個の予定を作成してください。
-3. 各日の予定は朝（09:00頃〜）、昼食（12:00頃〜）、午後（14:30頃〜）、夕食（18:30頃〜）のように時系列順に進むよう正確にstartTime/endTimeを設定してください。
-4. ユーザーの希望条件（行きたい場所・指定時間・テーマ）を最優先でスケジュール内に組み込んでください。
-5. startTime と endTime は ISO8601形式（例: "${dayDates[1]}T12:00:00"）にしてください。`;
-
-      const userQuery = `【旅行先】: ${title}\n【全日程】: ${totalDays}日間\n【各日の日付】: ${JSON.stringify(dayDates)}\n【参加メンバー】: ${members.join(', ')}\n【ユーザーの希望条件】:\n${userPrompt}\n\n上記を反映した全${totalDays}日分の旅行プラン steps 配列を作成してください。`;
-
-      const payload = {
-        contents: [{ parts: [{ text: `${systemPrompt}\n\n${userQuery}` }] }],
-        generationConfig: { 
-          responseMimeType: "application/json",
-          temperature: 0.7 
-        }
-      };
-
-      const res = await fetch(cloudflareWorkerEndpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      
-      if (!res.ok) throw new Error(`AIサーバー通信エラー (${res.status})`);
-
-      const result = await res.json();
-      const textResp = result.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!textResp) throw new Error("AI応答が空でした");
-
-      const cleanJsonStr = textResp.replace(/```json/gi, '').replace(/```/gi, '').trim();
-      const jsonMatch = cleanJsonStr.match(/\{[\s\S]*\}/);
-      const targetStr = jsonMatch ? jsonMatch[0] : cleanJsonStr;
-      const parsed = JSON.parse(targetStr);
-
-      if (parsed.steps && Array.isArray(parsed.steps) && parsed.steps.length > 0) {
-        return parsed.steps.map((s, idx) => ({
-          id: s.id || `ai_step_${Date.now()}_${idx}`,
-          day: Math.min(Math.max(1, parseInt(s.day, 10) || 1), totalDays),
-          title: s.title || "観光スポット",
-          category: s.category || "観光",
-          time: s.time || "10:00〜12:00",
-          startTime: s.startTime || `${dayDates[s.day || 1]}T10:00:00`,
-          endTime: s.endTime || `${dayDates[s.day || 1]}T12:00:00`,
-          icon: s.icon || getCategoryIcon(s.category),
-          iconBg: s.iconBg || "bg-shiorit-light text-shiorit-primary",
-          badge: s.badge || "",
-          desc: s.desc || "",
-          tips: s.tips || "",
-          mapQuery: s.mapQuery || s.title || title,
-          webUrl: s.webUrl || ""
-        }));
-      }
-      return null;
-    }
 
     window.copyCreatedTripUrl = function() {
       const input = document.getElementById('createdTripUrlInput');
@@ -1258,6 +1193,138 @@
 
       document.getElementById('editEndHour').value = String(eh).padStart(2, '0');
       document.getElementById('editEndMin').value = String(em).padStart(2, '0');
+    };
+
+    function getCategoryIcon(cat = '') {
+      if (cat.includes('ランチ') || cat.includes('グルメ') || cat.includes('ディナー')) return 'fa-solid fa-utensils';
+      if (cat.includes('カフェ') || cat.includes('朝食')) return 'fa-solid fa-mug-saucer';
+      if (cat.includes('温泉') || cat.includes('宿泊') || cat.includes('ホテル')) return 'fa-solid fa-hotel';
+      if (cat.includes('ドライブ') || cat.includes('移動') || cat.includes('新幹線') || cat.includes('フライト') || cat.includes('地下鉄') || cat.includes('電車')) return 'fa-solid fa-train-subway';
+      if (cat.includes('アクティビティ')) return 'fa-solid fa-compass';
+      return 'fa-solid fa-location-dot';
+    }
+
+    function getMapUrl(queryOrUrl) {
+      if (!queryOrUrl) return 'https://maps.google.com';
+      if (queryOrUrl.startsWith('http://') || queryOrUrl.startsWith('https://')) return queryOrUrl;
+      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(queryOrUrl)}`;
+    }
+
+    window.openTripTitleEditModal = function() {
+      const trip = liveTripData[currentTripKey];
+      if (!trip) return;
+      document.getElementById('editTripTitleInput').value = trip.title || '';
+      document.getElementById('editTripDatesInput').value = trip.dates || '';
+      document.getElementById('editTripDaysInput').value = totalTripDays || 3;
+      document.getElementById('tripTitleEditModal').classList.remove('hidden');
+    };
+
+    window.closeTripTitleEditModal = function() {
+      document.getElementById('tripTitleEditModal').classList.add('hidden');
+    };
+
+    window.saveTripTitleEdit = async function(e) {
+      e.preventDefault();
+      const trip = liveTripData[currentTripKey];
+      if (!trip) return;
+
+      const newTitle = document.getElementById('editTripTitleInput').value.trim();
+      const newDates = document.getElementById('editTripDatesInput').value.trim();
+      const newDays = parseInt(document.getElementById('editTripDaysInput').value, 10) || 3;
+
+      if (!newTitle) return;
+
+      trip.title = newTitle;
+      if (newDates) trip.dates = newDates;
+      
+      totalTripDays = newDays;
+      trip.totalDays = newDays;
+
+      trip.dayDates = trip.dayDates || {};
+      const baseDate = trip.dayDates[1] ? new Date(trip.dayDates[1] + "T00:00:00") : new Date();
+      for (let i = 1; i <= totalTripDays; i++) {
+        if (!trip.dayDates[i]) {
+          const d = new Date(baseDate);
+          d.setDate(baseDate.getDate() + (i - 1));
+          trip.dayDates[i] = d.toISOString().slice(0, 10);
+        }
+      }
+
+      closeTripTitleEditModal();
+
+      document.getElementById('activeTripTitle').innerHTML = `<span>${escapeHtml(trip.title)}</span><i class="fa-solid fa-pen text-[9px] text-shiorit-gray group-hover:text-shiorit-primary ml-1"></i>`;
+      document.getElementById('activeTripDates').innerText = trip.dates || '';
+      document.getElementById('appPageTitle').innerText = `${trip.title} - シオリット`;
+
+      renderTabBar();
+      renderMainCards();
+      await saveToCloud();
+      showToast(`${totalTripDays}日間のプランに更新しました！`);
+    };
+
+    window.openQuickLinkModal = function(editId = null) {
+      const trip = liveTripData[currentTripKey];
+      trip.quickLinks = trip.quickLinks || [];
+
+      if (editId) {
+        const item = trip.quickLinks.find(l => l.id === editId);
+        if (!item) return;
+        document.getElementById('quickLinkModalHeading').innerHTML = '<i class="fa-solid fa-pen text-shiorit-primary mr-1"></i> リンクを編集';
+        document.getElementById('editQuickLinkId').value = item.id;
+        document.getElementById('quickLinkTitle').value = item.title;
+        document.getElementById('quickLinkUrl').value = item.url;
+        document.getElementById('quickLinkMemo').value = item.memo || '';
+      } else {
+        document.getElementById('quickLinkModalHeading').innerHTML = '<i class="fa-solid fa-link text-shiorit-primary mr-1"></i> その他リンクを登録';
+        document.getElementById('editQuickLinkId').value = '';
+        document.getElementById('quickLinkTitle').value = '';
+        document.getElementById('quickLinkUrl').value = '';
+        document.getElementById('quickLinkMemo').value = '';
+      }
+      document.getElementById('quickLinkModal').classList.remove('hidden');
+    };
+
+    window.closeQuickLinkModal = function() {
+      document.getElementById('quickLinkModal').classList.add('hidden');
+    };
+
+    window.saveQuickLink = async function(e) {
+      e.preventDefault();
+      const trip = liveTripData[currentTripKey];
+      trip.quickLinks = trip.quickLinks || [];
+
+      const editId = document.getElementById('editQuickLinkId').value;
+      const title = document.getElementById('quickLinkTitle').value.trim();
+      let url = document.getElementById('quickLinkUrl').value.trim();
+      const memo = document.getElementById('quickLinkMemo').value.trim();
+
+      if (!title || !url) return;
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+      }
+
+      if (editId) {
+        const idx = trip.quickLinks.findIndex(l => l.id === editId);
+        if (idx !== -1) trip.quickLinks[idx] = { id: editId, title, url, memo };
+      } else {
+        trip.quickLinks.unshift({ id: 'ql_' + Date.now(), title, url, memo });
+      }
+
+      closeQuickLinkModal();
+      currentSlide = totalTripDays + 3;
+      renderMainCards();
+      await saveToCloud();
+      showToast('便利リンクを保存しました！');
+    };
+
+    window.deleteQuickLink = function(linkId) {
+      if (confirm('このリンクを削除しますか？')) {
+        const trip = liveTripData[currentTripKey];
+        trip.quickLinks = (trip.quickLinks || []).filter(l => l.id !== linkId);
+        renderMainCards();
+        saveToCloud();
+        showToast('削除しました');
+      }
     };
 
     async function syncFromCloud() {
@@ -1902,7 +1969,7 @@ ${allConversationLogs || '（過去の履歴なし）'}
           <div class="bg-gradient-to-r from-shiorit-dark via-slate-800 to-cyan-950 text-white p-5 relative overflow-hidden">
             <div class="flex items-center justify-between gap-2">
               <span class="px-2.5 py-0.5 rounded-full bg-white/20 border border-white/30 text-white text-[10px] font-bold">精算 ＆ 割り勘</span>
-              <span class="text-[11px] font-black tracking-widest text-shiorit-secondary">${expensePageNum} / ${totalPages} PAGE</span>
+              <span class="text-[11px] font-black tracking-widest text-white/90">${expensePageNum} / ${totalPages} PAGE</span>
             </div>
             <div class="mt-2.5 flex items-center justify-between">
               <div class="flex items-center gap-3">
@@ -1914,7 +1981,7 @@ ${allConversationLogs || '（過去の履歴なし）'}
                   <p class="text-xs text-shiorit-secondary font-normal">合計：¥${settlement.totalExpense.toLocaleString()}</p>
                 </div>
               </div>
-              <button onclick="openExpenseModal()" class="px-3 py-1.5 bg-shiorit-primary hover:opacity-90 active:scale-95 text-white font-bold rounded-xl text-xs flex items-center gap-1 shadow-resort transition cursor-pointer">
+              <button onclick="openExpenseModal()" class="px-3 py-1.5 bg-shiorit-primary hover:opacity-90 active:scale-95 text-white font-bold rounded-xl text-xs flex items-center gap-1 shadow-resort transition">
                 <i class="fa-solid fa-plus"></i>
                 <span>支払いを記録</span>
               </button>
@@ -1958,7 +2025,7 @@ ${allConversationLogs || '（過去の履歴なし）'}
                 <span class="font-bold text-shiorit-dark text-xs flex items-center gap-1.5">
                   <i class="fa-solid fa-users text-shiorit-primary"></i> 参加メンバー（${members.length}人）
                 </span>
-                <button onclick="openMemberModal()" class="text-shiorit-primary hover:opacity-80 text-xs font-bold flex items-center gap-1 cursor-pointer">
+                <button onclick="openMemberModal()" class="text-shiorit-primary hover:opacity-80 text-xs font-bold flex items-center gap-1">
                   <i class="fa-solid fa-user-plus"></i> 追加
                 </button>
               </div>
@@ -2065,7 +2132,7 @@ ${allConversationLogs || '（過去の履歴なし）'}
                           <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-orange-500 ml-1"></i>
                         </div>
                       </a>
-                      <button onclick="openEditModal('${s.id}', ${s.day})" class="w-6 h-6 rounded hover:bg-shiorit-light text-shiorit-gray hover:text-shiorit-primary flex items-center justify-center text-xs shrink-0 cursor-pointer" title="予定を編集">
+                      <button onclick="openEditModal('${s.id}', ${s.day})" class="w-6 h-6 rounded hover:bg-shiorit-light text-shiorit-gray hover:text-shiorit-primary flex items-center justify-center text-xs shrink-0" title="予定を編集">
                         <i class="fa-solid fa-pen text-[10px]"></i>
                       </button>
                     </div>
@@ -2098,10 +2165,10 @@ ${allConversationLogs || '（過去の履歴なし）'}
                         ${l.memo ? `<p class="text-[10px] text-shiorit-gray mt-0.5 truncate">${escapeHtml(l.memo)}</p>` : ''}
                       </a>
                       <div class="flex items-center gap-1 shrink-0">
-                        <button onclick="openQuickLinkModal('${l.id}')" class="w-6 h-6 rounded hover:bg-shiorit-light text-shiorit-gray hover:text-shiorit-primary flex items-center justify-center text-xs cursor-pointer" title="編集">
+                        <button onclick="openQuickLinkModal('${l.id}')" class="w-6 h-6 rounded hover:bg-shiorit-light text-shiorit-gray hover:text-shiorit-primary flex items-center justify-center text-xs" title="編集">
                           <i class="fa-solid fa-pen text-[10px]"></i>
                         </button>
-                        <button onclick="deleteQuickLink('${l.id}')" class="w-6 h-6 rounded hover:bg-rose-50 text-shiorit-gray hover:text-rose-500 flex items-center justify-center text-xs cursor-pointer" title="削除">
+                        <button onclick="deleteQuickLink('${l.id}')" class="w-6 h-6 rounded hover:bg-rose-50 text-shiorit-gray hover:text-rose-500 flex items-center justify-center text-xs" title="削除">
                           <i class="fa-regular fa-trash-can text-[10px]"></i>
                         </button>
                       </div>
@@ -2111,7 +2178,7 @@ ${allConversationLogs || '（過去の履歴なし）'}
               `}
             </div>
 
-            <button onclick="openQuickLinkModal()" class="w-full mt-2 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-dark font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
+            <button onclick="openQuickLinkModal()" class="w-full mt-2 py-2.5 bg-shiorit-light hover:bg-shiorit-secondary/40 text-shiorit-dark font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition">
               <i class="fa-solid fa-plus text-shiorit-primary"></i>
               <span>その他リンクを追加する</span>
             </button>
@@ -2637,7 +2704,6 @@ ${allConversationLogs || '（過去の履歴なし）'}
       showToast('LINE用共有メッセージをコピーしました！');
     }
 
-    // ★【完全修正版 v1.9.3】URLパラメータ判定（LPと画面の重なりを完全排除）
     async function checkUrlParams() {
       try {
         const urlParams = new URLSearchParams(window.location.search);
@@ -2648,7 +2714,6 @@ ${allConversationLogs || '（過去の履歴なし）'}
           if (match) tripParam = match[1].toLowerCase();
         }
 
-        // パラメータがない場合は、しおり画面を隠して確実にLP（ホーム画面）を表示
         if (!tripParam) {
           currentTripKey = null;
           document.getElementById('landingPage').classList.remove('hidden');
@@ -2659,19 +2724,14 @@ ${allConversationLogs || '（過去の履歴なし）'}
           return;
         }
 
-        // パラメータがある場合は、LPを確実に完全に隠し、しおり画面を表示
         currentTripKey = tripParam;
-        document.getElementById('landingPage').classList.add('hidden');
-        document.getElementById('appHeader').classList.remove('hidden');
-        document.getElementById('pageNavContainer').classList.remove('hidden');
-        document.getElementById('mainContainer').classList.remove('hidden');
 
         if (!liveTripData[currentTripKey]) {
           liveTripData[currentTripKey] = {
-            title: "神戸・京都 3泊4日 旅のしおり",
-            dates: "2026.10.31 (土) - 11.02 (火)",
-            totalDays: 4,
-            dayDates: { 1: "2026-10-31", 2: "2026-11-01", 3: "2026-11-02", 4: "2026-11-03" },
+            title: "神戸・有馬温泉 2泊3日 旅のしおり",
+            dates: "2026.09.28 (月) - 09.30 (水)",
+            totalDays: 3,
+            dayDates: { 1: "2026-09-28", 2: "2026-09-29", 3: "2026-09-30" },
             members: ["りゅーたろー", "ひなこ"],
             quickLinks: [],
             expenses: [],
@@ -2706,6 +2766,11 @@ ${allConversationLogs || '（過去の履歴なし）'}
           const todayStr = new Date().toISOString().slice(0, 10);
           for (let i = 1; i <= totalTripDays; i++) trip.dayDates[i] = todayStr;
         }
+
+        document.getElementById('landingPage').classList.add('hidden');
+        document.getElementById('appHeader').classList.remove('hidden');
+        document.getElementById('pageNavContainer').classList.remove('hidden');
+        document.getElementById('mainContainer').classList.remove('hidden');
 
         document.getElementById('activeTripTitle').innerHTML = `<span>${escapeHtml(trip.title)}</span><i class="fa-solid fa-pen text-[9px] text-shiorit-gray group-hover:text-shiorit-primary ml-1"></i>`;
         document.getElementById('activeTripDates').innerText = trip.dates || '';
