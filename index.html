@@ -13,11 +13,6 @@
   <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><defs><linearGradient id='bg' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%2338bdf8'/><stop offset='100%' stop-color='%230284c7'/></linearGradient></defs><rect width='512' height='512' rx='112' fill='url(%23bg)'/><text x='50%' y='46%' font-family='-apple-system, BlinkMacSystemFont, sans-serif' font-weight='900' font-size='88' fill='%23ffffff' text-anchor='middle'>Shiorit</text><text x='50%' y='64%' font-family='-apple-system, BlinkMacSystemFont, sans-serif' font-weight='700' font-size='32' fill='%23e0f2fe' text-anchor='middle'>シオリット</text></svg>">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='url(%23bg)'/><text x='50%' y='55%' font-family='sans-serif' font-weight='900' font-size='90' fill='%23ffffff' text-anchor='middle'>Shiorit</text></svg>">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -89,7 +84,7 @@
 </head>
 <body class="antialiased flex flex-col justify-between selection:bg-shiorit-secondary selection:text-shiorit-dark">
 
-  <!-- ★ トップページ（LP・新規しおり作成画面） -->
+  <!-- トップページ（LP・新規しおり作成画面） -->
   <div id="landingPage" class="flex-1 flex flex-col justify-between">
     <header class="glass-header px-4 py-3 sticky top-0 z-30 flex items-center justify-between">
       <div class="flex items-center gap-2.5">
@@ -184,7 +179,7 @@
 
     <footer class="py-6 text-center text-[10px] text-shiorit-gray border-t border-shiorit-secondary/40 flex items-center justify-center gap-2">
       <span>&copy; Shiorit (シオリット) All Rights Reserved.</span>
-      <span class="text-shiorit-primary font-mono font-bold">v1.6.0</span>
+      <span class="text-shiorit-primary font-mono font-bold">v1.7.0</span>
     </footer>
   </div>
 
@@ -193,7 +188,6 @@
     <div class="max-w-md mx-auto space-y-2">
       <div class="flex items-center justify-between gap-2">
         <div class="flex items-center gap-2 flex-1 truncate">
-          <!-- ★ ホームへ戻るボタン（確実にパラメータを消してトップへ遷移） -->
           <button onclick="goHome()" class="w-8 h-8 rounded-xl bg-white border border-shiorit-secondary text-shiorit-dark flex items-center justify-center text-xs shadow-xs hover:bg-shiorit-light active:scale-95 transition shrink-0 cursor-pointer" title="トップへ戻る">
             <i class="fa-solid fa-house text-shiorit-primary"></i>
           </button>
@@ -936,7 +930,29 @@
     let previousStepsBackup = null;
     const selectedThemes = new Set(['ご当地絶品グルメ中心']);
 
-    // ★ ホームへ戻る処理（URLパラメータを消してLPへ遷移）
+    // ★ スケジュール開始時刻を「分（整数）」に変換する超高精度ソート用関数
+    function getStepMinutes(step) {
+      if (!step) return 9999;
+      // 1. time文字列 (例: "08:30〜09:45" や "13:00") から取得
+      if (step.time) {
+        const startStr = step.time.split('〜')[0].trim();
+        const match = startStr.match(/(\d{1,2}):(\d{2})/);
+        if (match) {
+          return parseInt(match[1], 10) * 60 + parseInt(match[2], 10);
+        }
+      }
+      // 2. startTime (例: "2026-09-28T08:30:00") から取得
+      if (step.startTime && step.startTime.includes('T')) {
+        const timePart = step.startTime.split('T')[1];
+        const match = timePart.match(/(\d{1,2}):(\d{2})/);
+        if (match) {
+          return parseInt(match[1], 10) * 60 + parseInt(match[2], 10);
+        }
+      }
+      return 9999;
+    }
+
+    // ホームへ戻る処理（URLパラメータを消してLPへ遷移）
     window.goHome = function() {
       const url = new URL(window.location.href);
       url.search = '';
@@ -1824,6 +1840,7 @@ ${allConversationLogs || '（過去の履歴なし）'}
       bar.innerHTML = html;
     }
 
+    // ★【時系列ソート完全適用】カード描画処理
     function renderMainCards() {
       if (!currentTripKey) return;
       const trip = liveTripData[currentTripKey];
@@ -1863,7 +1880,11 @@ ${allConversationLogs || '（過去の履歴なし）'}
       let cardsHtml = '';
 
       for (let day = 1; day <= totalTripDays; day++) {
-        const daySteps = (trip.steps || []).filter(s => s.day === day).sort((a,b) => (a.startTime || '').localeCompare(b.startTime || ''));
+        // ★【ここが決定的な修正点】getStepMinutesで分換算して完璧に時系列（朝〜夜）順に並び替え
+        const daySteps = (trip.steps || [])
+          .filter(s => parseInt(s.day, 10) === day)
+          .sort((a, b) => getStepMinutes(a) - getStepMinutes(b));
+
         const grad = dayGradients[(day - 1) % dayGradients.length];
         const dateDisplay = (trip.dayDates && trip.dayDates[day]) ? trip.dayDates[day].replace(/-/g, '.') : `${day}日目`;
 
@@ -2192,7 +2213,7 @@ ${allConversationLogs || '（過去の履歴なし）'}
         paidByThisUser.map(exp => `<div onclick="openExpenseDetailModal('${exp.id}')" class="cursor-pointer p-2.5 bg-white border border-shiorit-secondary/60 rounded-xl flex items-center justify-between"><span>${escapeHtml(exp.title)}</span><strong class="text-shiorit-dark">¥${exp.amount.toLocaleString()}</strong></div>`).join('');
 
       const sharedWithThisUser = expenses.filter(exp => (exp.participants || []).includes(memberName));
-      document.getElementById('memberDetailShareList').innerHTML = sharedWithThisUser.length === 0 ?
+      document.getElementById('memberDetailShareList').innerHTML = sharedWithThisUser.length === 0 ? 
         `<div class="p-2.5 bg-shiorit-light/50 rounded-xl text-center text-shiorit-gray text-[11px]">対象となっている支払いはありません</div>` :
         sharedWithThisUser.map(exp => `<div onclick="openExpenseDetailModal('${exp.id}')" class="cursor-pointer p-2.5 bg-white border border-shiorit-secondary/60 rounded-xl flex items-center justify-between"><span>${escapeHtml(exp.title)}</span><strong class="text-rose-500">¥${Math.round(exp.amount / exp.participants.length).toLocaleString()}</strong></div>`).join('');
 
@@ -2686,7 +2707,6 @@ ${allConversationLogs || '（過去の履歴なし）'}
       showToast('LINE用共有メッセージをコピーしました！');
     }
 
-    // ★【修正完了】URLパラメータ判定（パラメータなしなら確実にLPホームを表示）
     async function checkUrlParams() {
       try {
         const urlParams = new URLSearchParams(window.location.search);
@@ -2697,7 +2717,6 @@ ${allConversationLogs || '（過去の履歴なし）'}
           if (match) tripParam = match[1].toLowerCase();
         }
 
-        // URLにtripパラメータがない場合は、確実にトップページ（LP）を表示
         if (!tripParam) {
           currentTripKey = null;
           document.getElementById('landingPage').classList.remove('hidden');
@@ -2708,7 +2727,6 @@ ${allConversationLogs || '（過去の履歴なし）'}
           return;
         }
 
-        // tripパラメータがある場合はしおりを表示
         currentTripKey = tripParam;
 
         if (!liveTripData[currentTripKey]) {
