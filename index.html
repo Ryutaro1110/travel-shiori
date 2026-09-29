@@ -87,8 +87,6 @@
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     select { -webkit-appearance: none; appearance: none; }
     i { display: inline-block; }
-    
-    /* 日付インプットの重なり防止用スタイル */
     .date-input-fix {
       width: 100%;
       box-sizing: border-box;
@@ -100,7 +98,7 @@
 <body class="antialiased flex flex-col justify-between selection:bg-shiorit-secondary selection:text-shiorit-dark">
 
   <!-- トップページ（LP・新規しおり作成画面） -->
-  <div id="landingPage" class="flex-1 flex flex-col justify-between">
+  <div id="landingPage" class="hidden flex-1 flex flex-col justify-between">
     <header class="glass-header px-4 py-3 sticky top-0 z-30 flex items-center justify-between">
       <div class="flex items-center gap-2.5">
         <div class="w-8 h-8 rounded-xl bg-shiorit-primary/15 flex items-center justify-center text-shiorit-primary font-bold shadow-xs">
@@ -149,7 +147,7 @@
 
     <footer class="py-6 text-center text-[10px] text-shiorit-gray border-t border-shiorit-secondary/40 flex items-center justify-center gap-2">
       <span>&copy; Shiorit (シオリット) All Rights Reserved.</span>
-      <span class="text-shiorit-primary font-mono font-bold">v1.9.1</span>
+      <span class="text-shiorit-primary font-mono font-bold">v1.9.2</span>
     </footer>
   </div>
 
@@ -229,7 +227,7 @@
   <!-- メインコンテンツ（しおりカード） -->
   <main id="mainContainer" class="hidden flex-1 max-w-md w-full mx-auto p-3.5 sm:p-4 space-y-6"></main>
 
-  <!-- ★【完全に重なりを解消した】新規旅行作成モーダル -->
+  <!-- 新規旅行作成モーダル -->
   <div id="createTripModal" class="fixed inset-0 z-[70] bg-shiorit-dark/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 hidden">
     <div class="glass-card bg-white rounded-3xl max-w-md w-full p-4 sm:p-5 shadow-resort border border-shiorit-secondary max-h-[92vh] overflow-y-auto space-y-3.5">
       <div class="flex items-center justify-between pb-2 border-b border-shiorit-secondary/40">
@@ -251,7 +249,6 @@
           <input type="text" id="newTripTitle" required class="w-full p-2.5 sm:p-3 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl font-bold text-shiorit-dark focus:ring-2 focus:ring-shiorit-primary focus:outline-none" placeholder="例：神戸・有馬温泉 2泊3日 旅のしおり">
         </div>
 
-        <!-- ★ 左右の間隔と幅を完全に分離した安全な日付グリッド -->
         <div class="grid grid-cols-2 gap-3">
           <div style="min-width: 0;">
             <label class="font-bold text-shiorit-dark block mb-1">開始日 <span class="text-rose-500">*</span></label>
@@ -273,7 +270,6 @@
           <input type="text" id="newTripMembers" required class="w-full p-2.5 sm:p-3 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark font-bold focus:ring-2 focus:ring-shiorit-primary focus:outline-none" value="りゅーたろー, ひなこ">
         </div>
 
-        <!-- AI希望条件ブロック -->
         <div class="bg-gradient-to-br from-amber-50/90 to-orange-50/90 border border-amber-200/90 rounded-2xl p-3 sm:p-3.5 space-y-2.5">
           <div class="flex items-center justify-between">
             <span class="font-black text-amber-950 text-xs flex items-center gap-1.5">
@@ -310,7 +306,6 @@
         </div>
 
         <div class="pt-2 flex flex-col gap-2">
-          <!-- ★ AI生成を確実に発火するイベントハンドラ -->
           <button type="button" onclick="executeCreateTrip(true)" class="w-full py-3.5 bg-gradient-to-r from-shiorit-primary via-sky-400 to-teal-400 hover:opacity-95 active:scale-98 text-white font-black rounded-2xl text-xs flex items-center justify-center gap-2 shadow-resort transition cursor-pointer">
             <i class="fa-solid fa-wand-magic-sparkles"></i>
             <span>AIで全日プランを自動作成してスタート</span>
@@ -846,7 +841,7 @@
       <div class="shrink-0 space-y-1 pt-1">
         <div class="flex flex-wrap gap-1.5">
           <button onclick="sendQuickAiChat('この旅行を3泊4日にして、4日目の予定も提案して')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 rounded-xl text-[10px] font-bold transition">🗓️ 3泊4日に変更して</button>
-          <button onclick="sendQuickAiChat('2日目のランチにおすすめのお店を3つ提案して')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 rounded-xl text-[10px] font-bold transition">🍽️️ ランチ候補3選</button>
+          <button onclick="sendQuickAiChat('2日目のランチにおすすめのお店を3つ提案して')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 rounded-xl text-[10px] font-bold transition">🍽️ ランチ候補3選</button>
           <button onclick="sendQuickAiChat('やっぱりさっきのスケジュールに戻して')" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-900 rounded-xl text-[10px] font-bold transition">↩️ さっきの予定に戻して</button>
         </div>
       </div>
@@ -1074,7 +1069,6 @@
       document.getElementById('calcDaysDisplay').innerText = text;
     }
 
-    // ★【確実にAIプラン生成を実行する関数】
     window.executeCreateTrip = async function(isAi) {
       const title = document.getElementById('newTripTitle').value.trim();
       const startDate = document.getElementById('newTripStartDate').value;
@@ -1382,7 +1376,6 @@
       }
     }
 
-    // AIチャット機能
     function renderAiChatHistory() {
       const container = document.getElementById('aiChatLogContainer');
       if (!container || !currentTripKey) return;
@@ -2600,21 +2593,6 @@ ${allConversationLogs || '（過去の履歴なし）'}
       }
     }
 
-    function showToast(msg, showUndoBtn = false) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toastMsg').innerText = msg;
-      const undoBtn = document.getElementById('toastUndoBtn');
-      if (showUndoBtn) undoBtn.classList.remove('hidden');
-      else undoBtn.classList.add('hidden');
-
-      toast.classList.remove('opacity-0', 'pointer-events-none');
-      toast.classList.add('opacity-100');
-      setTimeout(() => {
-        toast.classList.remove('opacity-100');
-        toast.classList.add('opacity-0', 'pointer-events-none');
-      }, 4000);
-    }
-
     window.shareTripUrl = function() {
       const shareUrl = window.location.href;
       const trip = liveTripData[currentTripKey];
@@ -2644,6 +2622,7 @@ ${allConversationLogs || '（過去の履歴なし）'}
       showToast('LINE用共有メッセージをコピーしました！');
     }
 
+    // ★【完全修正版】URLパラメータ判定（しおり表示時はLPを隠し、LP表示時はしおりを隠す）
     async function checkUrlParams() {
       try {
         const urlParams = new URLSearchParams(window.location.search);
@@ -2654,6 +2633,7 @@ ${allConversationLogs || '（過去の履歴なし）'}
           if (match) tripParam = match[1].toLowerCase();
         }
 
+        // パラメータがない場合は確実にLP（ホーム画面）を表示
         if (!tripParam) {
           currentTripKey = null;
           document.getElementById('landingPage').classList.remove('hidden');
@@ -2664,7 +2644,12 @@ ${allConversationLogs || '（過去の履歴なし）'}
           return;
         }
 
+        // パラメータがある場合はLPを確実に隠し、しおり画面を表示
         currentTripKey = tripParam;
+        document.getElementById('landingPage').classList.add('hidden');
+        document.getElementById('appHeader').classList.remove('hidden');
+        document.getElementById('pageNavContainer').classList.remove('hidden');
+        document.getElementById('mainContainer').classList.remove('hidden');
 
         if (!liveTripData[currentTripKey]) {
           liveTripData[currentTripKey] = {
@@ -2706,11 +2691,6 @@ ${allConversationLogs || '（過去の履歴なし）'}
           const todayStr = new Date().toISOString().slice(0, 10);
           for (let i = 1; i <= totalTripDays; i++) trip.dayDates[i] = todayStr;
         }
-
-        document.getElementById('landingPage').classList.add('hidden');
-        document.getElementById('appHeader').classList.remove('hidden');
-        document.getElementById('pageNavContainer').classList.remove('hidden');
-        document.getElementById('mainContainer').classList.remove('hidden');
 
         document.getElementById('activeTripTitle').innerHTML = `<span>${escapeHtml(trip.title)}</span><i class="fa-solid fa-pen text-[9px] text-shiorit-gray group-hover:text-shiorit-primary ml-1"></i>`;
         document.getElementById('activeTripDates').innerText = trip.dates || '';
