@@ -87,6 +87,14 @@
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     select { -webkit-appearance: none; appearance: none; }
     i { display: inline-block; }
+    
+    /* 日付インプットの重なり防止用スタイル */
+    .date-input-fix {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px 4px;
+      font-size: 11px;
+    }
   </style>
 </head>
 <body class="antialiased flex flex-col justify-between selection:bg-shiorit-secondary selection:text-shiorit-dark">
@@ -137,56 +145,11 @@
           <span>新しく旅行しおりを作る（無料）</span>
         </button>
       </div>
-
-      <div class="space-y-3 pt-2">
-        <h2 class="text-xs font-black tracking-widest text-shiorit-primary uppercase text-center">シオリットの圧倒的強み</h2>
-        <div class="space-y-2.5 text-xs">
-          <div class="glass-card p-4 rounded-2xl space-y-1 shadow-xs flex gap-3.5 items-start">
-            <div class="w-9 h-9 rounded-xl bg-shiorit-primary/20 text-shiorit-dark flex items-center justify-center shrink-0 font-black text-sm">
-              <i class="fa-solid fa-location-dot text-shiorit-primary"></i>
-            </div>
-            <div>
-              <h3 class="font-bold text-shiorit-dark">LINEで送るだけ（会員登録＆DL不要）</h3>
-              <p class="text-[11px] text-shiorit-gray leading-relaxed">全員のアプリDL・会員登録は一切不要。URLをLINEで開くだけで即座に全員が共同編集できます。</p>
-            </div>
-          </div>
-
-          <div class="glass-card p-4 rounded-2xl space-y-1 shadow-xs flex gap-3.5 items-start">
-            <div class="w-9 h-9 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center shrink-0 font-black text-sm">
-              <i class="fa-solid fa-link"></i>
-            </div>
-            <div>
-              <h3 class="font-bold text-shiorit-dark">便利リンク集（時刻表・食べログURL）</h3>
-              <p class="text-[11px] text-shiorit-gray leading-relaxed">各予定に登録したお店の公式HPや食べログ、シャトルバス時刻表をワンタップで開けます。</p>
-            </div>
-          </div>
-
-          <div class="glass-card p-4 rounded-2xl space-y-1 shadow-xs flex gap-3.5 items-start">
-            <div class="w-9 h-9 rounded-xl bg-shiorit-primary/20 text-shiorit-dark flex items-center justify-center shrink-0 font-black text-sm">
-              <i class="fa-solid fa-calculator text-shiorit-primary"></i>
-            </div>
-            <div>
-              <h3 class="font-bold text-shiorit-dark">割り勘 ＆ 送金ナビ（最小送金ルート）</h3>
-              <p class="text-[11px] text-shiorit-gray leading-relaxed">立替えた支払いを記録するだけで、「誰が誰にいくら送金すれば良いか」を最小回数で自動算出。</p>
-            </div>
-          </div>
-
-          <div class="glass-card p-4 rounded-2xl space-y-1 shadow-xs flex gap-3.5 items-start">
-            <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 font-black text-sm">
-              <i class="fa-solid fa-wand-magic-sparkles"></i>
-            </div>
-            <div>
-              <h3 class="font-bold text-shiorit-dark">本物のAIが3候補比較 ＆ 全会話記憶</h3>
-              <p class="text-[11px] text-shiorit-gray leading-relaxed">過去の会話をずっと記憶して自然に対話。変更後もワンタップまたはAIチャットでいつでも元に戻せます。</p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <footer class="py-6 text-center text-[10px] text-shiorit-gray border-t border-shiorit-secondary/40 flex items-center justify-center gap-2">
       <span>&copy; Shiorit (シオリット) All Rights Reserved.</span>
-      <span class="text-shiorit-primary font-mono font-bold">v1.9.0</span>
+      <span class="text-shiorit-primary font-mono font-bold">v1.9.1</span>
     </footer>
   </div>
 
@@ -266,7 +229,7 @@
   <!-- メインコンテンツ（しおりカード） -->
   <main id="mainContainer" class="hidden flex-1 max-w-md w-full mx-auto p-3.5 sm:p-4 space-y-6"></main>
 
-  <!-- ★【開始日・終了日の重なり解消＆AIプラン生成確実化】新規旅行作成モーダル -->
+  <!-- ★【完全に重なりを解消した】新規旅行作成モーダル -->
   <div id="createTripModal" class="fixed inset-0 z-[70] bg-shiorit-dark/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 hidden">
     <div class="glass-card bg-white rounded-3xl max-w-md w-full p-4 sm:p-5 shadow-resort border border-shiorit-secondary max-h-[92vh] overflow-y-auto space-y-3.5">
       <div class="flex items-center justify-between pb-2 border-b border-shiorit-secondary/40">
@@ -288,15 +251,15 @@
           <input type="text" id="newTripTitle" required class="w-full p-2.5 sm:p-3 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl font-bold text-shiorit-dark focus:ring-2 focus:ring-shiorit-primary focus:outline-none" placeholder="例：神戸・有馬温泉 2泊3日 旅のしおり">
         </div>
 
-        <!-- ★ 重なりを完全に解消した日付入力グリッド -->
-        <div class="grid grid-cols-2 gap-2 sm:gap-3">
-          <div class="min-w-0">
-            <label class="font-bold text-shiorit-dark block mb-1 truncate">開始日 <span class="text-rose-500">*</span></label>
-            <input type="date" id="newTripStartDate" required onchange="updateCalcDaysDisplay()" class="w-full min-w-0 px-2 py-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark font-bold text-xs focus:ring-2 focus:ring-shiorit-primary focus:outline-none">
+        <!-- ★ 左右の間隔と幅を完全に分離した安全な日付グリッド -->
+        <div class="grid grid-cols-2 gap-3">
+          <div style="min-width: 0;">
+            <label class="font-bold text-shiorit-dark block mb-1">開始日 <span class="text-rose-500">*</span></label>
+            <input type="date" id="newTripStartDate" required onchange="updateCalcDaysDisplay()" class="date-input-fix bg-shiorit-light/50 border border-shiorit-secondary rounded-xl font-bold text-shiorit-dark focus:ring-2 focus:ring-shiorit-primary focus:outline-none">
           </div>
-          <div class="min-w-0">
-            <label class="font-bold text-shiorit-dark block mb-1 truncate">終了日 <span class="text-rose-500">*</span></label>
-            <input type="date" id="newTripEndDate" required onchange="updateCalcDaysDisplay()" class="w-full min-w-0 px-2 py-2.5 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl text-shiorit-dark font-bold text-xs focus:ring-2 focus:ring-shiorit-primary focus:outline-none">
+          <div style="min-width: 0;">
+            <label class="font-bold text-shiorit-dark block mb-1">終了日 <span class="text-rose-500">*</span></label>
+            <input type="date" id="newTripEndDate" required onchange="updateCalcDaysDisplay()" class="date-input-fix bg-shiorit-light/50 border border-shiorit-secondary rounded-xl font-bold text-shiorit-dark focus:ring-2 focus:ring-shiorit-primary focus:outline-none">
           </div>
         </div>
 
@@ -347,7 +310,7 @@
         </div>
 
         <div class="pt-2 flex flex-col gap-2">
-          <!-- ★ iPhoneでも確実にAI生成を発火する明示的onclick呼び出し -->
+          <!-- ★ AI生成を確実に発火するイベントハンドラ -->
           <button type="button" onclick="executeCreateTrip(true)" class="w-full py-3.5 bg-gradient-to-r from-shiorit-primary via-sky-400 to-teal-400 hover:opacity-95 active:scale-98 text-white font-black rounded-2xl text-xs flex items-center justify-center gap-2 shadow-resort transition cursor-pointer">
             <i class="fa-solid fa-wand-magic-sparkles"></i>
             <span>AIで全日プランを自動作成してスタート</span>
@@ -361,7 +324,7 @@
     </div>
   </div>
 
-  <!-- ★【再配備】AI生成中ローディングオーバーレイ -->
+  <!-- AIプラン生成中ローディング -->
   <div id="aiLoadingOverlay" class="fixed inset-0 z-[120] bg-shiorit-dark/60 backdrop-blur-xs flex flex-col items-center justify-center p-4 hidden">
     <div class="glass-card bg-white rounded-3xl p-6 max-w-xs w-full text-center space-y-4 shadow-resort border border-shiorit-secondary">
       <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-shiorit-primary to-teal-300 text-white flex items-center justify-center text-2xl mx-auto shadow-resort animate-spin">
@@ -883,7 +846,7 @@
       <div class="shrink-0 space-y-1 pt-1">
         <div class="flex flex-wrap gap-1.5">
           <button onclick="sendQuickAiChat('この旅行を3泊4日にして、4日目の予定も提案して')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 rounded-xl text-[10px] font-bold transition">🗓️ 3泊4日に変更して</button>
-          <button onclick="sendQuickAiChat('2日目のランチにおすすめのお店を3つ提案して')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 rounded-xl text-[10px] font-bold transition">🍽️ ランチ候補3選</button>
+          <button onclick="sendQuickAiChat('2日目のランチにおすすめのお店を3つ提案して')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 rounded-xl text-[10px] font-bold transition">🍽️️ ランチ候補3選</button>
           <button onclick="sendQuickAiChat('やっぱりさっきのスケジュールに戻して')" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-900 rounded-xl text-[10px] font-bold transition">↩️ さっきの予定に戻して</button>
         </div>
       </div>
@@ -1196,7 +1159,6 @@
       document.getElementById('createdUrlModal').classList.remove('hidden');
     };
 
-    // ★【AIプラン自動構築API処理】
     async function generateInitialPlanWithAi(title, totalDays, dayDates, members, userPrompt) {
       const systemPrompt = `あなたはプロの旅行ツアープランナーです。指定された旅行タイトル、日数（全${totalDays}日間）、ユーザーの希望条件に基づいて、美しく実用的な旅行しおりのタイムラインJSONを作成してください。
 
@@ -1302,138 +1264,6 @@
 
       document.getElementById('editEndHour').value = String(eh).padStart(2, '0');
       document.getElementById('editEndMin').value = String(em).padStart(2, '0');
-    };
-
-    function getCategoryIcon(cat = '') {
-      if (cat.includes('ランチ') || cat.includes('グルメ') || cat.includes('ディナー')) return 'fa-solid fa-utensils';
-      if (cat.includes('カフェ') || cat.includes('朝食')) return 'fa-solid fa-mug-saucer';
-      if (cat.includes('温泉') || cat.includes('宿泊') || cat.includes('ホテル')) return 'fa-solid fa-hotel';
-      if (cat.includes('ドライブ') || cat.includes('移動') || cat.includes('新幹線') || cat.includes('フライト') || cat.includes('地下鉄') || cat.includes('電車')) return 'fa-solid fa-train-subway';
-      if (cat.includes('アクティビティ')) return 'fa-solid fa-compass';
-      return 'fa-solid fa-location-dot';
-    }
-
-    function getMapUrl(queryOrUrl) {
-      if (!queryOrUrl) return 'https://maps.google.com';
-      if (queryOrUrl.startsWith('http://') || queryOrUrl.startsWith('https://')) return queryOrUrl;
-      return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(queryOrUrl)}`;
-    }
-
-    window.openTripTitleEditModal = function() {
-      const trip = liveTripData[currentTripKey];
-      if (!trip) return;
-      document.getElementById('editTripTitleInput').value = trip.title || '';
-      document.getElementById('editTripDatesInput').value = trip.dates || '';
-      document.getElementById('editTripDaysInput').value = totalTripDays || 3;
-      document.getElementById('tripTitleEditModal').classList.remove('hidden');
-    };
-
-    window.closeTripTitleEditModal = function() {
-      document.getElementById('tripTitleEditModal').classList.add('hidden');
-    };
-
-    window.saveTripTitleEdit = async function(e) {
-      e.preventDefault();
-      const trip = liveTripData[currentTripKey];
-      if (!trip) return;
-
-      const newTitle = document.getElementById('editTripTitleInput').value.trim();
-      const newDates = document.getElementById('editTripDatesInput').value.trim();
-      const newDays = parseInt(document.getElementById('editTripDaysInput').value, 10) || 3;
-
-      if (!newTitle) return;
-
-      trip.title = newTitle;
-      if (newDates) trip.dates = newDates;
-      
-      totalTripDays = newDays;
-      trip.totalDays = newDays;
-
-      trip.dayDates = trip.dayDates || {};
-      const baseDate = trip.dayDates[1] ? new Date(trip.dayDates[1] + "T00:00:00") : new Date();
-      for (let i = 1; i <= totalTripDays; i++) {
-        if (!trip.dayDates[i]) {
-          const d = new Date(baseDate);
-          d.setDate(baseDate.getDate() + (i - 1));
-          trip.dayDates[i] = d.toISOString().slice(0, 10);
-        }
-      }
-
-      closeTripTitleEditModal();
-
-      document.getElementById('activeTripTitle').innerHTML = `<span>${escapeHtml(trip.title)}</span><i class="fa-solid fa-pen text-[9px] text-shiorit-gray group-hover:text-shiorit-primary ml-1"></i>`;
-      document.getElementById('activeTripDates').innerText = trip.dates || '';
-      document.getElementById('appPageTitle').innerText = `${trip.title} - シオリット`;
-
-      renderTabBar();
-      renderMainCards();
-      await saveToCloud();
-      showToast(`${totalTripDays}日間のプランに更新しました！`);
-    };
-
-    window.openQuickLinkModal = function(editId = null) {
-      const trip = liveTripData[currentTripKey];
-      trip.quickLinks = trip.quickLinks || [];
-
-      if (editId) {
-        const item = trip.quickLinks.find(l => l.id === editId);
-        if (!item) return;
-        document.getElementById('quickLinkModalHeading').innerHTML = '<i class="fa-solid fa-pen text-shiorit-primary mr-1"></i> リンクを編集';
-        document.getElementById('editQuickLinkId').value = item.id;
-        document.getElementById('quickLinkTitle').value = item.title;
-        document.getElementById('quickLinkUrl').value = item.url;
-        document.getElementById('quickLinkMemo').value = item.memo || '';
-      } else {
-        document.getElementById('quickLinkModalHeading').innerHTML = '<i class="fa-solid fa-link text-shiorit-primary mr-1"></i> その他リンクを登録';
-        document.getElementById('editQuickLinkId').value = '';
-        document.getElementById('quickLinkTitle').value = '';
-        document.getElementById('quickLinkUrl').value = '';
-        document.getElementById('quickLinkMemo').value = '';
-      }
-      document.getElementById('quickLinkModal').classList.remove('hidden');
-    };
-
-    window.closeQuickLinkModal = function() {
-      document.getElementById('quickLinkModal').classList.add('hidden');
-    };
-
-    window.saveQuickLink = async function(e) {
-      e.preventDefault();
-      const trip = liveTripData[currentTripKey];
-      trip.quickLinks = trip.quickLinks || [];
-
-      const editId = document.getElementById('editQuickLinkId').value;
-      const title = document.getElementById('quickLinkTitle').value.trim();
-      let url = document.getElementById('quickLinkUrl').value.trim();
-      const memo = document.getElementById('quickLinkMemo').value.trim();
-
-      if (!title || !url) return;
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        url = 'https://' + url;
-      }
-
-      if (editId) {
-        const idx = trip.quickLinks.findIndex(l => l.id === editId);
-        if (idx !== -1) trip.quickLinks[idx] = { id: editId, title, url, memo };
-      } else {
-        trip.quickLinks.unshift({ id: 'ql_' + Date.now(), title, url, memo });
-      }
-
-      closeQuickLinkModal();
-      currentSlide = totalTripDays + 3;
-      renderMainCards();
-      await saveToCloud();
-      showToast('便利リンクを保存しました！');
-    };
-
-    window.deleteQuickLink = function(linkId) {
-      if (confirm('このリンクを削除しますか？')) {
-        const trip = liveTripData[currentTripKey];
-        trip.quickLinks = (trip.quickLinks || []).filter(l => l.id !== linkId);
-        renderMainCards();
-        saveToCloud();
-        showToast('削除しました');
-      }
     };
 
     async function syncFromCloud() {
@@ -1552,6 +1382,7 @@
       }
     }
 
+    // AIチャット機能
     function renderAiChatHistory() {
       const container = document.getElementById('aiChatLogContainer');
       if (!container || !currentTripKey) return;
@@ -2042,7 +1873,8 @@ ${allConversationLogs || '（過去の履歴なし）'}
         <article id="card-${mapPageNum}" class="pamphlet-card glass-card rounded-3xl overflow-hidden shadow-resort border border-shiorit-secondary flex flex-col transition">
           <div class="bg-gradient-to-r from-shiorit-primary via-indigo-400 to-sky-500 text-white p-5 relative overflow-hidden">
             <div class="flex items-center justify-between gap-2">
-              <span class="px-2.5 py-0.5 rounded-full bg-white/20 border border-white/30 text-white text-[10px] font-bold">${mapPageNum} / ${totalPages} PAGE</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-white/20 border border-white/30 text-white text-[10px] font-bold">MAP & ACCESS</span>
+              <span class="text-[11px] font-black tracking-widest text-white/90">${mapPageNum} / ${totalPages} PAGE</span>
             </div>
             <div class="mt-2.5 flex items-center gap-3">
               <div class="w-10 h-10 rounded-2xl bg-white text-indigo-500 font-black text-xl flex items-center justify-center shadow">${mapPageNum}</div>
