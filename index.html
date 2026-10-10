@@ -207,7 +207,7 @@
 
     <footer class="py-6 text-center text-[10px] text-shiorit-gray border-t border-shiorit-secondary/40 flex items-center justify-center gap-2">
       <span>&copy; Shiorit (シオリット) All Rights Reserved.</span>
-      <span class="text-shiorit-primary font-mono font-bold">v1.9.6</span>
+      <span class="text-shiorit-primary font-mono font-bold">v1.9.7</span>
     </footer>
   </div>
 
@@ -366,6 +366,7 @@
         </div>
 
         <div class="pt-2 flex flex-col gap-2">
+          <!-- ★ AIプラン生成を確実に発火 -->
           <button type="button" onclick="executeCreateTrip(true)" class="w-full py-3.5 bg-gradient-to-r from-shiorit-primary via-sky-400 to-teal-400 hover:opacity-95 active:scale-98 text-white font-black rounded-2xl text-xs flex items-center justify-center gap-2 shadow-resort transition cursor-pointer">
             <i class="fa-solid fa-wand-magic-sparkles"></i>
             <span>AIで全日プランを自動作成してスタート</span>
@@ -379,7 +380,7 @@
     </div>
   </div>
 
-  <!-- AIプラン生成中ローディング -->
+  <!-- ★【復旧】AIプラン生成中ローディング -->
   <div id="aiLoadingOverlay" class="fixed inset-0 z-[120] bg-shiorit-dark/60 backdrop-blur-xs flex flex-col items-center justify-center p-4 hidden">
     <div class="glass-card bg-white rounded-3xl p-6 max-w-xs w-full text-center space-y-4 shadow-resort border border-shiorit-secondary">
       <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-shiorit-primary to-teal-300 text-white flex items-center justify-center text-2xl mx-auto shadow-resort animate-spin">
@@ -447,7 +448,7 @@
     </div>
   </div>
 
-  <!-- ★【新機能】タイトル・カレンダー日付・日数連動編集モーダル -->
+  <!-- タイトル・カレンダー日付・日数連動編集モーダル -->
   <div id="tripTitleEditModal" class="fixed inset-0 z-[80] bg-shiorit-dark/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 hidden">
     <div class="glass-card bg-white rounded-3xl max-w-xs w-full p-5 shadow-resort border border-shiorit-secondary space-y-4">
       <div class="flex items-center justify-between pb-2 border-b border-shiorit-secondary/40">
@@ -462,7 +463,6 @@
           <input type="text" id="editTripTitleInput" required class="w-full p-2 bg-shiorit-light/50 border border-shiorit-secondary rounded-xl font-bold text-shiorit-dark focus:ring-2 focus:ring-shiorit-primary focus:outline-none" placeholder="例：神戸・京都 3泊4日 旅のしおり">
         </div>
         
-        <!-- カレンダー選択式の日程 -->
         <div class="grid grid-cols-2 gap-2">
           <div style="min-width:0;">
             <label class="font-bold text-shiorit-dark block mb-1">開始日 <span class="text-rose-500">*</span></label>
@@ -582,7 +582,7 @@
     </div>
   </div>
 
-  <!-- 手動 予定追加・編集モーダル（食べログ自動抽出対応） -->
+  <!-- 手動 予定追加・編集モーダル -->
   <div id="editModal" class="fixed inset-0 z-[60] bg-shiorit-dark/50 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 hidden">
     <div class="glass-card bg-white rounded-3xl max-w-md w-full p-4 sm:p-5 shadow-resort border border-shiorit-secondary max-h-[90vh] overflow-y-auto space-y-3.5">
       <div class="flex items-center justify-between pb-2 border-b border-shiorit-secondary/40">
@@ -637,7 +637,6 @@
           </div>
         </div>
 
-        <!-- ★ 食べログ等の共有テキストを丸ごと貼っても自動でURLのみ抽出 -->
         <div>
           <label class="font-bold text-shiorit-dark flex items-center justify-between mb-1">
             <span class="flex items-center gap-1"><i class="fa-solid fa-link text-sky-500"></i> Webサイト / 食べログ等のURL（任意）</span>
@@ -974,7 +973,6 @@
     let previousStepsBackup = null;
     const selectedThemes = new Set(['ご当地絶品グルメ中心']);
 
-    // ★【新機能】テキスト丸ごと貼り付けからURLのみを抽出する関数
     function extractCleanUrl(rawText) {
       if (!rawText) return '';
       const urlMatch = rawText.match(/https?:\/\/[^\s]+/i);
@@ -1153,6 +1151,7 @@
       document.getElementById('calcDaysDisplay').innerText = text;
     }
 
+    // ★【復旧・強化】AIプラン生成処理を確実に実行するメイン関数
     window.executeCreateTrip = async function(isAi) {
       const title = document.getElementById('newTripTitle').value.trim();
       const startDate = document.getElementById('newTripStartDate').value;
@@ -1180,20 +1179,49 @@
         members,
         quickLinks: [],
         expenses: [],
-        steps: [
-          {
-            id: 's_1', day: 1, title: `${title} スタート`, category: "重要予定",
-            time: "10:00〜11:00", startTime: startDate + "T10:00:00", endTime: startDate + "T11:00:00",
-            icon: "fa-solid fa-flag-checkered", iconBg: "bg-shiorit-light text-shiorit-primary",
-            badge: "集合", desc: "楽しい旅行の始まりです！", tips: "", mapQuery: title, webUrl: ""
-          }
-        ],
+        steps: [],
         chatHistory: [
           { id: "init_" + Date.now(), sender: "ai", text: `『${title}』のしおりを作成しました！何でも相談してくださいね🌴` }
         ]
       };
 
       closeCreateTripModal();
+
+      if (isAi) {
+        document.getElementById('aiLoadingTitle').innerText = 'AIが旅行プランを作成中...';
+        document.getElementById('aiLoadingSub').innerText = `${calc.days}日間のスケジュールと時間を最適化しています`;
+        document.getElementById('aiLoadingOverlay').classList.remove('hidden');
+
+        try {
+          const generatedSteps = await generateInitialPlanWithAi(title, calc.days, calc.dayDates, members, structuredPrompt);
+          if (generatedSteps && generatedSteps.length > 0) {
+            newTripObj.steps = generatedSteps;
+          } else {
+            throw new Error("プラン生成に失敗しました");
+          }
+        } catch(err) {
+          console.warn("AIフォールバック適用:", err);
+          newTripObj.steps = [
+            {
+              id: 's_1', day: 1, title: `${title} スタート`, category: "重要予定",
+              time: "10:00〜11:00", startTime: startDate + "T10:00:00", endTime: startDate + "T11:00:00",
+              icon: "fa-solid fa-flag-checkered", iconBg: "bg-shiorit-light text-shiorit-primary",
+              badge: "集合", desc: "楽しい旅行の始まりです！", tips: "", mapQuery: title, webUrl: ""
+            }
+          ];
+        } finally {
+          document.getElementById('aiLoadingOverlay').classList.add('hidden');
+        }
+      } else {
+        newTripObj.steps = [
+          {
+            id: 's_1', day: 1, title: `${title} スタート`, category: "重要予定",
+            time: "10:00〜11:00", startTime: startDate + "T10:00:00", endTime: startDate + "T11:00:00",
+            icon: "fa-solid fa-flag-checkered", iconBg: "bg-shiorit-light text-shiorit-primary",
+            badge: "集合", desc: "楽しい旅行の始まりです！", tips: "", mapQuery: title, webUrl: ""
+          }
+        ];
+      }
 
       liveTripData[tripId] = newTripObj;
       localStorage.setItem('shiorit_saved_' + tripId, JSON.stringify(newTripObj));
@@ -1207,6 +1235,65 @@
       document.getElementById('createdTripUrlInput').value = newlyCreatedTripUrl;
       document.getElementById('createdUrlModal').classList.remove('hidden');
     };
+
+    // ★【復旧】Cloudflare Worker（AIプロキシ）を呼び出してタイムラインJSONを生成する関数
+    async function generateInitialPlanWithAi(title, totalDays, dayDates, members, userPrompt) {
+      const systemPrompt = `あなたはプロの旅行ツアープランナーです。指定された旅行タイトル、日数（全${totalDays}日間）、ユーザーの希望条件に基づいて、美しく実用的な旅行しおりのタイムラインJSONを作成してください。
+
+【厳格な時間・出力仕様】
+1. 出力は必ず {"steps": [...]} の形式のJSONオブジェクトのみを返してください。
+2. day は 1 〜 ${totalDays} の整数。1日あたり3〜5個の予定を作成してください。
+3. 各日の予定は朝（09:00頃〜）、昼食（12:00頃〜）、午後（14:30頃〜）、夕食（18:30頃〜）のように時系列順に進むよう正確にstartTime/endTimeを設定してください。
+4. ユーザーの希望条件（行きたい場所・指定時間・テーマ）を最優先でスケジュール内に組み込んでください。
+5. startTime と endTime は ISO8601形式（例: "${dayDates[1]}T12:00:00"）にしてください。`;
+
+      const userQuery = `【旅行先】: ${title}\n【全日程】: ${totalDays}日間\n【各日の日付】: ${JSON.stringify(dayDates)}\n【参加メンバー】: ${members.join(', ')}\n【ユーザーの希望条件】:\n${userPrompt}\n\n上記を反映した全${totalDays}日分の旅行プラン steps 配列を作成してください。`;
+
+      const payload = {
+        contents: [{ parts: [{ text: `${systemPrompt}\n\n${userQuery}` }] }],
+        generationConfig: { 
+          responseMimeType: "application/json",
+          temperature: 0.7 
+        }
+      };
+
+      const res = await fetch(cloudflareWorkerEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      if (!res.ok) throw new Error(`AIサーバー通信エラー (${res.status})`);
+
+      const result = await res.json();
+      const textResp = result.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!textResp) throw new Error("AI応答が空でした");
+
+      const cleanJsonStr = textResp.replace(/```json/gi, '').replace(/```/gi, '').trim();
+      const jsonMatch = cleanJsonStr.match(/\{[\s\S]*\}/);
+      const targetStr = jsonMatch ? jsonMatch[0] : cleanJsonStr;
+      const parsed = JSON.parse(targetStr);
+
+      if (parsed.steps && Array.isArray(parsed.steps) && parsed.steps.length > 0) {
+        return parsed.steps.map((s, idx) => ({
+          id: s.id || `ai_step_${Date.now()}_${idx}`,
+          day: Math.min(Math.max(1, parseInt(s.day, 10) || 1), totalDays),
+          title: s.title || "観光スポット",
+          category: s.category || "観光",
+          time: s.time || "10:00〜12:00",
+          startTime: s.startTime || `${dayDates[s.day || 1]}T10:00:00`,
+          endTime: s.endTime || `${dayDates[s.day || 1]}T12:00:00`,
+          icon: s.icon || getCategoryIcon(s.category),
+          iconBg: s.iconBg || "bg-shiorit-light text-shiorit-primary",
+          badge: s.badge || "",
+          desc: s.desc || "",
+          tips: s.tips || "",
+          mapQuery: s.mapQuery || s.title || title,
+          webUrl: s.webUrl || ""
+        }));
+      }
+      return null;
+    }
 
     window.copyCreatedTripUrl = function() {
       const input = document.getElementById('createdTripUrlInput');
@@ -1272,7 +1359,7 @@
       return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(queryOrUrl)}`;
     }
 
-    // ★【基本設定モーダル】初期表示値のロード
+    // 基本設定モーダルの初期表示
     window.openTripTitleEditModal = function() {
       const trip = liveTripData[currentTripKey];
       if (!trip) return;
@@ -1300,7 +1387,7 @@
       document.getElementById('editCalcDaysText').innerText = text;
     };
 
-    // ★【基本設定保存】カレンダー変更を各日のスケジュールに安全に完全連動
+    // 基本設定保存：カレンダー変更を各日のスケジュールに安全に完全連動
     window.saveTripTitleEdit = async function(e) {
       e.preventDefault();
       const trip = liveTripData[currentTripKey];
@@ -1320,7 +1407,6 @@
       trip.totalDays = totalTripDays;
       trip.dayDates = calc.dayDates;
 
-      // 既存予定の startTime / endTime の日付部分を安全に更新
       (trip.steps || []).forEach(step => {
         const stepDay = Math.min(step.day || 1, totalTripDays);
         step.day = stepDay;
@@ -2110,7 +2196,7 @@ ${allConversationLogs || '（過去の履歴なし）'}
                 <span class="font-bold text-shiorit-dark text-xs flex items-center gap-1.5">
                   <i class="fa-solid fa-users text-shiorit-primary"></i> 参加メンバー（${members.length}人）
                 </span>
-                <button onclick="openMemberModal()" class="text-shiorit-primary hover:opacity-80 text-xs font-bold flex items-center gap-1">
+                <button onclick="openMemberModal()" class="text-shiorit-primary hover:opacity-80 text-xs font-bold flex items-center gap-1 cursor-pointer">
                   <i class="fa-solid fa-user-plus"></i> 追加
                 </button>
               </div>
@@ -2789,7 +2875,7 @@ ${allConversationLogs || '（過去の履歴なし）'}
       showToast('LINE用共有メッセージをコピーしました！');
     }
 
-    // ★【完全排他制御】URLパラメータがある時は必ずLPを隠す
+    // URLパラメータ判定（LPとしおり画面の排他制御）
     async function checkUrlParams() {
       try {
         const urlParams = new URLSearchParams(window.location.search);
@@ -2817,7 +2903,6 @@ ${allConversationLogs || '（過去の履歴なし）'}
 
         currentTripKey = tripParam;
         
-        // 強制的にLPを消去し、しおり画面を全開表示
         if (landingPageEl) { landingPageEl.classList.add('hidden'); landingPageEl.style.display = 'none'; }
         if (appHeaderEl) { appHeaderEl.classList.remove('hidden'); appHeaderEl.style.display = ''; }
         if (pageNavEl) { pageNavEl.classList.remove('hidden'); pageNavEl.style.display = ''; }
@@ -2881,7 +2966,6 @@ ${allConversationLogs || '（過去の履歴なし）'}
       }
     }
 
-    // 意図しないピンチ操作による勝手な拡大を抑制
     document.addEventListener('gesturestart', (e) => e.preventDefault());
 
     window.addEventListener('popstate', checkUrlParams);
